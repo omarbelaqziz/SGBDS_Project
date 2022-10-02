@@ -1,9 +1,10 @@
 #include "BusStationsHandler.h"
 #include "StringsOperations.h"
-vector<pair<string, string>> handle_file_stream_bus_stations(ifstream& i_file) {
+
+set<BusStation*> handle_file_stream_bus_stations(ifstream& i_file) {
     string line;
     vector<string> temp;
-    vector<pair<string, string>> tokens;
+    set<BusStation*> bus_stations;
 
     while (getline(i_file, line))
     {
@@ -12,11 +13,12 @@ vector<pair<string, string>> handle_file_stream_bus_stations(ifstream& i_file) {
             break;
         }
         temp = StringsOperations::split(StringsOperations::ltrim(line));
-        pair<string, string> p(temp[0], temp[1]);
-        tokens.push_back(p);
+        
+
+        bus_stations.insert(new BusStation(temp[0], isDepot_handler(temp[1])));
     }
 
-    return tokens;
+    return bus_stations;
 }
 
 bool isDepot_handler(string isDepot_string)
@@ -31,11 +33,3 @@ bool isDepot_handler(string isDepot_string)
     return result;
 }
 
-set<BusStation*> handle_bus_stations(vector<pair<string, string>> stations) {
-    set<BusStation*> bus_stations;
-    for (auto station : stations) {
-        bus_stations.insert(new BusStation(station.first, isDepot_handler(station.second)));
-    }
-
-    return bus_stations;
-}

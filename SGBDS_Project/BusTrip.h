@@ -2,7 +2,6 @@
 #include <string>
 #include "BusLine.h"
 #include "BusStation.h"
-#include "TripDate.h"
 #include <ctime>
 #include <cstdlib>
 
@@ -16,8 +15,8 @@ private:
     string tripId;
     BusStation *busStationDep;
     BusStation *busStationArr;
-    time_t dateDep; 
-    time_t dateArr; 
+    time_t dateDep;
+    time_t dateArr;
 
 public:
     BusTrip(
@@ -27,8 +26,9 @@ public:
         time_t dateDepart,
         time_t dateArrivee);
 
-    bool operator<(const BusTrip& trip);
-    // {
-    //     return ((this->dateArrivee - this->dateDepart) < (trip.dateArrivee - trip.dateDepart))
-    // }
+    bool operator<(const BusTrip &trip);
+    bool operator<(const BusTrip *trip);
+    bool operator==(const BusTrip *bus);
+    bool operator==(const BusTrip &bus);
+    void showBusTrip();
 };

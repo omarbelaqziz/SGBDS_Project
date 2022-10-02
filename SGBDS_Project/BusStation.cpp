@@ -11,15 +11,24 @@ bool BusStation::operator<(const BusStation &bus)
     return this->id < bus.id;
 }
 
-bool BusStation::operator<(const BusStation *bus) {
+bool BusStation::operator<(const BusStation *bus)
+{
     return this->id < bus->id;
 }
 
 void BusStation::showBusStation()
 {
     cout << endl;
-        cout << "Station Id: " << this->id << endl;
-        cout << "Is Depot: " << this->isDepot << endl;
+    cout << "Station Id: " << this->id << endl;
+    cout << "Is Depot: " << this->isDepot << endl;
+}
+bool BusStation::operator==(const BusStation *bus)
+{
+    return this->id == bus->id;
+}
+bool BusStation::operator==(const BusStation &bus)
+{
+    return this->id == bus.id;
 }
 
 bool BusStation::hasId(string stationId)

@@ -9,7 +9,8 @@
 
 using namespace std; 
 
-unordered_map<string, set<BusTrip>> handle_file_stream_bus_trips(ifstream& i_file, set<BusStation*> busStationsSet);
+
+unordered_map<string, set<BusTrip*>>  handle_file_stream_bus_trips(ifstream& i_file, set<BusStation*> busStationsSet);
 BusTrip* buildBusTrip(vector<string> rawData, set<BusStation*> busStationsSet);
 static time_t dateTimeStringToTimeObject(string date, string time);
 
