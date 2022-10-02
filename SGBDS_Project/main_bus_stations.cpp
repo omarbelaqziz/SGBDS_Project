@@ -5,13 +5,13 @@
 #include <map>
 #include <algorithm>
 #include "strings_operations.h"
-#include "BusStation.hpp"
+#include "BusStation.h"
 #include "BusStationsHandler.h"
 using namespace std;
 
 int main(int argc, char const *argv[])
 {
-    string fn("../resources/test.txt");
+    string fn("./resources/test_bus_stations.txt");
     ifstream i_file;
 
     i_file.open(fn);
