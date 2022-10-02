@@ -1,6 +1,6 @@
-#include "strings_operations.h"
+#include "StringsOperations.h"
 
-string rtrim(const string &str)
+string StringsOperations::rtrim(const string &str)
 {
     string s(str);
 
@@ -10,7 +10,7 @@ string rtrim(const string &str)
 
     return s;
 }
-string ltrim(const string &str)
+string StringsOperations::ltrim(const string &str)
 {
     string s(str);
 
@@ -20,7 +20,7 @@ string ltrim(const string &str)
 
     return s;
 }
-vector<string> split(const string &str)
+vector<string> StringsOperations::split(const string &str)
 {
 
     vector<string> tokens;

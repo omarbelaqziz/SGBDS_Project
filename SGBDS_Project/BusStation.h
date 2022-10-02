@@ -12,10 +12,7 @@ private:
 
 public:
     BusStation(string id, bool isDepot);
-    
     bool operator<(const BusStation &bus);
-
     bool operator<(const BusStation *bus);
-
     void showBusStation();
 };

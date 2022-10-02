@@ -4,7 +4,7 @@
 #include <fstream>
 #include <map>
 #include <algorithm>
-#include "strings_operations.h"
+#include "StringsOperations.h"
 #include "BusStation.h"
 #include "BusStationsHandler.h"
 using namespace std;

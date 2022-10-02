@@ -1,5 +1,5 @@
 #include "BusStationsHandler.h"
-#include "strings_operations.h"
+#include "StringsOperations.h"
 
 vector<pair<string, string>> handle_file_stream_bus_stations(ifstream& i_file){
     string line; 
@@ -8,7 +8,7 @@ vector<pair<string, string>> handle_file_stream_bus_stations(ifstream& i_file){
 
     while (getline(i_file, line))
     {
-        temp = split(ltrim(line)); 
+        temp = StringsOperations::split(StringsOperations::ltrim(line)); 
         pair<string, string> p(temp[0], temp[1]); 
         tokens.push_back(p); 
     }
