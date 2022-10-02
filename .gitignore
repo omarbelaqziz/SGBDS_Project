@@ -361,3 +361,13 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+#linux users gitignore 
+resources 
+build 
+include
+
+.vscode
+build-and-run.sh 
+CMakeLists.txt
+ll
