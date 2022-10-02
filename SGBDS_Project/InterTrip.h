@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "BusStation.h"
+#include "BusStation.hpp"
 
 class InterTrip
 {
