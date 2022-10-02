@@ -20,6 +20,15 @@ string StringsOperations::ltrim(const string &str)
 
     return s;
 }
+string StringsOperations::removeLastChar(const string& str)
+{
+    string s(str);
+    if (!s.empty()) {
+        s.pop_back();
+    }
+    return s;
+}
+
 vector<string> StringsOperations::split(const string &str)
 {
 
@@ -39,4 +48,7 @@ vector<string> StringsOperations::split(const string &str)
     tokens.push_back(str.substr(start));
 
     return tokens;
+}
+bool StringsOperations::stringToBool(string const& str) {
+    return str != "0";
 }

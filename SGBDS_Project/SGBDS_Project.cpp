@@ -2,10 +2,106 @@
 //
 
 #include <iostream>
+#include <fstream>
+#include <set>
+#include <string>
+#include <vector>
+#include "BusStation.h"
+#include "StringsOperations.h"
+
+using namespace std;
+
+BusStation createBusStationFromLine(string line) {
+    string fineLine(StringsOperations::removeLastChar(StringsOperations::ltrim(StringsOperations::rtrim(line))));
+    vector<string> strings = StringsOperations::split(fineLine);
+    return BusStation(strings[0], StringsOperations::stringToBool(strings[1]));
+}
+
+
+vector<pair<string, string>> handle_file_stream_bus_stations(ifstream& i_file) {
+    string line;
+    vector<string> temp;
+    vector<pair<string, string>> tokens;
+
+    while (getline(i_file, line))
+    {
+        if (line.find("}") != string::npos) {
+            cout << "Bus Stations op. ends at " << line << endl;
+            break;
+        }
+        temp = StringsOperations::split(StringsOperations::ltrim(line));
+        pair<string, string> p(temp[0], temp[1]);
+        tokens.push_back(p);
+    }
+
+    return tokens;
+}
+
+bool isDepot_handler(string isDepot_string)
+{
+    bool result = false;
+    if (isDepot_string.size() == 2)
+    {
+        char v = isDepot_string.at(0);
+        (v == '0') ? result = false : result = true;
+    }
+    // handle the error 
+    return result;
+}
+
+set<BusStation*> handle_bus_stations(vector<pair<string, string>> stations) {
+    set<BusStation*> bus_stations;
+    for (auto station : stations) {
+        bus_stations.insert(new BusStation(station.first, isDepot_handler(station.second)));
+    }
+
+    return bus_stations;
+}
 
 int main()
 {
-    std::cout << "Hello World!\n";
+
+    //string filename = "../data/InputDataDepot50_ExistedDeadheadsWithBusLines.txt";
+    string filename = "../data/test.txt";
+    set<BusStation> busStationsSet;
+    vector<BusStation> busStationsVector;
+    ifstream dataFile;
+    dataFile.open(filename, ios::in);
+    if (dataFile.is_open()) {
+        string line;
+        int lineNumber = 0;
+        while (getline(dataFile, line)) {
+            lineNumber++;
+            if (line.find("{") != string::npos) {
+                if (line.find("BusStations") != string::npos) {
+                    cout << "Bus Stations op. begins at " << lineNumber << endl;
+                    /*while (getline(dataFile, line)) {
+                        if (line.find("}") != string::npos) {
+                            cout << "Bus Stations op. ends at " << line << endl;
+                            break;
+                        }
+                        busStationsVector.push_back(createBusStationFromLine(line));
+
+                    }*/
+                    vector<pair<string, string>> tokens = handle_file_stream_bus_stations(dataFile);
+                    set<BusStation*> busStations = handle_bus_stations(tokens);
+                }
+                else if (line.find("BusTrip") != string::npos) {
+                    cout << "Bus OP starts at " << lineNumber << endl;
+                }
+                else if (line.find("InterTrips") != string::npos) {
+                    cout << "Inter Trips op. begins at " << lineNumber << endl;
+                }
+            }
+            else if (line.find("}") != string::npos) {
+                cout << "Op. ends at " << line << endl;
+            }
+        }
+    }
+    else {
+        cout << "cannot open " << filename << endl;
+    }
+    dataFile.close();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

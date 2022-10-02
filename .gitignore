@@ -371,3 +371,6 @@ include
 build-and-run.sh 
 CMakeLists.txt
 ll
+
+#data folder
+data
