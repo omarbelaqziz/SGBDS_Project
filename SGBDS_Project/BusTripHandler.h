@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <set> 
 #include <vector>
-#include "BusTrip.hpp"
+#include "BusTrip.h"
 
 using namespace std; 
 
