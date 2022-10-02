@@ -144,12 +144,16 @@
     <ClCompile Include="BusTrip.cpp" />
     <ClCompile Include="InterTrip.cpp" />
     <ClCompile Include="SGBDS_Project.cpp" />
+    <ClCompile Include="StringsOperations.cpp" />
+    <ClCompile Include="TripDate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BusLine.h" />
     <ClInclude Include="BusStation.h" />
     <ClInclude Include="BusTrip.h" />
     <ClInclude Include="InterTrip.h" />
+    <ClInclude Include="StringsOperations.h" />
+    <ClInclude Include="TripDate.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
