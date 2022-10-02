@@ -146,6 +146,8 @@
     <ClCompile Include="SGBDS_Project.cpp" />
     <ClCompile Include="StringsOperations.cpp" />
     <ClCompile Include="TripDate.cpp" />
+    <ClCompile Include="BusStationsHandler.cpp" />
+    <ClCompile Include="BusTripsHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BusLine.h" />
@@ -154,6 +156,7 @@
     <ClInclude Include="InterTrip.h" />
     <ClInclude Include="StringsOperations.h" />
     <ClInclude Include="TripDate.h" />
+    <ClInclude Include="BusTripsHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

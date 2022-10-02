@@ -4,6 +4,7 @@
 #include "BusStation.h"
 #include "TripDate.h"
 #include <ctime>
+#include <cstdlib>
 
 using namespace std;
 
@@ -13,16 +14,16 @@ private:
     string tripId;
     BusStation *busStationDep;
     BusStation *busStationArr;
-    TripDate *dateDepart;
-    TripDate *dateArrivee;
+    time_t dateDep; 
+    time_t dateArr; 
 
 public:
     BusTrip(
         string tripId,
         BusStation *busStationDep,
         BusStation *busStationArr,
-        TripDate *dateDepart,
-        TripDate *dateArrivee);
+        time_t dateDepart,
+        time_t dateArrivee);
 
     // bool operator<(const BusTrip &trip)
     // {
