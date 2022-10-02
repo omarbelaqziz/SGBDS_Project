@@ -4,13 +4,18 @@ BusTrip::BusTrip(
     string tripId,
     BusStation *busStationDep,
     BusStation *busStationArr,
-    TripDate *dateDepart,
-    TripDate *dateArrivee)
+    time_t dateDep,
+    time_t dateArr)
 {
 
     this->tripId = tripId;
     this->busStationDep = busStationDep;
     this->busStationArr = busStationArr;
-    this->dateArrivee = dateArrivee;
-    this->dateDepart = dateDepart;
+    this->dateArr = dateArr;
+    this->dateDep = dateDep;
+}
+
+bool BusTrip::operator<(const BusTrip& trip)
+{
+   return (difftime(this->dateArr, this->dateDep)) < (difftime(trip.dateArr, trip.dateDep));
 }

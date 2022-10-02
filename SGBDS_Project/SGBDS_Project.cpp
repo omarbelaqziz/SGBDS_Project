@@ -7,8 +7,10 @@
 #include <string>
 #include <vector>
 #include "BusStation.h"
+#include "BusTrip.h"
 #include "StringsOperations.h"
 #include "BusStationsHandler.h"
+#include "BusTripsHandler.h"
 
 using namespace std;
 
@@ -26,6 +28,7 @@ int main()
     //string filename = "../data/InputDataDepot50_ExistedDeadheadsWithBusLines.txt";
     string filename = "./data/test.txt";
     set<BusStation> busStationsSet;
+    set<BusStation*> busStations;
     vector<BusStation> busStationsVector;
     ifstream dataFile;
     dataFile.open(filename, ios::in);
@@ -55,6 +58,7 @@ int main()
                 }
                 else if (line.find("BusTrip") != string::npos) {
                     cout << "Bus OP starts at " << lineNumber << endl;
+                    unordered_map<string, set<BusTrip>> map = handle_file_stream_bus_trips(dataFile, busStations);
                 }
                 else if (line.find("InterTrips") != string::npos) {
                     cout << "Inter Trips op. begins at " << lineNumber << endl;

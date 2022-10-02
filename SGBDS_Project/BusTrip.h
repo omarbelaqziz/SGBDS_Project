@@ -6,6 +6,8 @@
 #include <ctime>
 #include <cstdlib>
 
+#pragma once
+
 using namespace std;
 
 class BusTrip
@@ -25,7 +27,7 @@ public:
         time_t dateDepart,
         time_t dateArrivee);
 
-    // bool operator<(const BusTrip &trip)
+    bool operator<(const BusTrip& trip);
     // {
     //     return ((this->dateArrivee - this->dateDepart) < (trip.dateArrivee - trip.dateDepart))
     // }

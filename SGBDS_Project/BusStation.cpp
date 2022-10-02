@@ -21,3 +21,8 @@ void BusStation::showBusStation()
         cout << "Station Id: " << this->id << endl;
         cout << "Is Depot: " << this->isDepot << endl;
 }
+
+bool BusStation::hasId(string stationId)
+{
+    return this->id == stationId;
+}
