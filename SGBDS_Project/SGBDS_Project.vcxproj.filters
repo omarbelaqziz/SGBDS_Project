@@ -30,6 +30,24 @@
     <ClCompile Include="InterTrip.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="StringsOperations.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TripDate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BusStationsHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BusTripsHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StatisticsCalculator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InterTripsHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BusStation.h">
@@ -42,6 +60,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InterTrip.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StringsOperations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TripDate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BusTripsHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StatisticsCalculator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InterTripsHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

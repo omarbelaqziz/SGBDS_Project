@@ -11,7 +11,7 @@
 #include "StringsOperations.h"
 #include "BusStationsHandler.h"
 #include "BusTripsHandler.h"
-
+#include ""
 using namespace std;
 
 BusStation createBusStationFromLine(string line) {
@@ -62,6 +62,12 @@ int main()
                 }
                 else if (line.find("InterTrips") != string::npos) {
                     cout << "Inter Trips op. begins at " << lineNumber << endl;
+                    interTrips = handle_file_stream_inter_trips(dataFile, busStations);
+
+                    for (auto v : interTrips)
+                    {
+                        v->showInterTrips();
+                    }
                 }
             }
             else if (line.find("}") != string::npos) {
