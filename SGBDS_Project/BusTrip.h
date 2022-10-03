@@ -31,4 +31,11 @@ public:
     // {
     //     return ((this->dateArrivee - this->dateDepart) < (trip.dateArrivee - trip.dateDepart))
     // }
+
+    BusStation* getBusStationDep() {
+        return this->busStationDep;
+    }
+    BusStation* getBusStationArr() {
+        return this->busStationArr;
+    }
 };
