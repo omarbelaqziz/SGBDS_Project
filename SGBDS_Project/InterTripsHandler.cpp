@@ -1,5 +1,6 @@
 #include "InterTripsHandler.h"
 #include "StringsOperations.h"
+
 using namespace std;
 set<InterTrip*> handle_file_stream_inter_trips(ifstream& i_file, set<BusStation*> busStationsSet)
 {

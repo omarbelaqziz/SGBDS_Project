@@ -8,10 +8,11 @@
 #include <vector>
 #include "BusStation.h"
 #include "BusTrip.h"
+#include "InterTrip.h"
 #include "StringsOperations.h"
 #include "BusStationsHandler.h"
 #include "BusTripsHandler.h"
-#include ""
+#include "InterTripsHandler.h"
 using namespace std;
 
 BusStation createBusStationFromLine(string line) {
@@ -30,6 +31,7 @@ int main()
     set<BusStation> busStationsSet;
     set<BusStation*> busStations;
     vector<BusStation> busStationsVector;
+    set<InterTrip*> interTrips;
     ifstream dataFile;
     dataFile.open(filename, ios::in);
     if (dataFile.is_open()) {
@@ -49,7 +51,7 @@ int main()
 
                     }*/
                     vector<pair<string, string>> tokens = handle_file_stream_bus_stations(dataFile);
-                    set<BusStation*> busStations = handle_bus_stations(tokens);
+                    busStations = handle_bus_stations(tokens);
                 
                     for(auto v : busStations) 
                     {
