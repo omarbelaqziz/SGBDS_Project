@@ -9,10 +9,10 @@
 
 using namespace std; 
 
-unordered_map<string, set<BusTrip>> handle_file_stream_bus_trips(ifstream& i_file, set<BusStation*> busStationsSet);
-BusTrip* buildBusTrip(vector<string> rawData, set<BusStation*> busStationsSet);
-static time_t dateTimeStringToTimeObject(string date, string time);
 
+void handle_file_stream_bus_trips(unordered_map<string, multiset<BusTrip> *> &tripsMap, ifstream &i_file, set<BusStation> *busStationsSet);
+void buildBusTrip(BusTrip& busTrip, vector<string> rawData, set<BusStation>& busStationsSet);
+static time_t dateTimeStringToTimeObject(string date, string time);
 BusStation* findBusStationById(const set<BusStation*>& busStationsSet, string busStationId);
 
 //unordered_map<string, set<BusTrip*>> handle_bus_trips(vector<vector<string>> trips);

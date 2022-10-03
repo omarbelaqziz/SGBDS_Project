@@ -2,7 +2,6 @@
 #include <string>
 #include "BusLine.h"
 #include "BusStation.h"
-#include "TripDate.h"
 #include <ctime>
 #include <cstdlib>
 
@@ -12,30 +11,29 @@ using namespace std;
 
 class BusTrip
 {
-private:
+public:
     string tripId;
-    BusStation *busStationDep;
-    BusStation *busStationArr;
-    time_t dateDep; 
-    time_t dateArr; 
+    const BusStation* busStationDep;
+    const BusStation *busStationArr;
+    time_t dateDep;
+    time_t dateArr;
 
 public:
+
+    BusTrip() {
+
+    }
+
     BusTrip(
         string tripId,
-        BusStation *busStationDep,
-        BusStation *busStationArr,
+        const BusStation *busStationDep,
+        const BusStation *busStationArr,
         time_t dateDepart,
         time_t dateArrivee);
 
-    bool operator<(const BusTrip& trip);
-    // {
-    //     return ((this->dateArrivee - this->dateDepart) < (trip.dateArrivee - trip.dateDepart))
-    // }
-
-    BusStation* getBusStationDep() {
-        return this->busStationDep;
-    }
-    BusStation* getBusStationArr() {
-        return this->busStationArr;
-    }
+    bool operator<(const BusTrip &trip) const;
+    bool operator<(const BusTrip *trip) const;
+    bool operator==(const BusTrip *bus) const;
+    bool operator==(const BusTrip &bus) const;
+    void showBusTrip();
 };
