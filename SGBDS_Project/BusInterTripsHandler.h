@@ -3,7 +3,10 @@
 #include <set> 
 #include <vector>
 #include "BusStation.h"
+#include "InterTrip.h"
 
 using namespace std; 
 
-set<BusStation*> handle_file_stream_inter_trips(ifstream& i_file);
+void handle_file_stream_inter_trips(set<InterTrip>& inter_trips, ifstream& i_file, set<BusStation>* busStationsSet);
+void buildInterTrip(InterTrip& inter_tripp, vector<string> stringData, set<BusStation>& busStationsSet);
+

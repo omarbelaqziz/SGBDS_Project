@@ -6,5 +6,5 @@
 
 using namespace std; 
 
-set<BusStation*> handle_file_stream_bus_stations(ifstream& i_file);
+set<BusStation> * handle_file_stream_bus_stations(ifstream& i_file);
 bool isDepot_handler(string isDepot_string);

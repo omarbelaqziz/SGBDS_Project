@@ -11,24 +11,29 @@ using namespace std;
 
 class BusTrip
 {
-private:
+public:
     string tripId;
-    BusStation *busStationDep;
-    BusStation *busStationArr;
+    const BusStation* busStationDep;
+    const BusStation *busStationArr;
     time_t dateDep;
     time_t dateArr;
 
 public:
+
+    BusTrip() {
+
+    }
+
     BusTrip(
         string tripId,
-        BusStation *busStationDep,
-        BusStation *busStationArr,
+        const BusStation *busStationDep,
+        const BusStation *busStationArr,
         time_t dateDepart,
         time_t dateArrivee);
 
-    bool operator<(const BusTrip &trip);
-    bool operator<(const BusTrip *trip);
-    bool operator==(const BusTrip *bus);
-    bool operator==(const BusTrip &bus);
+    bool operator<(const BusTrip &trip) const;
+    bool operator<(const BusTrip *trip) const;
+    bool operator==(const BusTrip *bus) const;
+    bool operator==(const BusTrip &bus) const;
     void showBusTrip();
 };

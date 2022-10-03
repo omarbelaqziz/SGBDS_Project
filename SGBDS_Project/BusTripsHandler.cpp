@@ -2,47 +2,69 @@
 #include "StringsOperations.h"
 #include <iterator>
 
-unordered_map<string, set<BusTrip*>> handle_file_stream_bus_trips(ifstream &i_file, set<BusStation*> busStationsSet)
+void handle_file_stream_bus_trips(unordered_map<string, multiset<BusTrip> *> &tripsMap, ifstream &i_file, set<BusStation> *busStationsSet)
 {
-    string line; 
-    vector<string> rawData; 
-    unordered_map<string, set<BusTrip*>> map;
-    while(getline(i_file, line)) {
-        if (line.find("}") != string::npos) {
+    string line;
+    vector<string> rawData;
+
+    while (getline(i_file, line))
+    {
+        if (line.find("}") != string::npos)
+        {
             cout << "Bus Trips op. ends at " << line << endl;
             break;
         }
         rawData = StringsOperations::split(StringsOperations::removeLastChar(StringsOperations::ltrim(StringsOperations::rtrim(line))));
-        BusTrip* busTrip = buildBusTrip(rawData,busStationsSet);
-        if (map.count(rawData[0]) > 0) {
-            set<BusTrip*>& BSTrips = map[rawData[0]];
-            BSTrips.insert(busTrip);
+        BusTrip busTrip;
+        buildBusTrip(busTrip, rawData, *busStationsSet);
+        multiset<BusTrip> *BSTrips;
+        if (tripsMap.count(rawData[0]) > 0)
+        {
+            BSTrips = tripsMap[rawData[0]];
+            BSTrips->insert(busTrip);
         }
-        else {
-            set<BusTrip*> BSTrips;
-            BSTrips.insert(busTrip);
-            map[rawData[0]] = BSTrips;
+        else
+        {
+            BSTrips = new multiset<BusTrip>();
+            BSTrips->insert(busTrip);
+            tripsMap[rawData[0]] = BSTrips;
         }
     }
-    return map; 
 }
 
-BusTrip* buildBusTrip(vector<string> rawData, set<BusStation*> busStationsSet)
+void buildBusTrip(BusTrip &busTrip, vector<string> rawData, set<BusStation> &busStationsSet)
 {
     // BusStation* depBusStation = findBusStationById(busStationsSet,rawData[2]);
-    auto depBusStation = busStationsSet.find(new BusStation(rawData[2], false));
+    auto depBusStation = busStationsSet.find(BusStation(rawData[2], false));
 
-    auto arrivalBusStation = busStationsSet.find(new BusStation(rawData[5], false));
+    auto arrivalBusStation = busStationsSet.find(BusStation(rawData[5], false));
     time_t depTime = dateTimeStringToTimeObject(rawData[3], rawData[4]);
     time_t arrivalTime = dateTimeStringToTimeObject(rawData[6], rawData[7]);
 
-    return new BusTrip(
-        rawData[1],
-        *depBusStation,
-        *arrivalBusStation,
-        depTime,
-        arrivalTime
-    );
+
+    auto b_d = &(*depBusStation);
+    auto b_a = &(*arrivalBusStation);
+
+    if (depBusStation != busStationsSet.end() && arrivalBusStation != busStationsSet.end())
+    {
+
+        busTrip.tripId = rawData[1],
+        busTrip.busStationDep = b_d,
+        busTrip.busStationArr = b_a,
+        busTrip.dateDep = depTime,
+        busTrip.dateArr = arrivalTime;
+    }
+
+    else
+    {
+        cout << "NO bus station found " << endl;
+
+        busTrip.tripId = "LIE";
+        busTrip.busStationDep = NULL;
+        busTrip.busStationArr = NULL;
+        busTrip.dateDep = depTime;
+        busTrip.dateArr = arrivalTime;
+    }
 }
 
 time_t dateTimeStringToTimeObject(string date, string time)
@@ -53,16 +75,16 @@ time_t dateTimeStringToTimeObject(string date, string time)
     timeStruct.tm_year = stoi(date.substr(0, 4)) - 1900;
     timeStruct.tm_mon = stoi(date.substr(5, 2)) - 1;
     timeStruct.tm_mday = stoi(date.substr(8, 2));
-    
+
     return mktime(&timeStruct);
 }
 
-BusStation* findBusStationById(const set<BusStation*>& busStationsSet, string busStationId)
+BusStation *findBusStationById(const set<BusStation *> &busStationsSet, string busStationId)
 {
     for (auto bs : busStationsSet)
     {
-        if (bs->hasId(busStationId)) return bs;
+        if (bs->hasId(busStationId))
+            return bs;
     }
     return nullptr;
 }
-

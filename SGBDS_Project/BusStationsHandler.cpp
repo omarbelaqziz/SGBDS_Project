@@ -1,10 +1,10 @@
 #include "BusStationsHandler.h"
 #include "StringsOperations.h"
 
-set<BusStation*> handle_file_stream_bus_stations(ifstream& i_file) {
+set<BusStation>* handle_file_stream_bus_stations(ifstream& i_file) {
     string line;
     vector<string> temp;
-    set<BusStation*> bus_stations;
+    set<BusStation> * bus_stations = new set<BusStation>();
 
     while (getline(i_file, line))
     {
@@ -15,7 +15,7 @@ set<BusStation*> handle_file_stream_bus_stations(ifstream& i_file) {
         temp = StringsOperations::split(StringsOperations::ltrim(line));
         
 
-        bus_stations.insert(new BusStation(temp[0], isDepot_handler(temp[1])));
+        bus_stations->insert(BusStation(temp[0], isDepot_handler(temp[1])));
     }
 
     return bus_stations;

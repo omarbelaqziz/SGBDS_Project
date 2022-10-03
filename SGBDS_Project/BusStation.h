@@ -6,17 +6,20 @@ using namespace std;
 
 class BusStation
 {
-private:
+public:
     string id;
     bool isDepot;
 
 public:
     BusStation(string id, bool isDepot);
-    bool operator<(const BusStation &bus);
-    bool operator<(const BusStation *bus);
-    bool operator==(const BusStation *bus);
-    bool operator==(const BusStation &bus);
+    bool operator<(const BusStation &bus) const;
+    bool operator<(const BusStation *bus) const;
+    bool operator==(const BusStation *bus) const;
+    bool operator==(const BusStation &bus) const;
 
-    void showBusStation();
+    void showBusStation() const;
     bool hasId(string stationId);
+
+    string getId();
+    bool getIsDepot();
 };

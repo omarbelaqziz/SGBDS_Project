@@ -11,8 +11,13 @@
 #include "StringsOperations.h"
 #include "BusStationsHandler.h"
 #include "BusTripsHandler.h"
+#include "BusInterTripsHandler.h"
+#include "InterTrip.h"
 
 using namespace std;
+
+typedef unordered_map<string, multiset<BusTrip> *> TRIPS_MAP;
+typedef set<InterTrip> INTER_TRIPS;
 
 BusStation createBusStationFromLine(string line)
 {
@@ -26,9 +31,12 @@ int main()
 
     // string filename = "../data/InputDataDepot50_ExistedDeadheadsWithBusLines.txt";
     string filename = "./data/test.txt";
-    set<BusStation> busStationsSet;
-    set<BusStation*> busStations;
+    set<BusStation> *busStations;
     vector<BusStation> busStationsVector;
+
+    INTER_TRIPS interTrips; 
+    TRIPS_MAP tripsStations;
+
     ifstream dataFile;
     dataFile.open(filename, ios::in);
     if (dataFile.is_open())
@@ -44,27 +52,28 @@ int main()
                 {
                     cout << "Bus Stations op. begins at " << lineNumber << endl;
                     busStations = handle_file_stream_bus_stations(dataFile);
-
-                    for (auto v : busStations)
-                    {
-                        v->showBusStation();
-                    }
                 }
                 else if (line.find("BusTrip") != string::npos)
                 {
                     cout << "Bus OP starts at " << lineNumber << endl;
-                    unordered_map<string, set<BusTrip*>> map = handle_file_stream_bus_trips(dataFile, busStations);
+                    handle_file_stream_bus_trips(tripsStations, dataFile, busStations);
 
-                    
-                    cout << "size L_16: " << map["L_16"].size() << endl; 
-                    for(auto sf: map["L_16"])
+                    cout << "size L_16: " << tripsStations.at("L_16")->size() << endl;
+                    for (auto sf : *tripsStations["L_16"])
                     {
-                        sf->showBusTrip(); 
+                        sf.showBusTrip();
                     }
                 }
                 else if (line.find("InterTrips") != string::npos)
                 {
                     cout << "Inter Trips op. begins at " << lineNumber << endl;
+                    handle_file_stream_inter_trips(interTrips, dataFile, busStations);
+                
+                    cout << "---------------" << endl; 
+                    for(auto v : interTrips)
+                    {
+                        v.showInterTrips(); 
+                    }
                 }
             }
             else if (line.find("}") != string::npos)
@@ -73,10 +82,15 @@ int main()
             }
         }
     }
+
     else
     {
         cout << "cannot open " << filename << endl;
     }
+
+    cout << "===============" << endl; 
+    
+
     dataFile.close();
 }
 
