@@ -11,7 +11,6 @@ void handle_file_stream_bus_trips(unordered_map<string, multiset<BusTrip> *> &tr
     {
         if (line.find("}") != string::npos)
         {
-            cout << "Bus Trips op. ends at " << line << endl;
             break;
         }
         rawData = StringsOperations::split(StringsOperations::removeLastChar(StringsOperations::ltrim(StringsOperations::rtrim(line))));
@@ -34,7 +33,6 @@ void handle_file_stream_bus_trips(unordered_map<string, multiset<BusTrip> *> &tr
 
 void buildBusTrip(BusTrip &busTrip, vector<string> rawData, set<BusStation> &busStationsSet)
 {
-    // BusStation* depBusStation = findBusStationById(busStationsSet,rawData[2]);
     auto depBusStation = busStationsSet.find(BusStation(rawData[2], false));
 
     auto arrivalBusStation = busStationsSet.find(BusStation(rawData[5], false));

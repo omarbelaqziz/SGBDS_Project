@@ -21,7 +21,7 @@ public:
 public:
 
     BusTrip() {
-
+        
     }
 
     BusTrip(
@@ -36,4 +36,20 @@ public:
     bool operator==(const BusTrip *bus) const;
     bool operator==(const BusTrip &bus) const;
     void showBusTrip();
+    const BusStation* getBusStationDep() const {
+        return this->busStationDep;
+    }
+    const BusStation* getBusStationArr() const {
+        return this->busStationArr;
+    }
+
+    time_t getDateDep() const {
+        return this->dateDep;
+    }
+    time_t getDateArr() const {
+        return this->dateArr;
+    }
+    string getTripId() const {
+        return this->tripId;
+    }
 };

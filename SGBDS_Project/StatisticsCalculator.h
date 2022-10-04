@@ -4,21 +4,17 @@
 #include <string>
 #include "BusTrip.h"
 
+using namespace std;
 struct LineTrips {
 	string idLine;
 	int nombreVoygs;
-	bool operator <(const LineTrips& lt) const {
+	inline bool operator <(const LineTrips& lt) const {
 		return nombreVoygs < lt.nombreVoygs;
 	}
 };
 
-
-
-using namespace std;
-
-
-
 int tripsTotalNumber(unordered_map<string, multiset<BusTrip>*> map);
 multiset<LineTrips> tripsNumberByLines(unordered_map<string, multiset<BusTrip>*> map);
 void showDurations(unordered_map<string, multiset<BusTrip>*> map);
-
+void showTripsNumberByLines(multiset<LineTrips> tripsNumbers);
+void showAllStatistics(unordered_map<string, multiset<BusTrip>*> map);
