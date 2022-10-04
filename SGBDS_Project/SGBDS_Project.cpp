@@ -13,6 +13,7 @@
 #include "BusTripsHandler.h"
 #include "BusInterTripsHandler.h"
 #include "InterTrip.h"
+#include "StatisticsCalculator.h"
 
 using namespace std;
 
@@ -31,7 +32,7 @@ int main()
 
     // string filename = "../data/InputDataDepot50_ExistedDeadheadsWithBusLines.txt";
     string filename = "./data/test.txt";
-    set<BusStation> *busStations;
+    set<BusStation> *busStations = nullptr;
     vector<BusStation> busStationsVector;
 
     INTER_TRIPS interTrips; 
@@ -64,22 +65,25 @@ int main()
                         sf.showBusTrip();
                     }
                 }
-                else if (line.find("InterTrips") != string::npos)
+                /*else if (line.find("InterTrips") != string::npos)
                 {
                     cout << "Inter Trips op. begins at " << lineNumber << endl;
                     handle_file_stream_inter_trips(interTrips, dataFile, busStations);
                 
                     cout << "---------------" << endl; 
-                    for(auto v : interTrips)
-                    {
-                        v.showInterTrips(); 
-                    }
-                }
+                    //for(auto v : interTrips)
+                    //{
+                      //  v.showInterTrips(); 
+                    //}
+                }*/
             }
             else if (line.find("}") != string::npos)
             {
                 cout << "Op. ends at " << line << endl;
             }
+
+            cout << "==================================================";
+            showDurations(tripsStations);
         }
     }
 
