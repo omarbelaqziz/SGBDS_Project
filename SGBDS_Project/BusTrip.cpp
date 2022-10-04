@@ -18,12 +18,12 @@ BusTrip::BusTrip(
 
 bool BusTrip::operator<(const BusTrip &trip) const
 {
-    return (difftime(this->dateArr, this->dateDep)) < (difftime(trip.dateArr, trip.dateDep));
+    return difftime(trip.dateDep, this->dateDep) > 0;
 }
 
 bool BusTrip::operator<(const BusTrip *trip) const
 {
-    return (difftime(this->dateArr, this->dateDep)) < (difftime(trip->dateArr, trip->dateDep));
+    return difftime(trip->dateDep, this->dateDep) > 0;
 }
 
 bool BusTrip::operator==(const BusTrip *bus) const

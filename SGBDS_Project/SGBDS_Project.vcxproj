@@ -143,6 +143,7 @@
     <ClCompile Include="BusStation.cpp" />
     <ClCompile Include="BusTrip.cpp" />
     <ClCompile Include="InterTrip.cpp" />
+    <ClCompile Include="Itiniraires.cpp" />
     <ClCompile Include="SGBDS_Project.cpp" />
     <ClCompile Include="StringsOperations.cpp" />
     <ClCompile Include="BusStationsHandler.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="BusStation.h" />
     <ClInclude Include="BusTrip.h" />
     <ClInclude Include="InterTrip.h" />
+    <ClInclude Include="Itiniraires.h" />
     <ClInclude Include="StringsOperations.h" />
     <ClInclude Include="BusStationsHandler.h" />
     <ClInclude Include="BusTripsHandler.h" />

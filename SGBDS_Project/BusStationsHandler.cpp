@@ -9,7 +9,7 @@ set<BusStation>* handle_file_stream_bus_stations(ifstream& i_file) {
     while (getline(i_file, line))
     {
         if (line.find("}") != string::npos) {
-            cout << "Bus Stations op. ends at " << line << endl;
+            //cout << "Bus Stations op. ends at " << line << endl;
             break;
         }
         temp = StringsOperations::split(StringsOperations::ltrim(line));
