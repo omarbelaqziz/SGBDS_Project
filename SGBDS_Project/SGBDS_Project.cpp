@@ -73,12 +73,7 @@ int main()
     dataFile.close();
 
     // showing statistics
-    //showAllStatistics(tripsStations);
-    auto ourSet = tripsStations.find("L_51");
-    for (auto it = ourSet->second->begin(); it != ourSet->second->end(); ++it)
-    {
-        cout << it->dateDep << endl;
-    }
+    showAllStatistics(tripsStations);
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
