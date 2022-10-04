@@ -6,6 +6,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <ctime>
 #include "BusStation.h"
 #include "BusTrip.h"
 #include "StringsOperations.h"
@@ -30,8 +31,9 @@ BusStation createBusStationFromLine(string line)
 int main()
 {
 
+
     // string filename = "../data/InputDataDepot50_ExistedDeadheadsWithBusLines.txt";
-    string filename = "./data/test.txt";
+    string filename = "../data/test.txt";
     set<BusStation> *busStations = nullptr;
     vector<BusStation> busStationsVector;
 
@@ -51,51 +53,27 @@ int main()
             {
                 if (line.find("BusStations") != string::npos)
                 {
-                    cout << "Bus Stations op. begins at " << lineNumber << endl;
                     busStations = handle_file_stream_bus_stations(dataFile);
                 }
                 else if (line.find("BusTrip") != string::npos)
                 {
-                    cout << "Bus OP starts at " << lineNumber << endl;
                     handle_file_stream_bus_trips(tripsStations, dataFile, busStations);
-
-                    cout << "size L_16: " << tripsStations.at("L_16")->size() << endl;
-                    for (auto sf : *tripsStations["L_16"])
-                    {
-                        sf.showBusTrip();
-                    }
                 }
                 /*else if (line.find("InterTrips") != string::npos)
                 {
-                    cout << "Inter Trips op. begins at " << lineNumber << endl;
-                    handle_file_stream_inter_trips(interTrips, dataFile, busStations);
-                
-                    cout << "---------------" << endl; 
-                    //for(auto v : interTrips)
-                    //{
-                      //  v.showInterTrips(); 
-                    //}
+                    handle_file_stream_inter_trips(interTrips, dataFile, busStations)
                 }*/
             }
-            else if (line.find("}") != string::npos)
-            {
-                cout << "Op. ends at " << line << endl;
-            }
-
-            cout << "==================================================";
-            showDurations(tripsStations);
         }
     }
-
     else
     {
         cout << "cannot open " << filename << endl;
-    }
-
-    cout << "===============" << endl; 
-    
-
+    } 
     dataFile.close();
+
+    // showing statistics
+    showAllStatistics(tripsStations);
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

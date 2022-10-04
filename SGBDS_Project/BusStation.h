@@ -20,6 +20,6 @@ public:
     void showBusStation() const;
     bool hasId(string stationId);
 
-    string getId();
-    bool getIsDepot();
+    string getId() const;
+    bool getIsDepot() const;
 };
