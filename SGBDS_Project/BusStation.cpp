@@ -36,12 +36,12 @@ bool BusStation::hasId(string stationId)
     return this->id == stationId;
 }
 
-string BusStation::getId()
+string BusStation::getId() const
 {
     return this->id;
 }
 
-bool BusStation::getIsDepot()
+bool BusStation::getIsDepot() const 
 {
     return this->isDepot;
 }

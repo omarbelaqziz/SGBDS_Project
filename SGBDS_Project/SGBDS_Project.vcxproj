@@ -156,6 +156,8 @@
     <ClInclude Include="StringsOperations.h" />
     <ClInclude Include="BusStationsHandler.h" />
     <ClInclude Include="BusTripsHandler.h" />
+    <ClInclude Include="TargetInterTrip.h" />
+
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

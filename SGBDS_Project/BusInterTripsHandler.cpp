@@ -1,9 +1,12 @@
 #include "BusInterTripsHandler.h"
 #include "StringsOperations.h"
+#include "TargetInterTrip.h"
 
 using namespace std;
-void handle_file_stream_inter_trips(set<InterTrip> &inter_trips, ifstream &i_file, set<BusStation> *busStationsSet)
+
+void handle_file_stream_inter_trips(map<string, set<TargetInterTrip> *> &inter_trips, ifstream &i_file, set<BusStation> *busStationsSet)
 {
+
     string line;
     vector<string> stringData;
 
@@ -15,22 +18,38 @@ void handle_file_stream_inter_trips(set<InterTrip> &inter_trips, ifstream &i_fil
             break;
         }
         stringData = StringsOperations::split(StringsOperations::removeLastChar(StringsOperations::ltrim(StringsOperations::rtrim(line))));
-        InterTrip intertrip;
-        buildInterTrip(intertrip, stringData, *busStationsSet);
-        // test if stations exist
-        inter_trips.insert(intertrip);
+        
+
+        auto depBusStation = busStationsSet->find(BusStation(stringData[1], false));
+
+        auto arrivalBusStation = busStationsSet->find(BusStation(stringData[2], false));
+
+    
+
+        int duration = stoi(stringData[3]);
+        string interTripId = stringData[0];
+        // struct Temp te;
+        if (depBusStation == busStationsSet->end() && arrivalBusStation == busStationsSet->end())
+        {
+            cout << "No station found" << endl;
+            exit(-1); 
+        }
+
+        set<TargetInterTrip> *DepTargets;
+        TargetInterTrip targetInterTrip(&(*arrivalBusStation), interTripId, duration); 
+        
+
+        if (inter_trips.count((*depBusStation).id) > 0)
+        {
+            
+            DepTargets = inter_trips[(*depBusStation).getId()];
+            DepTargets->insert(targetInterTrip);
+        }
+        else
+        {
+            DepTargets = new set<TargetInterTrip>();
+            DepTargets->insert(targetInterTrip);
+            inter_trips[(*depBusStation).getId()] = DepTargets;
+        }
     }
-}
-void buildInterTrip(InterTrip &inter_tripp, vector<string> stringData, set<BusStation> &busStationsSet)
-{
-    // BusStation* depBusStation = findBusStationById(busStationsSet,rawData[2]);
-    auto depBusStation = busStationsSet.find(BusStation(stringData[2], false));
-
-    auto arrivalBusStation = busStationsSet.find(BusStation(stringData[3], false));
-    int duration = stoi(stringData[4]);
-
-    inter_tripp.id = stringData[1];
-    inter_tripp.departureBusStation = &(*depBusStation);
-    inter_tripp.arrivalBusStation = &(*arrivalBusStation);
-    inter_tripp.duration = duration;
 }

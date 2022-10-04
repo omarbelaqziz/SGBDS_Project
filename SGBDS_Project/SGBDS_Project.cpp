@@ -12,12 +12,13 @@
 #include "BusStationsHandler.h"
 #include "BusTripsHandler.h"
 #include "BusInterTripsHandler.h"
-#include "InterTrip.h"
+
+#include "TargetInterTrip.h"
 
 using namespace std;
 
 typedef unordered_map<string, multiset<BusTrip> *> TRIPS_MAP;
-typedef set<InterTrip> INTER_TRIPS;
+typedef map<string, set<TargetInterTrip>*> INTER_TRIPS;
 
 BusStation createBusStationFromLine(string line)
 {
@@ -63,17 +64,27 @@ int main()
                     {
                         sf.showBusTrip();
                     }
+                    cout << "=====================" << endl; 
                 }
                 else if (line.find("InterTrips") != string::npos)
                 {
+                    
                     cout << "Inter Trips op. begins at " << lineNumber << endl;
                     handle_file_stream_inter_trips(interTrips, dataFile, busStations);
                 
                     cout << "---------------" << endl; 
-                    for(auto v : interTrips)
+                    set<TargetInterTrip>*dd = interTrips["Depot50"]; 
+                    set<TargetInterTrip>::iterator it; 
+                    for(it = dd->begin(); it!=dd->end(); ++it)
                     {
-                        v.showInterTrips(); 
+                        cout << "Depot50" << "===>"; 
+                        (*it).showTarget();  
+                         
                     }
+
+                    cout << "=====Assuring data ====" << endl;
+                    cout << "Depot50 destinations: " << dd->size() <<endl;
+                    cout << "stations count: " << busStations->size() << endl;   
                 }
             }
             else if (line.find("}") != string::npos)
