@@ -7,19 +7,22 @@
 #include <string>
 #include <vector>
 #include <ctime>
+
 #include "BusStation.h"
 #include "BusTrip.h"
 #include "StringsOperations.h"
 #include "BusStationsHandler.h"
 #include "BusTripsHandler.h"
 #include "BusInterTripsHandler.h"
+
+#include "TargetInterTrip.h"
 #include "InterTrip.h"
 #include "StatisticsCalculator.h"
 
 using namespace std;
 
 typedef unordered_map<string, multiset<BusTrip> *> TRIPS_MAP;
-typedef set<InterTrip> INTER_TRIPS;
+typedef map<string, set<TargetInterTrip> *> INTER_TRIPS;
 
 BusStation createBusStationFromLine(string line)
 {
@@ -31,13 +34,12 @@ BusStation createBusStationFromLine(string line)
 int main()
 {
 
-
     // string filename = "../data/InputDataDepot50_ExistedDeadheadsWithBusLines.txt";
-    string filename = "../data/test.txt";
+    string filename = "./data/test.txt";
     set<BusStation> *busStations = nullptr;
     vector<BusStation> busStationsVector;
 
-    INTER_TRIPS interTrips; 
+    INTER_TRIPS interTrips;
     TRIPS_MAP tripsStations;
 
     ifstream dataFile;
@@ -58,22 +60,48 @@ int main()
                 else if (line.find("BusTrip") != string::npos)
                 {
                     handle_file_stream_bus_trips(tripsStations, dataFile, busStations);
+
+                    cout << "size L_16: " << tripsStations.at("L_16")->size() << endl;
+                    for (auto sf : *tripsStations["L_16"])
+                    {
+                        sf.showBusTrip();
+                    }
+                    cout << "=====================" << endl;
                 }
-                /*else if (line.find("InterTrips") != string::npos)
+                else if (line.find("InterTrips") != string::npos)
                 {
-                    handle_file_stream_inter_trips(interTrips, dataFile, busStations)
-                }*/
+
+                    cout << "Inter Trips op. begins at " << lineNumber << endl;
+                    handle_file_stream_inter_trips(interTrips, dataFile, busStations);
+
+                    cout << "---------------" << endl;
+                    set<TargetInterTrip> *dd = interTrips["Depot50"];
+                    set<TargetInterTrip>::iterator it;
+                    // for (it = dd->begin(); it != dd->end(); ++it)
+                    // {
+                    //     cout << "Depot50"
+                    //          << "===>";
+                    //     (*it).showTarget();
+                    // }
+
+                    cout << "=====Assuring data ====" << endl;
+                    cout << "Depot50 destinations: " << dd->size() << endl;
+                    cout << "stations count: " << busStations->size() << endl;
+                }
+            }
+            else if (line.find("}") != string::npos)
+            {
+                cout << "Op. ends at " << line << endl;
             }
         }
+        // showing statistics
+        // showAllStatistics(tripsStations);
     }
     else
     {
         cout << "cannot open " << filename << endl;
-    } 
+    }
     dataFile.close();
-
-    // showing statistics
-    showAllStatistics(tripsStations);
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

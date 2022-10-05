@@ -13,12 +13,6 @@ struct LineTrips {
 	}
 };
 
-
-
-
-
-
-
 int tripsTotalNumber(unordered_map<string, multiset<BusTrip>*> map);
 multiset<LineTrips> tripsNumberByLines(unordered_map<string, multiset<BusTrip>*> map);
 void showDurations(unordered_map<string, multiset<BusTrip>*> map);

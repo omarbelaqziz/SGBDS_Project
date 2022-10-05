@@ -41,7 +41,7 @@ string BusStation::getId() const
     return this->id;
 }
 
-bool BusStation::getIsDepot() const
+bool BusStation::getIsDepot() const 
 {
     return this->isDepot;
 }
