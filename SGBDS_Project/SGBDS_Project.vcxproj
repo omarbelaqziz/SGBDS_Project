@@ -149,6 +149,7 @@
     <ClCompile Include="BusStationsHandler.cpp" />
     <ClCompile Include="BusTripsHandler.cpp" />
     <ClCompile Include="StatisticsCalculator.cpp" />
+    <ClCompile Include="GraphGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BusLine.h" />
@@ -161,6 +162,7 @@
     <ClInclude Include="BusTripsHandler.h" />
     <ClInclude Include="TargetInterTrip.h" />
     <ClInclude Include="StatisticsCalculator.h" />
+    <ClInclude Include="GraphGenerator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
