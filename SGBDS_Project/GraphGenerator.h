@@ -1,10 +1,12 @@
 #include <iostream>
+#include <memory>
 #include <algorithm>
 #include <set>
 #include <vector>
 #include <unordered_map>
 #include <map>
 #include <ctime>
+#include <stdlib.h>
 #include "BusStation.h"
 #include "TargetInterTrip.h"
 #include "BusTrip.h"
