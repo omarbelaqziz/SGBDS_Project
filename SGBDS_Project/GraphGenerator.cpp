@@ -7,6 +7,8 @@ void graph_generator(
 {
     TRIPS_MAP::iterator global_iterator;
 
+    std::allocator<pair<BusTrip, bool> > alloc; 
+
     // handle each Line
     for (global_iterator = linesTrips.begin(); global_iterator != linesTrips.end(); ++global_iterator)
     {
@@ -21,7 +23,7 @@ void graph_generator(
         pair<BusTrip, bool> *ptr1;
         pair<BusTrip, bool> *ptr2;
 
-        temp = (pair<BusTrip, bool> *)malloc(sizeof(pair<BusTrip, bool>) * (*global_iterator).second->size());
+        temp = alloc.allocate(sizeof(pair<BusTrip, bool>) * (*global_iterator).second->size());
 
         multiset<BusTrip>::iterator temp_it;
 
@@ -34,6 +36,8 @@ void graph_generator(
             temp[u].second = false;
             u++;
         }
+
+        int dest_fal = 0; 
 
         // show Line
         cout << "Line: " << (*global_iterator).first << endl
@@ -72,8 +76,8 @@ void graph_generator(
                 {
                     if ((*ptr2).first.busStationDep == (*ptr1).first.busStationArr)
                     {
-                        if (0 < difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 &&
-                            difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 < 45)
+                        if (0 <= difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 &&
+                            difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 <= 45)
                         {
                             cout << (*ptr1).first.tripId << "==> waitInStation(" << difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60<< ") ===>";
                             (*ptr1).second = true;
@@ -99,6 +103,7 @@ void graph_generator(
                         if (itty == stationsTargets[(*ptr1).first.busStationDep->id]->end())
                         {
                             cout << "Error in finding the destination ";
+                            dest_fal++; 
                         }
                         int attente = difftime((*ptr1).first.dateArr, (*ptr2).first.dateDep) / 60 - (*itty).duree;
                         if (attente > 0)
@@ -129,5 +134,10 @@ void graph_generator(
                 }
             }
         }
+
+    
+
     }
+
+    
 }
