@@ -19,6 +19,8 @@
 #include "InterTrip.h"
 #include "StatisticsCalculator.h"
 
+#include "GraphGenerator.h"
+
 using namespace std;
 
 typedef unordered_map<string, multiset<BusTrip> *> TRIPS_MAP;
@@ -88,6 +90,8 @@ int main()
                     cout << "Depot50 destinations: " << dd->size() << endl;
                     cout << "stations count: " << busStations->size() << endl;
                 }
+
+
             }
             else if (line.find("}") != string::npos)
             {
@@ -96,6 +100,9 @@ int main()
         }
         // showing statistics
         // showAllStatistics(tripsStations);
+        cout << "==========Graph Gent=============" << endl; 
+
+        graph_generator(interTrips, busStations, tripsStations); 
     }
     else
     {

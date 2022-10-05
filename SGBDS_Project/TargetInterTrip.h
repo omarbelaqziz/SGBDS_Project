@@ -32,12 +32,12 @@ public:
 
     bool operator==(const TargetInterTrip &tip) const
     {
-        return this->interTripId == tip.interTripId;
+        return *(this->target) == *(tip.target);
     }
 
     bool operator==(const TargetInterTrip *tip) const
     {
-        return this->interTripId == tip->interTripId;
+        return *(this->target) == *(tip->target);
     }
     bool operator<(const TargetInterTrip &tip) const
     {
