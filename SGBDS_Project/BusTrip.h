@@ -1,6 +1,6 @@
+#pragma once
 #include <iostream>
 #include <string>
-#include "BusLine.h"
 #include "BusStation.h"
 #include <ctime>
 #include <cstdlib>
@@ -13,21 +13,24 @@ class BusTrip
 {
 public:
     string tripId;
-    const BusStation* busStationDep;
+    const BusStation *busStationDep;
     const BusStation *busStationArr;
+    string strDDep;
+    string strDDarr;
     time_t dateDep;
     time_t dateArr;
 
 public:
-
-    BusTrip() {
-        
+    BusTrip()
+    {
     }
 
     BusTrip(
         string tripId,
         const BusStation *busStationDep,
         const BusStation *busStationArr,
+        string strDDep,
+        string strDDarr,
         time_t dateDepart,
         time_t dateArrivee);
 
@@ -36,20 +39,25 @@ public:
     bool operator==(const BusTrip *bus) const;
     bool operator==(const BusTrip &bus) const;
     void showBusTrip();
-    const BusStation* getBusStationDep() const {
+    const BusStation *getBusStationDep() const
+    {
         return this->busStationDep;
     }
-    const BusStation* getBusStationArr() const {
+    const BusStation *getBusStationArr() const
+    {
         return this->busStationArr;
     }
 
-    time_t getDateDep() const {
+    time_t getDateDep() const
+    {
         return this->dateDep;
     }
-    time_t getDateArr() const {
+    time_t getDateArr() const
+    {
         return this->dateArr;
     }
-    string getTripId() const {
+    string getTripId() const
+    {
         return this->tripId;
     }
 };

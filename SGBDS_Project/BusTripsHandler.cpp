@@ -49,6 +49,8 @@ void buildBusTrip(BusTrip &busTrip, vector<string> rawData, set<BusStation> &bus
         busTrip.tripId = rawData[1],
         busTrip.busStationDep = b_d,
         busTrip.busStationArr = b_a,
+        busTrip.strDDarr = rawData[7]; 
+        busTrip.strDDep = rawData[4]; 
         busTrip.dateDep = depTime,
         busTrip.dateArr = arrivalTime;
     }
@@ -60,6 +62,8 @@ void buildBusTrip(BusTrip &busTrip, vector<string> rawData, set<BusStation> &bus
         busTrip.tripId = "LIE";
         busTrip.busStationDep = NULL;
         busTrip.busStationArr = NULL;
+        busTrip.strDDarr = rawData[7]; 
+        busTrip.strDDep = rawData[4]; 
         busTrip.dateDep = depTime;
         busTrip.dateArr = arrivalTime;
     }

@@ -18,9 +18,7 @@ bool BusStation::operator<(const BusStation *bus) const
 
 void BusStation::showBusStation() const
 {
-    cout << endl;
-    cout << "Station Id: " << this->id << endl;
-    cout << "Is Depot: " << this->isDepot << endl;
+    cout <<  this->id << "(" << isDepot << ")"; 
 }
 bool BusStation::operator==(const BusStation *bus) const 
 {

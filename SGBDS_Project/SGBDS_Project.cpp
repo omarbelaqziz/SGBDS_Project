@@ -1,30 +1,11 @@
 // SGBDS_Project.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include <iostream>
-#include <fstream>
-#include <set>
-#include <string>
-#include <vector>
-#include <ctime>
-
-#include "BusStation.h"
-#include "BusTrip.h"
-#include "StringsOperations.h"
-#include "BusStationsHandler.h"
-#include "BusTripsHandler.h"
-#include "BusInterTripsHandler.h"
-
-#include "TargetInterTrip.h"
-#include "InterTrip.h"
-#include "StatisticsCalculator.h"
-
+#include "preproc.h"
 #include "GraphGenerator.h"
 
 using namespace std;
 
-typedef unordered_map<string, multiset<BusTrip> *> TRIPS_MAP;
-typedef map<string, set<TargetInterTrip> *> INTER_TRIPS;
 
 BusStation createBusStationFromLine(string line)
 {
@@ -35,9 +16,12 @@ BusStation createBusStationFromLine(string line)
 
 int main()
 {
+    // string filename = "./data/test.txt";
+    string filename = FILENAME;
+    string line_test = LINE_TEST; 
+    string depot = DEPOT; 
 
-    // string filename = "../data/InputDataDepot50_ExistedDeadheadsWithBusLines.txt";
-    string filename = "./data/test.txt";
+
     set<BusStation> *busStations = nullptr;
     vector<BusStation> busStationsVector;
 
@@ -63,8 +47,8 @@ int main()
                 {
                     handle_file_stream_bus_trips(tripsStations, dataFile, busStations);
 
-                    cout << "size L_16: " << tripsStations.at("L_16")->size() << endl;
-                    for (auto sf : *tripsStations["L_16"])
+                    cout << "size " << line_test << ": " << tripsStations.at(line_test)->size() << endl;
+                    for (auto sf : *tripsStations[line_test])
                     {
                         sf.showBusTrip();
                     }
@@ -77,21 +61,20 @@ int main()
                     handle_file_stream_inter_trips(interTrips, dataFile, busStations);
 
                     cout << "---------------" << endl;
-                    set<TargetInterTrip> *dd = interTrips["Depot50"];
+                    set<TargetInterTrip> *dd = interTrips[depot];
                     set<TargetInterTrip>::iterator it;
-                    // for (it = dd->begin(); it != dd->end(); ++it)
-                    // {
-                    //     cout << "Depot50"
-                    //          << "===>";
-                    //     (*it).showTarget();
-                    // }
+
+                    for(it = dd->begin(); it!= dd->end(); ++it)
+                    {
+                        cout << depot << " -> "; 
+                        (*it).showTarget(); 
+                        cout << endl; 
+                    }
 
                     cout << "=====Assuring data ====" << endl;
-                    cout << "Depot50 destinations: " << dd->size() << endl;
+                    cout << depot << " destinations: " << dd->size() << endl;
                     cout << "stations count: " << busStations->size() << endl;
                 }
-
-
             }
             else if (line.find("}") != string::npos)
             {
@@ -100,9 +83,9 @@ int main()
         }
         // showing statistics
         // showAllStatistics(tripsStations);
-        cout << "==========Graph Gent=============" << endl; 
+        // cout << "==========Graph Gent=============" << endl;
 
-        graph_generator(interTrips, busStations, tripsStations); 
+        graph_generator(interTrips, busStations, tripsStations);
     }
     else
     {
