@@ -109,16 +109,21 @@ void graph_generator(
                                 cout << (*ptr1).first.tripId << "--> waitInStation(" << difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 << ") --->";
                                 (*ptr1).second = true;
                                 res++;
+
+                                duree_attente += difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60;
+                                duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60 + difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60);
                                 ptr1 = ptr2;
                                 ptr2++;
-                                duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60 + difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60);
-                                duree_attente += difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60;
                             }
                             // new cluster
                             else if (difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 > 45)
                             {
                                 cout << (*ptr1).first.tripId << " ---> Depot" << endl;
                                 (*ptr1).second = true;
+                                // added by omar <=>
+                                    // we need to add trip duration even if he had to go to depot
+                                duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60);
+                                // <=>
                                 res++;
                                 isTreated = true;
                             }
@@ -172,6 +177,7 @@ void graph_generator(
                                     {
                                         duree_attente += attente;
                                         duree_hlp += duree;
+                                        duree_total += attente + duree;
                                         hlp_number++;
                                         cout << (*ptr1).first.tripId << " -- HLP --> "
                                              << " waitInStation (" << attente << ")"
