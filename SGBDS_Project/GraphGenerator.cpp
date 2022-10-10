@@ -169,6 +169,10 @@ void graph_generator(
                                     if (attente > 45)
                                     {
                                         cout << (*ptr1).first.tripId << " --> Depot" << endl;
+                                        // added by omar <=>
+                                            // we need to add trip duration even if he had to go to depot
+                                        duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60);
+                                        // <=>
                                         (*ptr1).second = true;
                                         res++;
                                         isTreated = true;
@@ -197,9 +201,9 @@ void graph_generator(
                     }
                 }
             }
-            if (clusterCount == 1) {
-                cout << "|#Cluster|Duree Total|Cout total|Nombre HLP|Duree HLP|% HLP|Duree Attente|% Attente|" << endl;
-            }
+            
+            cout << "|#Cluster|Duree Total|Cout total|Nombre HLP|Duree HLP|% HLP|Duree Attente|% Attente|" << endl;
+            
             double cout_total = c_a * duree_attente + c_v * duree_hlp;
             cout << "|" << clusterCount << "|" << duree_total << "min|" << cout_total << "|" << hlp_number << " HLP|" << duree_hlp << "min|" << duree_hlp*100/duree_total << "%|" << duree_attente << "min|" << duree_attente * 100 / duree_total << "%|" << endl;
             duree_total = 0;
