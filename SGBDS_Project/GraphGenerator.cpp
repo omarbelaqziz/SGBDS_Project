@@ -57,6 +57,9 @@ void graph_generator(
         while (res != (*global_iterator).second->size())
         {
             int duree_total = 0;
+            int duree_attente = 0;
+            int duree_hlp = 0;
+            int hlp_number = 0;
             isTreated = false;
             clusterCount++;
 
@@ -109,6 +112,7 @@ void graph_generator(
                                 ptr1 = ptr2;
                                 ptr2++;
                                 duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60 + difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60);
+                                duree_attente += difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60;
                             }
                             // new cluster
                             else if (difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 > 45)
@@ -166,6 +170,9 @@ void graph_generator(
                                     }
                                     else
                                     {
+                                        duree_attente += attente;
+                                        duree_hlp += duree;
+                                        hlp_number++;
                                         cout << (*ptr1).first.tripId << " -- HLP --> "
                                              << " waitInStation (" << attente << ")"
                                              << " -->";
@@ -184,9 +191,14 @@ void graph_generator(
                     }
                 }
             }
-
-            cout << "Duree total de l'itineraire: " << duree_total << endl;
+            if (clusterCount == 1) {
+                cout << "|#Cluster|Duree Total|Cout total|Nombre HLP|Duree HLP|% HLP|Duree Attente|% Attente|" << endl;
+            }
+            double cout_total = c_a * duree_attente + c_v * duree_hlp;
+            cout << "|" << clusterCount << "|" << duree_total << "min|" << clusterCount << "|" << clusterCount << "|" << clusterCount << "|" << endl;
             duree_total = 0;
+            duree_attente = 0;
+            duree_hlp = 0;
         }
     }
 
