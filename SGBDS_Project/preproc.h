@@ -24,9 +24,8 @@ typedef unordered_map<string, multiset<BusTrip> *> TRIPS_MAP;
 typedef map<string, set<TargetInterTrip> *> INTER_TRIPS;
 typedef vector<pair<BusTrip, bool>> TEMP_TYPE;
 
-#define FILENAME "./data/temp.txt"
-#define LINE_TEST "L_28"
-#define DEPOT "A033"
+#define FILENAME "./data/test.txt"
+
 
 
 #define c_a 0.4

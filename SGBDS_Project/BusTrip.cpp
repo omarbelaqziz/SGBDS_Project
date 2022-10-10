@@ -39,7 +39,7 @@ bool BusTrip::operator==(const BusTrip &bus) const
     return this->tripId == bus.tripId; 
 }
 
-void BusTrip::showBusTrip()
+void BusTrip::showBusTrip() const 
 {
     cout << endl;
     cout << this->tripId << " : " ;

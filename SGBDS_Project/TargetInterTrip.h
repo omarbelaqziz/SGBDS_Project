@@ -35,10 +35,12 @@ public:
         return this->duree; 
     }
 
-    static std::set<TargetInterTrip>::iterator findByTargetId(string targetId, set<TargetInterTrip> *targetsSet)
+    static int findDurationByTargetId(string targetId, set<TargetInterTrip> *targetsSet)
     {
         BusStation *bs = new BusStation(targetId, 0); 
-        return targetsSet->find(TargetInterTrip(bs, "InterTripXX", 12)); 
+        std::set<TargetInterTrip>::iterator it = targetsSet->find(TargetInterTrip(bs, "InterTripXX", 12)); 
+        if(it == targetsSet->end()) return -1; 
+        return (*it).duree; 
     }
 
     bool operator==(const TargetInterTrip &tip) const

@@ -38,7 +38,7 @@ public:
     bool operator<(const BusTrip *trip) const;
     bool operator==(const BusTrip *bus) const;
     bool operator==(const BusTrip &bus) const;
-    void showBusTrip();
+    void showBusTrip() const;
     const BusStation *getBusStationDep() const
     {
         return this->busStationDep;
