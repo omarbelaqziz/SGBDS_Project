@@ -28,7 +28,7 @@ multiset<LineTrips> tripsNumberByLines(unordered_map<string, multiset<BusTrip>*>
 	return lineTrips;
 }
 
-void showDurations(unordered_map<string, multiset<BusTrip>*> map)
+void showDurations(unordered_map<string, multiset<BusTrip>*> map, ofstream& output_file)
 {
 	int dureeMin = 0;
 	int dureeMax = 0;
@@ -54,35 +54,35 @@ void showDurations(unordered_map<string, multiset<BusTrip>*> map)
 				btMax = &(*it);
 			}
 
-			cout << "Duree du voyage " << it->getTripId() << " \tde " << (*it).getBusStationDep()->getId();
-			cout << " \tvers " << (*it).getBusStationArr()->getId() << "\t est : ";
-			cout << duree << " minutes" << endl;
+			output_file << "Duree du voyage " << it->getTripId() << " \tde " << (*it).getBusStationDep()->getId();
+			output_file << " \tvers " << (*it).getBusStationArr()->getId() << "\t est : ";
+			output_file << duree << " minutes" << endl;
 		}
 	}
-	cout << " le voyage avec la duree minimal de : " << dureeMin << " minutes est " << btMin->getTripId() << endl;
-	cout << " le voyage avec la duree maximal de : " << dureeMax << " minutes est " << btMax->getTripId() << endl;
-	cout << " la moyenne des durees est : " << somme / tripsTotalNumber(map) << endl;
+	output_file << " le voyage avec la duree minimal de : " << dureeMin << " minutes est " << btMin->getTripId() << endl;
+	output_file << " le voyage avec la duree maximal de : " << dureeMax << " minutes est " << btMax->getTripId() << endl;
+	output_file << " la moyenne des durees est : " << somme / tripsTotalNumber(map) << endl;
 }
 
-void showTripsNumberByLines(multiset<LineTrips> tripsNumbers)
+void showTripsNumberByLines(multiset<LineTrips> tripsNumbers, ofstream& output_file)
 {
 	multiset<LineTrips> ::iterator it;
 	for (it = tripsNumbers.begin(); it != tripsNumbers.end(); ++it)
 	{
-		cout << "Le nombre de voyeges de la ligne : " << (*it).idLine << " \test : " << it->nombreVoygs << endl;
+		output_file << "Le nombre de voyeges de la ligne : " << (*it).idLine << " \test : " << it->nombreVoygs << endl;
  	}
 }
 
-void showAllStatistics(unordered_map<string, multiset<BusTrip>*> map)
+void showAllStatistics(unordered_map<string, multiset<BusTrip>*> map, ofstream& output_file)
 {
-	cout << "=================================================================================" << endl;
-	cout << "### le nombre de voyages total est : " << tripsTotalNumber(map) << endl;
-	cout << "=================================================================================" << endl;
-	cout << "### le nombre des voyages par chaque ligne : " << endl;
-	showTripsNumberByLines(tripsNumberByLines(map));
-	cout << "=================================================================================" << endl;
-	cout << "### les durees des voyages :" << endl;
-	showDurations(map);
-	cout << "=================================================================================" << endl;
+	output_file << "=================================================================================" << endl;
+	output_file << "### le nombre de voyages total est : " << tripsTotalNumber(map) << endl;
+	output_file << "=================================================================================" << endl;
+	output_file << "### le nombre des voyages par chaque ligne : " << endl;
+	showTripsNumberByLines(tripsNumberByLines(map), output_file);
+	output_file << "=================================================================================" << endl;
+	output_file << "### les durees des voyages :" << endl;
+	showDurations(map, output_file);
+	output_file << "=================================================================================" << endl;
 }
 
