@@ -33,3 +33,16 @@ bool isDepot_handler(string isDepot_string)
     return result;
 }
 
+string findDepotId(set<BusStation>* busStations)
+{
+    set<BusStation>::iterator itr;
+    string depotId = "";
+    for (itr = busStations->begin();
+        itr != busStations->end(); itr++)
+    {
+        if (itr->getIsDepot() == true)
+            return itr->getId();
+    }
+
+}
+

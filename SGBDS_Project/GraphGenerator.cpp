@@ -1,4 +1,5 @@
 #include "GraphGenerator.h"
+#include "BusStationsHandler.h"
 #include <list>
 #include <iomanip>
 
@@ -18,9 +19,15 @@ void graph_generator(
     set<BusStation> *busStations,
     TRIPS_MAP linesTrips)
 {
+    
     TRIPS_MAP::iterator global_iterator;
     int iii = 0;
     // handle each Line
+    string depotId = findDepotId(busStations);
+    if (depotId == "") {
+        cout << "no depot found in data" << endl;
+        exit(-1);
+    }
     for (global_iterator = linesTrips.begin(); global_iterator != linesTrips.end(); ++global_iterator)
     {
         // show the Depot
@@ -61,6 +68,7 @@ void graph_generator(
             int duree_attente = 0;
             int duree_hlp = 0;
             int hlp_number = 0;
+            double cout_total = 0;
             isTreated = false;
             clusterCount++;
 
@@ -73,8 +81,26 @@ void graph_generator(
             while ((*ptr1).second != false)
                 ptr1++;
 
+            // add from depot duration 
+
+            duree_total += TargetInterTrip::findDurationByTargetId((*ptr1).first.busStationDep->getId(), stationsTargets[depotId]);
+            if (duree_total == -1)
+            {
+                cout << "duration between depot and " << (*ptr1).first.busStationDep->getId() << " not found" << endl;
+                exit(-1);
+            }
+            cout_total += duree_total * c_v;
+
             if (ptr1 == (temp + (*global_iterator).second->size() - 1))
             {
+                int duree =  TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[(*ptr1).first.busStationArr->getId()]);
+                if (duree == -1)
+                {
+                    cout << "duration between " << (*ptr1).first.busStationArr->getId() << " and depot not found" << endl;
+                    exit(-1);
+                }
+                duree_total += duree;
+                cout_total += duree * c_v;
                 (*ptr1).second = true;
                 res++;
                 cout << (*ptr1).first.tripId << "--> Depot" << endl;
@@ -94,6 +120,14 @@ void graph_generator(
                     }
                     if (ptr2 == (temp + (*global_iterator).second->size() - 1))
                     {
+                        int duree = TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[(*ptr1).first.busStationArr->getId()]);
+                        if (duree == -1)
+                        {
+                            cout << "duration between " << (*ptr1).first.busStationArr->getId() << " and depot not found" << endl;
+                            exit(-1);
+                        }
+                        duree_total += duree;
+                        cout_total += duree * c_v;
                         (*ptr1).second = true;
                         res++;
                         cout << (*ptr1).first.tripId << "--> Depot" << endl;
@@ -119,6 +153,14 @@ void graph_generator(
                             // new cluster
                             else if (difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 > 45)
                             {
+                                int duree = TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[(*ptr1).first.busStationArr->getId()]);
+                                if (duree == -1)
+                                {
+                                    cout << "duration between " << (*ptr1).first.busStationArr->getId() << " and depot not found" << endl;
+                                    exit(-1);
+                                }
+                                duree_total += duree;
+                                cout_total += duree * c_v;
                                 cout << (*ptr1).first.tripId << " ---> Depot" << endl;
                                 (*ptr1).second = true;
                                 // added by omar <=>
@@ -206,7 +248,7 @@ void graph_generator(
             cout << " __________________________________________________________________________________ " << endl;
             cout << "|#Cluster|Duree Total|Cout total|Nombre HLP|Duree HLP|% HLP|Duree Attente|% Attente|" << endl;
             
-            double cout_total = c_a * duree_attente + c_v * duree_hlp;
+            cout_total += c_a * duree_attente + c_v * duree_hlp;
             cout << "|" << setw(8) << clusterCount << "|" << setw(7) << duree_total << " min|" << setw(10) << cout_total << "|" << setw(6) << hlp_number << " HLP|" << setw(5) << duree_hlp << " min|" << setw(3) << duree_hlp*100/duree_total << " %|" << setw(9) << duree_attente << " min|" << setw(7) << duree_attente * 100 / duree_total << " %|" << endl;
             cout << " ---------------------------------------------------------------------------------- " << endl;
             duree_total = 0;
