@@ -195,7 +195,7 @@ void graph_generator(
                 cout << "|#Cluster|Duree Total|Cout total|Nombre HLP|Duree HLP|% HLP|Duree Attente|% Attente|" << endl;
             }
             double cout_total = c_a * duree_attente + c_v * duree_hlp;
-            cout << "|" << clusterCount << "|" << duree_total << "min|" << clusterCount << "|" << clusterCount << "|" << clusterCount << "|" << endl;
+            cout << "|" << clusterCount << "|" << duree_total << "min|" << cout_total << "|" << hlp_number << " HLP|" << duree_hlp << "min|" << duree_hlp*100/duree_total << "%|" << duree_attente << "min|" << duree_attente * 100 / duree_total << "%|" << endl;
             duree_total = 0;
             duree_attente = 0;
             duree_hlp = 0;
