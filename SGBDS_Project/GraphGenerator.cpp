@@ -10,12 +10,14 @@ struct StatsItineraire
     // a list that will contains a pair of the hlp duration with the
     // percentage due to the totla duration of the itineraire
     list<pair<int, double>> hlps;
+
 };
 
 void graph_generator(
     INTER_TRIPS stationsTargets,
     set<BusStation> *busStations,
-    TRIPS_MAP linesTrips)
+    TRIPS_MAP linesTrips, 
+    ofstream& output_file)
 {
     TRIPS_MAP::iterator global_iterator;
     int iii = 0;
@@ -48,11 +50,11 @@ void graph_generator(
             u++;
         }
 
-        int dest_fal = 0;
+       
         iii++;
         // show Line
-        cout << "Line: " << iii << " (" << (*global_iterator).first << " ) / " << linesTrips.size() << endl
-             << "--------------" << endl;
+        output_file << endl << "***************" << endl << "Line: " << iii << " (" << (*global_iterator).first << " ) / " << linesTrips.size() << endl
+             << "***************" << endl;
 
         while (res != (*global_iterator).second->size())
         {
@@ -63,10 +65,9 @@ void graph_generator(
             isTreated = false;
             clusterCount++;
 
-            cout << endl << "-----------------------" << endl; 
-            cout << "Cluster: " << clusterCount << endl;
-            cout << endl << "---------------------" << endl << endl; 
-            cout << "Depot --> "; 
+            output_file << "-----------------------" << endl; 
+            output_file << "Cluster: " << clusterCount << endl;
+            output_file << "Depot --> "; 
             ptr1 = temp;
 
             while ((*ptr1).second != false)
@@ -76,13 +77,12 @@ void graph_generator(
             {
                 (*ptr1).second = true;
                 res++;
-                cout << (*ptr1).first.tripId << "--> Depot" << endl;
+                output_file << (*ptr1).first.tripId << "--> Depot" << endl;
                 isTreated = true;
                 duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60);
             }
             else
             {
-
                 ptr2 = ptr1;
                 while (!isTreated)
                 {
@@ -95,7 +95,7 @@ void graph_generator(
                     {
                         (*ptr1).second = true;
                         res++;
-                        cout << (*ptr1).first.tripId << "--> Depot" << endl;
+                        output_file << (*ptr1).first.tripId << "--> Depot" << endl;
                         isTreated = true;
                         duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60);
                     }
@@ -106,7 +106,7 @@ void graph_generator(
                             if (0 <= difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 &&
                                 difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 <= 45)
                             {
-                                cout << (*ptr1).first.tripId << "--> waitInStation(" << difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 << ") --->";
+                                output_file << (*ptr1).first.tripId << "--> waitInStation(" << difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 << ") --->";
                                 (*ptr1).second = true;
                                 res++;
 
@@ -118,7 +118,7 @@ void graph_generator(
                             // new cluster
                             else if (difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 > 45)
                             {
-                                cout << (*ptr1).first.tripId << " ---> Depot" << endl;
+                                output_file << (*ptr1).first.tripId << " ---> Depot" << endl;
                                 (*ptr1).second = true;
                                 // added by omar <=>
                                     // we need to add trip duration even if he had to go to depot
@@ -168,11 +168,11 @@ void graph_generator(
                                 {
                                     if (attente > 45)
                                     {
-                                        cout << (*ptr1).first.tripId << " --> Depot" << endl;
                                         // added by omar <=>
                                             // we need to add trip duration even if he had to go to depot
                                         duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60);
                                         // <=>
+                                        output_file << (*ptr1).first.tripId << " --> Depot" << endl;
                                         (*ptr1).second = true;
                                         res++;
                                         isTreated = true;
@@ -183,7 +183,7 @@ void graph_generator(
                                         duree_hlp += duree;
                                         duree_total += attente + duree;
                                         hlp_number++;
-                                        cout << (*ptr1).first.tripId << " -- HLP --> "
+                                        output_file << (*ptr1).first.tripId << " -- HLP --> "
                                              << " waitInStation (" << attente << ")"
                                              << " -->";
                                         (*ptr1).second = true;
@@ -202,17 +202,18 @@ void graph_generator(
                 }
             }
             
-            cout << "|#Cluster|Duree Total|Cout total|Nombre HLP|Duree HLP|% HLP|Duree Attente|% Attente|" << endl;
+            output_file << "|#Cluster|Duree Total|Cout total|Nombre HLP|Duree HLP|% HLP|Duree Attente|% Attente|" << endl;
             
             double cout_total = c_a * duree_attente + c_v * duree_hlp;
-            cout << "|" << clusterCount << "|" << duree_total << "min|" << cout_total << "|" << hlp_number << " HLP|" << duree_hlp << "min|" << duree_hlp*100/duree_total << "%|" << duree_attente << "min|" << duree_attente * 100 / duree_total << "%|" << endl;
+            output_file << "|" << clusterCount << "|" << duree_total << "min|" << cout_total << "|" << hlp_number << " HLP|" << duree_hlp << "min|" << duree_hlp*100/duree_total << "%|" << duree_attente << "min|" << duree_attente * 100 / duree_total << "%|" << endl;
+
             duree_total = 0;
             duree_attente = 0;
             duree_hlp = 0;
         }
     }
 
-    cout << "-------------" << endl;
-    cout << "Finished all Line Trips" << endl;
-    cout << "-------------" << endl;
+    output_file << "-------------" << endl;
+    output_file << "Finished all Line Trips" << endl;
+    output_file << "-------------" << endl;
 }
