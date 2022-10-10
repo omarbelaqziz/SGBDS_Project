@@ -1,5 +1,6 @@
 #include "GraphGenerator.h"
 #include <list>
+#include <iomanip>
 
 struct StatsItineraire
 {
@@ -202,10 +203,12 @@ void graph_generator(
                 }
             }
             
+            cout << " __________________________________________________________________________________ " << endl;
             cout << "|#Cluster|Duree Total|Cout total|Nombre HLP|Duree HLP|% HLP|Duree Attente|% Attente|" << endl;
             
             double cout_total = c_a * duree_attente + c_v * duree_hlp;
-            cout << "|" << clusterCount << "|" << duree_total << "min|" << cout_total << "|" << hlp_number << " HLP|" << duree_hlp << "min|" << duree_hlp*100/duree_total << "%|" << duree_attente << "min|" << duree_attente * 100 / duree_total << "%|" << endl;
+            cout << "|" << setw(8) << clusterCount << "|" << setw(7) << duree_total << " min|" << setw(10) << cout_total << "|" << setw(6) << hlp_number << " HLP|" << setw(5) << duree_hlp << " min|" << setw(3) << duree_hlp*100/duree_total << " %|" << setw(9) << duree_attente << " min|" << setw(7) << duree_attente * 100 / duree_total << " %|" << endl;
+            cout << " ---------------------------------------------------------------------------------- " << endl;
             duree_total = 0;
             duree_attente = 0;
             duree_hlp = 0;
