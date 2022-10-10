@@ -1,30 +1,11 @@
 // SGBDS_Project.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include <iostream>
-#include <fstream>
-#include <set>
-#include <string>
-#include <vector>
-#include <ctime>
-
-#include "BusStation.h"
-#include "BusTrip.h"
-#include "StringsOperations.h"
-#include "BusStationsHandler.h"
-#include "BusTripsHandler.h"
-#include "BusInterTripsHandler.h"
-
-#include "TargetInterTrip.h"
-#include "InterTrip.h"
-#include "StatisticsCalculator.h"
-
+#include "preproc.h"
 #include "GraphGenerator.h"
 
 using namespace std;
 
-typedef unordered_map<string, multiset<BusTrip> *> TRIPS_MAP;
-typedef map<string, set<TargetInterTrip> *> INTER_TRIPS;
 
 BusStation createBusStationFromLine(string line)
 {
@@ -35,9 +16,11 @@ BusStation createBusStationFromLine(string line)
 
 int main()
 {
+    // string filename = "./data/test.txt";
+    string filename = FILENAME;
+   
 
-    // string filename = "../data/InputDataDepot50_ExistedDeadheadsWithBusLines.txt";
-    string filename = "./data/test.txt";
+
     set<BusStation> *busStations = nullptr;
     vector<BusStation> busStationsVector;
 
@@ -62,47 +45,21 @@ int main()
                 else if (line.find("BusTrip") != string::npos)
                 {
                     handle_file_stream_bus_trips(tripsStations, dataFile, busStations);
-
-                    cout << "size L_16: " << tripsStations.at("L_16")->size() << endl;
-                    for (auto sf : *tripsStations["L_16"])
-                    {
-                        sf.showBusTrip();
-                    }
-                    cout << "=====================" << endl;
                 }
                 else if (line.find("InterTrips") != string::npos)
                 {
 
                     cout << "Inter Trips op. begins at " << lineNumber << endl;
                     handle_file_stream_inter_trips(interTrips, dataFile, busStations);
-
-                    cout << "---------------" << endl;
-                    set<TargetInterTrip> *dd = interTrips["Depot50"];
-                    set<TargetInterTrip>::iterator it;
-                    // for (it = dd->begin(); it != dd->end(); ++it)
-                    // {
-                    //     cout << "Depot50"
-                    //          << "===>";
-                    //     (*it).showTarget();
-                    // }
-
-                    cout << "=====Assuring data ====" << endl;
-                    cout << "Depot50 destinations: " << dd->size() << endl;
-                    cout << "stations count: " << busStations->size() << endl;
                 }
-
-
             }
             else if (line.find("}") != string::npos)
             {
                 cout << "Op. ends at " << line << endl;
             }
         }
-        // showing statistics
-        // showAllStatistics(tripsStations);
-        cout << "==========Graph Gent=============" << endl; 
 
-        graph_generator(interTrips, busStations, tripsStations); 
+        graph_generator(interTrips, busStations, tripsStations);
     }
     else
     {
@@ -110,14 +67,3 @@ int main()
     }
     dataFile.close();
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started:
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

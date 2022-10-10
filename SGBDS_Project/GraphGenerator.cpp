@@ -1,4 +1,16 @@
 #include "GraphGenerator.h"
+#include <list>
+
+struct StatsItineraire
+{
+    int duree_total;
+    double cout_total;
+    int nbr_hlp;
+
+    // a list that will contains a pair of the hlp duration with the
+    // percentage due to the totla duration of the itineraire
+    list<pair<int, double>> hlps;
+};
 
 void graph_generator(
     INTER_TRIPS stationsTargets,
@@ -6,9 +18,7 @@ void graph_generator(
     TRIPS_MAP linesTrips)
 {
     TRIPS_MAP::iterator global_iterator;
-
-    std::allocator<pair<BusTrip, bool> > alloc; 
-
+    int iii = 0;
     // handle each Line
     for (global_iterator = linesTrips.begin(); global_iterator != linesTrips.end(); ++global_iterator)
     {
@@ -23,7 +33,8 @@ void graph_generator(
         pair<BusTrip, bool> *ptr1;
         pair<BusTrip, bool> *ptr2;
 
-        temp = alloc.allocate(sizeof(pair<BusTrip, bool>) * (*global_iterator).second->size());
+        // temp = (pair<BusTrip, bool> *)malloc(sizeof(pair<BusTrip, bool>) * (*global_iterator).second->size());
+        temp = new pair<BusTrip, bool>[(*global_iterator).second->size()];
 
         multiset<BusTrip>::iterator temp_it;
 
@@ -32,112 +43,154 @@ void graph_generator(
         {
             if (u == (*global_iterator).second->size())
                 break;
-            temp[u].first = (*temp_it);
-            temp[u].second = false;
+            (temp + u)->first = (*temp_it);
+            (temp + u)->second = false;
             u++;
         }
 
-        int dest_fal = 0; 
-
+        int dest_fal = 0;
+        iii++;
         // show Line
-        cout << "Line: " << (*global_iterator).first << endl
+        cout << "Line: " << iii << " (" << (*global_iterator).first << " ) / " << linesTrips.size() << endl
              << "--------------" << endl;
 
         while (res != (*global_iterator).second->size())
         {
+            int duree_total = 0;
             isTreated = false;
             clusterCount++;
 
+            cout << endl << "-----------------------" << endl; 
             cout << "Cluster: " << clusterCount << endl;
-
+            cout << endl << "---------------------" << endl << endl; 
+            cout << "Depot --> "; 
             ptr1 = temp;
 
             while ((*ptr1).second != false)
                 ptr1++;
 
-
-            ptr2 = ptr1;
-            ptr2++;
-
-            while (!isTreated)
+            if (ptr1 == (temp + (*global_iterator).second->size() - 1))
             {
-                while ((*ptr2).second && ptr2 != (temp + (*global_iterator).second->size() - 1))
+                (*ptr1).second = true;
+                res++;
+                cout << (*ptr1).first.tripId << "--> Depot" << endl;
+                isTreated = true;
+                duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60);
+            }
+            else
+            {
+
+                ptr2 = ptr1;
+                while (!isTreated)
                 {
-                    ptr2++;
-                }
-                if (ptr2 == (temp + (*global_iterator).second->size() - 1))
-                {
-                    (*ptr2).second = true;
-                    res++;
-                    cout << (*ptr1).first.tripId << "==> Depot" << endl;
-                    isTreated = true;
-                }
-                else
-                {
-                    if ((*ptr2).first.busStationDep == (*ptr1).first.busStationArr)
+
+                    while ((*ptr2).second && ptr2 != (temp + (*global_iterator).second->size() - 1))
                     {
-                        if (0 <= difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 &&
-                            difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 <= 45)
-                        {
-                            cout << (*ptr1).first.tripId << "==> waitInStation(" << difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60<< ") ===>";
-                            (*ptr1).second = true;
-                            res++;
-                            ptr1 = ptr2;
-                            ptr2++;
-                        }
-                        if (difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 > 45)
-                        {
-                            cout << (*ptr1).first.tripId << " ===> Depot" << endl;
-                            (*ptr1).second = true;
-                            res++;
-                            isTreated = true;
-                        }
-                        else
-                        {
-                            ptr2++;
-                        }
+                        ptr2++;
+                    }
+                    if (ptr2 == (temp + (*global_iterator).second->size() - 1))
+                    {
+                        (*ptr1).second = true;
+                        res++;
+                        cout << (*ptr1).first.tripId << "--> Depot" << endl;
+                        isTreated = true;
+                        duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60);
                     }
                     else
                     {
-                        auto itty = stationsTargets[(*ptr1).first.busStationArr->id]->find(TargetInterTrip((*ptr2).first.busStationDep, "asdfsa", 12));
-                        if (itty == stationsTargets[(*ptr1).first.busStationDep->id]->end())
+                        if ((*ptr2).first.busStationDep == (*ptr1).first.busStationArr)
                         {
-                            cout << "Error in finding the destination ";
-                            dest_fal++; 
-                        }
-                        int attente = difftime((*ptr1).first.dateArr, (*ptr2).first.dateDep) / 60 - (*itty).duree;
-                        if (attente > 0)
-                        {
-                            if (attente > 45)
+                            if (0 <= difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 &&
+                                difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 <= 45)
                             {
-                                cout << (*ptr1).first.tripId << " ===> Depot" << endl;
+                                cout << (*ptr1).first.tripId << "--> waitInStation(" << difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 << ") --->";
+                                (*ptr1).second = true;
+                                res++;
+                                ptr1 = ptr2;
+                                ptr2++;
+                                duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60 + difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60);
+                            }
+                            // new cluster
+                            else if (difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 > 45)
+                            {
+                                cout << (*ptr1).first.tripId << " ---> Depot" << endl;
                                 (*ptr1).second = true;
                                 res++;
                                 isTreated = true;
                             }
                             else
                             {
-                                cout << (*ptr1).first.tripId << " === HLP ===> "
-                                     << " waitInStation (" << attente << ")"
-                                     << " ===>";
-                                (*ptr1).second = true;
-                                res++;
-                                ptr1 = ptr2;
                                 ptr2++;
                             }
                         }
                         else
                         {
-                            ptr2++;
+                            auto PTRR = (*ptr2).first.busStationDep;
+
+                            if (PTRR == NULL)
+                            {
+                                cout << endl
+                                     << "---> There is no no data for ptr2 :: " << endl; 
+                                exit(-1);
+                            }
+                            else
+                            {
+                                int duree = TargetInterTrip::findDurationByTargetId((*ptr2).first.busStationDep->getId(), stationsTargets[(*ptr1).first.busStationArr->getId()]);
+
+                                if (duree == -1)
+                                {
+
+                                    // SEARCH IN THE NEGATIVE WAY
+                                    int temp_duree = TargetInterTrip::findDurationByTargetId((*ptr1).first.busStationArr->getId(), stationsTargets[(*ptr2).first.busStationDep->getId()]);
+                                    if (temp_duree == -1)
+                                    {
+                                        cout << endl
+                                             << "---> There is no InterTrip between " << (*ptr1).first.busStationArr->id << " -> " << (*ptr2).first.busStationDep->getId() << " <-- " << endl;
+                                        exit(-1);
+                                    }
+                                    else
+                                    {
+                                        duree = temp_duree;
+                                    }
+                                }
+                                int attente = (difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60) - duree;
+
+                                if (attente > 0)
+                                {
+                                    if (attente > 45)
+                                    {
+                                        cout << (*ptr1).first.tripId << " --> Depot" << endl;
+                                        (*ptr1).second = true;
+                                        res++;
+                                        isTreated = true;
+                                    }
+                                    else
+                                    {
+                                        cout << (*ptr1).first.tripId << " -- HLP --> "
+                                             << " waitInStation (" << attente << ")"
+                                             << " -->";
+                                        (*ptr1).second = true;
+                                        res++;
+                                        ptr1 = ptr2;
+                                        ptr2++;
+                                    }
+                                }
+                                else
+                                {
+                                    ptr2++;
+                                }
+                            }
                         }
                     }
                 }
             }
+
+            cout << "Duree total de l'itineraire: " << duree_total << endl;
+            duree_total = 0;
         }
-
-    
-
     }
 
-    
+    cout << "-------------" << endl;
+    cout << "Finished all Line Trips" << endl;
+    cout << "-------------" << endl;
 }

@@ -39,29 +39,30 @@ void buildBusTrip(BusTrip &busTrip, vector<string> rawData, set<BusStation> &bus
     time_t depTime = dateTimeStringToTimeObject(rawData[3], rawData[4]);
     time_t arrivalTime = dateTimeStringToTimeObject(rawData[6], rawData[7]);
 
-
-    auto b_d = &(*depBusStation);
-    auto b_a = &(*arrivalBusStation);
-
+    if(rawData.size() != 8)
+    {
+        cout << "--> this vector of trips have a syntaxique problem : " ;
+        for(auto v: rawData) {
+            cout << v << ", ";
+        } 
+        cout << endl; 
+        exit(-1); 
+    }
     if (depBusStation != busStationsSet.end() && arrivalBusStation != busStationsSet.end())
     {
-
         busTrip.tripId = rawData[1],
-        busTrip.busStationDep = b_d,
-        busTrip.busStationArr = b_a,
+        busTrip.busStationDep = &(*depBusStation),
+        busTrip.busStationArr = &(*arrivalBusStation),
+        busTrip.strDDarr = rawData[7]; 
+        busTrip.strDDep = rawData[4]; 
         busTrip.dateDep = depTime,
         busTrip.dateArr = arrivalTime;
     }
 
     else
     {
-        cout << "NO bus station found " << endl;
-
-        busTrip.tripId = "LIE";
-        busTrip.busStationDep = NULL;
-        busTrip.busStationArr = NULL;
-        busTrip.dateDep = depTime;
-        busTrip.dateArr = arrivalTime;
+        cout << " --> One of the stations : " << rawData[7] << " || " << rawData[4] << " is not in the busStations set <--" << endl;
+        exit(-1);    
     }
 }
 

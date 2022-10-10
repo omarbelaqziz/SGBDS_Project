@@ -1,21 +1,5 @@
-#include <iostream>
-#include <memory>
-#include <algorithm>
-#include <set>
-#include <vector>
-#include <unordered_map>
-#include <map>
-#include <ctime>
-#include <stdlib.h>
-#include "BusStation.h"
-#include "TargetInterTrip.h"
-#include "BusTrip.h"
-
-using namespace std;
-
-typedef unordered_map<string, multiset<BusTrip> *> TRIPS_MAP;
-typedef map<string, set<TargetInterTrip> *> INTER_TRIPS;
-typedef vector<pair<BusTrip, bool>> TEMP_TYPE;
+#pragma once 
+#include "preproc.h"
 
 void graph_generator(
     INTER_TRIPS stationsTargets,

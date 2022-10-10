@@ -26,25 +26,40 @@ public:
 
     void showTarget() const
     {
-        cout << "Duree: " << this->duree << ", " << this->interTripId << endl;
         this->target->showBusStation();
+        cout << " | " << this->duree; 
+    }
+
+    int getDuree() const 
+    {
+        return this->duree; 
+    }
+
+    static int findDurationByTargetId(string targetId, set<TargetInterTrip> *targetsSet)
+    {
+        BusStation *bs = new BusStation(targetId, 0); 
+        std::set<TargetInterTrip>::iterator it = targetsSet->find(TargetInterTrip(bs, "InterTripXX", 12)); 
+        if(it == targetsSet->end()) return -1; 
+        return (*it).duree; 
     }
 
     bool operator==(const TargetInterTrip &tip) const
     {
+        cout << endl << "using comp" << endl; 
         return *(this->target) == *(tip.target);
     }
 
     bool operator==(const TargetInterTrip *tip) const
     {
+        cout << endl << "using comp" << endl; 
         return *(this->target) == *(tip->target);
     }
     bool operator<(const TargetInterTrip &tip) const
     {
-        return this->interTripId < tip.interTripId;
+        return *(this->target) < *(tip.target);
     }
     bool operator<(const TargetInterTrip *tip) const
     {
-        return this->interTripId < tip->interTripId;
+        return *(this->target) < *(tip->target);
     }
 };
