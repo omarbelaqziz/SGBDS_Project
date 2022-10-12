@@ -12,21 +12,45 @@ struct StatsItineraire
     // a list that will contains a pair of the hlp duration with the
     // percentage due to the totla duration of the itineraire
     list<pair<int, double>> hlps;
-
 };
+
+typedef struct
+{
+    int duree_total_depot;
+    int duree_total_attente;
+    int duree_total_hlp;
+
+    int somme_hlp;
+    int somme_voyages;
+    int somme_clusters;
+
+    double cout_total_depot;
+} DepotStats;
 
 void graph_generator(
     INTER_TRIPS stationsTargets,
     set<BusStation> *busStations,
-    TRIPS_MAP linesTrips, 
-    ofstream& output_file)
+    TRIPS_MAP linesTrips,
+    ofstream &output_file)
 {
-    
+    // initialisation des stats de depot
+
+    DepotStats depot_stats;
+    depot_stats.duree_total_depot = 0;
+    depot_stats.duree_total_attente = 0;
+    depot_stats.duree_total_hlp = 0;
+    depot_stats.somme_hlp = 0;
+    depot_stats.somme_voyages = 0;
+    depot_stats.somme_clusters = 0;
+    depot_stats.cout_total_depot = 0.0;
+
+    int its = 0;
     TRIPS_MAP::iterator global_iterator;
     int iii = 0;
     // handle each Line
     string depotId = findDepotId(busStations);
-    if (depotId == "") {
+    if (depotId == "")
+    {
         cout << "no depot found in data" << endl;
         exit(-1);
     }
@@ -58,11 +82,12 @@ void graph_generator(
             u++;
         }
 
-       
         iii++;
         // show Line
-        output_file << endl << "***************" << endl << "Line: " << iii << " (" << (*global_iterator).first << " ) / " << linesTrips.size() << endl
-             << "***************" << endl;
+        output_file << endl
+                    << "***************" << endl
+                    << "Line: " << iii << " (" << (*global_iterator).first << " ) / " << linesTrips.size() << endl
+                    << "***************" << endl;
 
         while (res != (*global_iterator).second->size())
         {
@@ -74,15 +99,18 @@ void graph_generator(
             isTreated = false;
             clusterCount++;
 
-            output_file << "-----------------------" << endl; 
+            its++;
+
+            output_file << "-----------------------" << endl;
             output_file << "Cluster: " << clusterCount << endl;
-            output_file << "Depot --> "; 
+            output_file << "Depot --> ";
+
             ptr1 = temp;
 
             while ((*ptr1).second != false)
                 ptr1++;
 
-            // add from depot duration 
+            // add from depot duration
 
             duree_total += TargetInterTrip::findDurationByTargetId((*ptr1).first.busStationDep->getId(), stationsTargets[depotId]);
             if (duree_total == -1)
@@ -94,7 +122,7 @@ void graph_generator(
 
             if (ptr1 == (temp + (*global_iterator).second->size() - 1))
             {
-                int duree =  TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[(*ptr1).first.busStationArr->getId()]);
+                int duree = TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[(*ptr1).first.busStationArr->getId()]);
                 if (duree == -1)
                 {
                     cout << "duration between " << (*ptr1).first.busStationArr->getId() << " and depot not found" << endl;
@@ -164,7 +192,7 @@ void graph_generator(
                                 output_file << (*ptr1).first.tripId << " ---> Depot" << endl;
                                 (*ptr1).second = true;
                                 // added by omar <=>
-                                    // we need to add trip duration even if he had to go to depot
+                                // we need to add trip duration even if he had to go to depot
                                 duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60);
                                 // <=>
                                 res++;
@@ -182,7 +210,7 @@ void graph_generator(
                             if (PTRR == NULL)
                             {
                                 cout << endl
-                                     << "---> There is no no data for ptr2 :: " << endl; 
+                                     << "---> There is no no data for ptr2 :: " << endl;
                                 exit(-1);
                             }
                             else
@@ -212,7 +240,7 @@ void graph_generator(
                                     if (attente > 45)
                                     {
                                         // added by omar <=>
-                                            // we need to add trip duration even if he had to go to depot
+                                        // we need to add trip duration even if he had to go to depot
                                         duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60);
                                         // <=>
                                         output_file << (*ptr1).first.tripId << " --> Depot" << endl;
@@ -227,8 +255,8 @@ void graph_generator(
                                         duree_total += attente + duree;
                                         hlp_number++;
                                         output_file << (*ptr1).first.tripId << " -- HLP --> "
-                                             << " waitInStation (" << attente << ")"
-                                             << " -->";
+                                                    << " waitInStation (" << attente << ")"
+                                                    << " -->";
                                         (*ptr1).second = true;
                                         res++;
                                         ptr1 = ptr2;
@@ -244,20 +272,39 @@ void graph_generator(
                     }
                 }
             }
-            
+
             output_file << " __________________________________________________________________________________ " << endl;
             output_file << "|#Cluster|Duree Total|Cout total|Nombre HLP|Duree HLP|% HLP|Duree Attente|% Attente|" << endl;
-            
+
             cout_total += c_a * duree_attente + c_v * duree_hlp;
-            output_file << "|" << setw(8) << clusterCount << "|" << setw(7) << duree_total << " min|" << setw(10) << cout_total << "|" << setw(6) << hlp_number << " HLP|" << setw(5) << duree_hlp << " min|" << setw(3) << duree_hlp*100/duree_total << " %|" << setw(9) << duree_attente << " min|" << setw(7) << duree_attente * 100 / duree_total << " %|" << endl;
+            output_file << "|" << setw(8) << clusterCount << "|" << setw(7) << duree_total << " min|" << setw(10) << cout_total << "|" << setw(6) << hlp_number << " HLP|" << setw(5) << duree_hlp << " min|" << setw(3) << duree_hlp * 100 / duree_total << " %|" << setw(9) << duree_attente << " min|" << setw(7) << duree_attente * 100 / duree_total << " %|" << endl;
             output_file << " ---------------------------------------------------------------------------------- " << endl;
+
+            // collecting informations
+            depot_stats.duree_total_attente += duree_attente;
+            depot_stats.duree_total_depot += duree_total;
+            depot_stats.duree_total_hlp += duree_hlp;
+            depot_stats.cout_total_depot += cout_total;
+            depot_stats.somme_hlp += hlp_number;
+
+            // collect also the total of trips and clusters
+
             duree_total = 0;
             duree_attente = 0;
             duree_hlp = 0;
         }
     }
+    depot_stats.somme_clusters += its;
 
     output_file << "-------------" << endl;
     output_file << "Finished all Line Trips" << endl;
     output_file << "-------------" << endl;
+    cout << "N# clusters: " << its << endl;
+    cout << "Cout de depot; " << depotId << " : " << depot_stats.cout_total_depot << endl;
+
+    cout << " __________________________________________________________________________________ " << endl;
+    cout << "|#Depot  |Duree Total|Cout total|Total HLP|Duree HLP|% HLP|Total Attente|% Attente|Somme Clusters|" << endl;
+
+    cout << "|" << setw(8) << depotId << "|" << setw(7) << depot_stats.duree_total_depot << " min|" << setw(10) << depot_stats.cout_total_depot << "|" << setw(6) << depot_stats.duree_total_hlp << " HLP|" << setw(5) << depot_stats.somme_hlp << " min|" << setw(3) << depot_stats.duree_total_hlp * 100 / depot_stats.duree_total_depot << " %|" << setw(9) << depot_stats.duree_total_attente << " min|" << setw(7) << depot_stats.duree_total_attente * 100 / depot_stats.duree_total_depot << " %|" << depot_stats.somme_clusters << endl;
+    cout << " ---------------------------------------------------------------------------------- " << endl;
 }
