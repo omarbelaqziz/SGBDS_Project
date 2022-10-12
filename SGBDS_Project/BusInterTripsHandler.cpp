@@ -14,7 +14,7 @@ void handle_file_stream_inter_trips(map<string, set<TargetInterTrip> *> &inter_t
     {
         if (line.find("}") != string::npos)
         {
-            cout << "Inter Trips op. ends at " << line << endl;
+            cout << endl;
             break;
         }
         stringData = StringsOperations::split(StringsOperations::removeLastChar(StringsOperations::ltrim(StringsOperations::rtrim(line))));
