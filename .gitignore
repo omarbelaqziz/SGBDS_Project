@@ -368,9 +368,10 @@ build
 include
 
 .vscode
-build-and-run.sh 
+/SGBDS_Project/build-and-run.sh 
 CMakeLists.txt
 ll
+/SGBDS_Project/ll
 
 #data folder
 data

@@ -13,25 +13,25 @@ BusStation createBusStationFromLine(string line)
 int main()
 {
     std::clock_t c_start = std::clock();
-    char filenames[][18] = {
-        "./data/test50.txt",
-        "./data/test54.txt",
-        "./data/test55.txt",
-        "./data/test56.txt",
-        "./data/test57.txt",
-        "./data/test58.txt",
-        "./data/test59.txt",
-        "./data/test60.txt"};
+    char filenames[][19] = {
+        "../data/test50.txt",
+        "../data/test54.txt",
+        "../data/test55.txt",
+        "../data/test56.txt",
+        "../data/test57.txt",
+        "../data/test58.txt",
+        "../data/test59.txt",
+        "../data/test60.txt"};
 
-    char output_files[][19] = {
-        "./output/out50.txt",
-        "./output/out54.txt",
-        "./output/out55.txt",
-        "./output/out56.txt",
-        "./output/out57.txt",
-        "./output/out58.txt",
-        "./output/out59.txt",
-        "./output/out60.txt"};
+    char output_files[][20] = {
+        "../output/out50.txt",
+        "../output/out54.txt",
+        "../output/out55.txt",
+        "../output/out56.txt",
+        "../output/out57.txt",
+        "../output/out58.txt",
+        "../output/out59.txt",
+        "../output/out60.txt"};
 
     int data_set_index = 0;
 
