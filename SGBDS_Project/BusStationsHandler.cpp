@@ -44,4 +44,5 @@ string findDepotId(set<BusStation> *busStations)
         if (itr->getIsDepot() == true)
             return itr->getId();
     }
+    return NULL; 
 }

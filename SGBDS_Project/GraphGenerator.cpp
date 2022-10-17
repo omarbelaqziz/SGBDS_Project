@@ -21,7 +21,7 @@ typedef struct
     int duree_total_hlp;
 
     int somme_hlp;
-    int somme_voyages;
+    int somme_covered_voyages;
     int somme_clusters;
 
     double cout_total_depot;
@@ -40,7 +40,7 @@ void graph_generator(
     depot_stats.duree_total_attente = 0;
     depot_stats.duree_total_hlp = 0;
     depot_stats.somme_hlp = 0;
-    depot_stats.somme_voyages = 0;
+    depot_stats.somme_covered_voyages = 0;
     depot_stats.somme_clusters = 0;
     depot_stats.cout_total_depot = 0.0;
 
@@ -132,6 +132,7 @@ void graph_generator(
                 cout_total += duree * c_v;
                 (*ptr1).second = true;
                 res++;
+                depot_stats.somme_covered_voyages ++; 
                 output_file << (*ptr1).first.tripId << "--> Depot" << endl;
                 isTreated = true;
                 duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60);
@@ -160,6 +161,7 @@ void graph_generator(
                         res++;
                         output_file << (*ptr1).first.tripId << "--> Depot" << endl;
                         isTreated = true;
+                        depot_stats.somme_covered_voyages ++; 
                         duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60);
                     }
                     else
@@ -197,6 +199,7 @@ void graph_generator(
                                 // <=>
                                 res++;
                                 isTreated = true;
+                                depot_stats.somme_covered_voyages ++; 
                             }
                             else
                             {
@@ -247,6 +250,7 @@ void graph_generator(
                                         (*ptr1).second = true;
                                         res++;
                                         isTreated = true;
+                                        depot_stats.somme_covered_voyages ++; 
                                     }
                                     else
                                     {
@@ -303,8 +307,8 @@ void graph_generator(
     cout << "Cout de depot; " << depotId << " : " << depot_stats.cout_total_depot << endl;
 
     cout << " __________________________________________________________________________________ " << endl;
-    cout << "|#Depot  |Duree Total|Cout total|Total HLP|Duree HLP|% HLP|Total Attente|% Attente|Somme Clusters|" << endl;
+    cout << "|#Depot  |Duree Total|Cout total|Total HLP|Duree HLP|% HLP|Total Attente|% Attente|Somme Clusters|Covered Trips" << endl;
 
-    cout << "|" << setw(8) << depotId << "|" << setw(7) << depot_stats.duree_total_depot << " min|" << setw(10) << depot_stats.cout_total_depot << "|" << setw(6) << depot_stats.duree_total_hlp << " HLP|" << setw(5) << depot_stats.somme_hlp << " min|" << setw(3) << depot_stats.duree_total_hlp * 100 / depot_stats.duree_total_depot << " %|" << setw(9) << depot_stats.duree_total_attente << " min|" << setw(7) << depot_stats.duree_total_attente * 100 / depot_stats.duree_total_depot << " %|" << depot_stats.somme_clusters << endl;
+    cout << "|" << setw(8) << depotId << "|" << setw(7) << depot_stats.duree_total_depot << " min|" << setw(10) << depot_stats.cout_total_depot << "|" << setw(6) << depot_stats.duree_total_hlp << " HLP|" << setw(5) << depot_stats.somme_hlp << " min|" << setw(3) << depot_stats.duree_total_hlp * 100 / depot_stats.duree_total_depot << " %|" << setw(9) << depot_stats.duree_total_attente << " min|" << setw(7) << depot_stats.duree_total_attente * 100 / depot_stats.duree_total_depot << " %|" << depot_stats.somme_clusters << "|" << setw(7) << depot_stats.somme_covered_voyages  << endl;
     cout << " ---------------------------------------------------------------------------------- " << endl;
 }
