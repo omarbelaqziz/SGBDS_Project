@@ -1,5 +1,6 @@
 #include "preproc.h"
 #include "GraphGenerator.h"
+#include "GraphNotLinesGenerator.h"
 
 using namespace std;
 
@@ -13,25 +14,25 @@ BusStation createBusStationFromLine(string line)
 int main()
 {
     std::clock_t c_start = std::clock();
-    char filenames[][18] = {
-        "./data/test50.txt",
-        "./data/test54.txt",
-        "./data/test55.txt",
-        "./data/test56.txt",
-        "./data/test57.txt",
-        "./data/test58.txt",
-        "./data/test59.txt",
-        "./data/test60.txt"};
+    char filenames[][19] = {
+        "../data/test50.txt",
+        "../data/test54.txt",
+        "../data/test55.txt",
+        "../data/test56.txt",
+        "../data/test57.txt",
+        "../data/test58.txt",
+        "../data/test59.txt",
+        "../data/test60.txt"};
 
-    char output_files[][19] = {
-        "./output/out50.txt",
-        "./output/out54.txt",
-        "./output/out55.txt",
-        "./output/out56.txt",
-        "./output/out57.txt",
-        "./output/out58.txt",
-        "./output/out59.txt",
-        "./output/out60.txt"};
+    char output_files[][20] = {
+        "../output/out50.txt",
+        "../output/out54.txt",
+        "../output/out55.txt",
+        "../output/out56.txt",
+        "../output/out57.txt",
+        "../output/out58.txt",
+        "../output/out59.txt",
+        "../output/out60.txt"};
 
     int data_set_index = 0;
 
@@ -47,6 +48,7 @@ int main()
 
         INTER_TRIPS interTrips;
         TRIPS_MAP tripsStations;
+        
 
         ifstream dataFile;
         ofstream dataOutFile;
@@ -80,10 +82,25 @@ int main()
                     // std::cout << "Op. ends at " << line << endl;
                 }
             }
-            showAllStatistics(tripsStations, dataOutFile);
+            // livrable I
+
+            /* showAllStatistics(tripsStations, dataOutFile);
             graph_generator(interTrips, busStations, tripsStations, dataOutFile);
 
-            delete busStations;
+            delete busStations; */ 
+            multiset<BusTrip> busTripsPopulation; 
+            detach_lines(busTripsPopulation, tripsStations); 
+
+            cout << "showing results of the new population" << endl; 
+            int sum_trips = 0; 
+            for(auto v: busTripsPopulation)
+            {
+                sum_trips++; 
+                // v.showBusTrip();
+                // cout << endl; 
+            }
+            cout << "tripsTotal: " << sum_trips << endl; 
+            heuristic_graph_builder(busTripsPopulation, dataOutFile, busStations, interTrips); 
         }
         else if (!dataFile.is_open())
         {
