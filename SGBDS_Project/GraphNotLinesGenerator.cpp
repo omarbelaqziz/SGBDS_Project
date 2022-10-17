@@ -11,7 +11,7 @@ typedef struct
     int somme_hlp;
     int somme_covered_voyages;
     int somme_clusters;
-
+    int clusters_with_one_trip;
     double cout_total_depot;
 } DepotStats;
 
@@ -38,6 +38,7 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
     depot_stats.somme_hlp = 0;
     depot_stats.somme_covered_voyages = 0;
     depot_stats.somme_clusters = 0;
+    depot_stats.clusters_with_one_trip=0;
     depot_stats.cout_total_depot = 0.0;
 
     int population_size = busTripsPopulation.size();
@@ -74,6 +75,7 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
         double cout_total = 0;
         isTreated = false;
         clusterCount++;
+        int number_trips = 0;
 
         its++;
 
@@ -110,6 +112,7 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
             res++;
             depot_stats.somme_covered_voyages++;
             output_file << (*ptr1).first.tripId << "--> Depot" << endl;
+            number_trips++;
             isTreated = true;
             duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60);
         }
@@ -136,6 +139,7 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
                     (*ptr1).second = true;
                     res++;
                     output_file << (*ptr1).first.tripId << "--> Depot" << endl;
+                    number_trips++;
                     isTreated = true;
                     depot_stats.somme_covered_voyages++;
                     duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60);
@@ -148,6 +152,7 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
                             difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 <= 45)
                         {
                             output_file << (*ptr1).first.tripId << "--> waitInStation(" << difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 << ") --->";
+                            number_trips++;
                             (*ptr1).second = true;
                             res++;
                             depot_stats.somme_covered_voyages++;
@@ -168,6 +173,7 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
                             duree_total += duree;
                             cout_total += duree * c_v;
                             output_file << (*ptr1).first.tripId << " ---> Depot" << endl;
+                            number_trips++;
                             (*ptr1).second = true;
                             // added by omar <=>
                             // we need to add trip duration even if he had to go to depot
@@ -223,6 +229,7 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
                                     duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60);
                                     // <=>
                                     output_file << (*ptr1).first.tripId << " --> Depot" << endl;
+                                    number_trips++;
                                     (*ptr1).second = true;
                                     res++;
                                     isTreated = true;
@@ -237,6 +244,7 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
                                     output_file << (*ptr1).first.tripId << " -- HLP --> "
                                                 << " waitInStation (" << attente << ")"
                                                 << " -->";
+                                    number_trips++;
                                     depot_stats.somme_covered_voyages++;
                                     (*ptr1).second = true;
                                     res++;
@@ -254,11 +262,12 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
             }
         }
 
-        output_file << " __________________________________________________________________________________ " << endl;
-        output_file << "|#Cluster|Duree Total|Cout total|Nombre HLP|Duree HLP|% HLP|Duree Attente|% Attente|" << endl;
+        output_file << " __________________________________________________________________________________________________ " << endl;
+        output_file << "|#Cluster|Duree Total|Cout total|Nombre HLP|Duree HLP|% HLP|Duree Attente|% Attente|Nombre de trips" << endl;
 
         cout_total += c_a * duree_attente + c_v * duree_hlp;
-        output_file << "|" << setw(8) << clusterCount << "|" << setw(7) << duree_total << " min|" << setw(10) << cout_total << "|" << setw(6) << hlp_number << " HLP|" << setw(5) << duree_hlp << " min|" << setw(3) << duree_hlp * 100 / duree_total << " %|" << setw(9) << duree_attente << " min|" << setw(7) << duree_attente * 100 / duree_total << " %|" << endl;
+        output_file << "|" << setw(8) << clusterCount << "|" << setw(7) << duree_total << " min|" << setw(10) << cout_total << "|" << setw(6) << hlp_number << " HLP|" 
+            << setw(5) << duree_hlp << " min|" << setw(3) << duree_hlp * 100 / duree_total << " %|" << setw(9) << duree_attente << " min|" << setw(7) << duree_attente * 100 / duree_total << " %|" << number_trips << endl;
         output_file << " ---------------------------------------------------------------------------------- " << endl;
 
         // collecting informations
@@ -267,6 +276,9 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
         depot_stats.duree_total_hlp += duree_hlp;
         depot_stats.cout_total_depot += cout_total;
         depot_stats.somme_hlp += hlp_number;
+        //collecting informations for number of clusters with one trip
+        if (number_trips == 1)
+            depot_stats.clusters_with_one_trip++;
 
         // collect also the total of trips and clusters
 
@@ -283,9 +295,13 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
     cout << "N# clusters: " << its << endl;
     cout << "Cout de depot; " << depotId << " : " << depot_stats.cout_total_depot << endl;
 
-    cout << " __________________________________________________________________________________ " << endl;
-    cout << "|#Depot  |Duree Total|Cout total|Total HLP|Duree HLP|% HLP|Total Attente|% Attente|Somme Clusters|Covered Trips" << endl;
+    cout << " ___________________________________________________________________________________________________________________________ " << endl;
+    cout << "|#Depot  |Duree Total|Cout total|Total HLP|Duree HLP|% HLP|Total Attente|% Attente|Somme Clusters|Covered Trips|Clusters with one trip" << endl;
 
-    cout << "|" << setw(8) << depotId << "|" << setw(7) << depot_stats.duree_total_depot << " min|" << setw(10) << depot_stats.cout_total_depot << "|" << setw(6) << depot_stats.duree_total_hlp << " HLP|" << setw(5) << depot_stats.somme_hlp << " min|" << setw(3) << depot_stats.duree_total_hlp * 100 / depot_stats.duree_total_depot << " %|" << setw(9) << depot_stats.duree_total_attente << " min|" << setw(7) << depot_stats.duree_total_attente * 100 / depot_stats.duree_total_depot << " %|" << setw(7)<< depot_stats.somme_clusters << "|" << setw(10) << depot_stats.somme_covered_voyages << endl;
+    cout << "|" << setw(8) << depotId << "|" << setw(7) << depot_stats.duree_total_depot << " min|" << setw(10) << depot_stats.cout_total_depot << "|" 
+        << setw(6) << depot_stats.duree_total_hlp << " HLP|" << setw(5) << depot_stats.somme_hlp << " min|" 
+        << setw(3) << depot_stats.duree_total_hlp * 100 / depot_stats.duree_total_depot << " %|" 
+        << setw(9) << depot_stats.duree_total_attente << " min|" << setw(7) << depot_stats.duree_total_attente * 100 / depot_stats.duree_total_depot 
+        << " %|" << setw(7)<< depot_stats.somme_clusters << "|" << setw(10) << depot_stats.somme_covered_voyages <<"|" <<setw(7)<<depot_stats.clusters_with_one_trip << endl;
     cout << " ---------------------------------------------------------------------------------- " << endl;
 }
