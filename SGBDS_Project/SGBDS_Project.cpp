@@ -84,23 +84,27 @@ int main()
             }
             // livrable I
 
-            /* showAllStatistics(tripsStations, dataOutFile);
+            showAllStatistics(tripsStations, dataOutFile);
             graph_generator(interTrips, busStations, tripsStations, dataOutFile);
 
-            delete busStations; */ 
-            multiset<BusTrip> busTripsPopulation; 
-            detach_lines(busTripsPopulation, tripsStations); 
+            delete busStations; 
 
-            cout << "showing results of the new population" << endl; 
-            int sum_trips = 0; 
-            for(auto v: busTripsPopulation)
-            {
-                sum_trips++; 
-                // v.showBusTrip();
-                // cout << endl; 
-            }
-            cout << "tripsTotal: " << sum_trips << endl; 
-            heuristic_graph_builder(busTripsPopulation, dataOutFile, busStations, interTrips); 
+
+            // livrable II
+
+            // multiset<BusTrip> busTripsPopulation; 
+            // detach_lines(busTripsPopulation, tripsStations); 
+
+            // cout << "showing results of the new population" << endl; 
+            // int sum_trips = 0; 
+            // for(auto v: busTripsPopulation)
+            // {
+            //     sum_trips++; 
+            //     // v.showBusTrip();
+            //     // cout << endl; 
+            // }
+            // cout << "tripsTotal: " << sum_trips << endl; 
+            // heuristic_graph_builder(busTripsPopulation, dataOutFile, busStations, interTrips); 
         }
         else if (!dataFile.is_open())
         {

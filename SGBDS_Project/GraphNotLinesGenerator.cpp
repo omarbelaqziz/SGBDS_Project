@@ -295,13 +295,11 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
     cout << "N# clusters: " << its << endl;
     cout << "Cout de depot; " << depotId << " : " << depot_stats.cout_total_depot << endl;
 
-    cout << " ___________________________________________________________________________________________________________________________ " << endl;
+    cout << " __________________________________________________________________________________ " << endl;
     cout << "|#Depot  |Duree Total|Cout total|Total HLP|Duree HLP|% HLP|Total Attente|% Attente|Somme Clusters|Covered Trips|Clusters with one trip" << endl;
 
-    cout << "|" << setw(8) << depotId << "|" << setw(7) << depot_stats.duree_total_depot << " min|" << setw(10) << depot_stats.cout_total_depot << "|" 
-        << setw(6) << depot_stats.duree_total_hlp << " HLP|" << setw(5) << depot_stats.somme_hlp << " min|" 
-        << setw(3) << depot_stats.duree_total_hlp * 100 / depot_stats.duree_total_depot << " %|" 
-        << setw(9) << depot_stats.duree_total_attente << " min|" << setw(7) << depot_stats.duree_total_attente * 100 / depot_stats.duree_total_depot 
-        << " %|" << setw(7)<< depot_stats.somme_clusters << "|" << setw(10) << depot_stats.somme_covered_voyages <<"|" <<setw(7)<<depot_stats.clusters_with_one_trip << endl;
+    cout << "|" << setw(8) << depotId << "|" << setw(7) << depot_stats.duree_total_depot << " min|" << setw(10) << depot_stats.cout_total_depot << "|" << setw(6) << depot_stats.duree_total_hlp << " HLP|" << setw(5) << depot_stats.somme_hlp << " min|" << setw(3) << depot_stats.duree_total_hlp * 100 / depot_stats.duree_total_depot << " %|" << setw(9) << depot_stats.duree_total_attente << " min|" << setw(7) << depot_stats.duree_total_attente * 100 / depot_stats.duree_total_depot << " %|" << setw(7) << depot_stats.somme_clusters << "|" << setw(10) << depot_stats.somme_covered_voyages << "|" << setw(7) << depot_stats.clusters_with_one_trip << endl;
     cout << " ---------------------------------------------------------------------------------- " << endl;
 }
+
+//TODO:  we have to calculate the iteneraires with one trip :: IMPORTANT 
