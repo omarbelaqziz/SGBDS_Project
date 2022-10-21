@@ -6,9 +6,9 @@ using namespace std;
 
 BusStation createBusStationFromLine(string line)
 {
-    string fineLine(StringsOperations::removeLastChar(StringsOperations::ltrim(StringsOperations::rtrim(line))));
-    vector<string> strings = StringsOperations::split(fineLine);
-    return BusStation(strings[0], StringsOperations::stringToBool(strings[1]));
+    string fineLine(StringOps::removeLastChar(StringOps::ltrim(StringOps::rtrim(line))));
+    vector<string> strings = StringOps::split(fineLine);
+    return BusStation(strings[0], StringOps::stringToBool(strings[1]));
 }
 
 int main()

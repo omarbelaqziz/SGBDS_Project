@@ -1,5 +1,5 @@
 #include "BusInterTripsHandler.h"
-#include "StringsOperations.h"
+#include "StringOps.h"
 #include "TargetInterTrip.h"
 
 using namespace std;
@@ -17,7 +17,7 @@ void handle_file_stream_inter_trips(map<string, set<TargetInterTrip> *> &inter_t
             cout << endl;
             break;
         }
-        stringData = StringsOperations::split(StringsOperations::removeLastChar(StringsOperations::ltrim(StringsOperations::rtrim(line))));
+        stringData = StringOps::split(StringOps::removeLastChar(StringOps::ltrim(StringOps::rtrim(line))));
         
 
         auto depBusStation = busStationsSet->find(BusStation(stringData[1], false));

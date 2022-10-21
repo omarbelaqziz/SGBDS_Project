@@ -1,5 +1,5 @@
 #include "BusStationsHandler.h"
-#include "StringsOperations.h"
+#include "StringOps.h"
 
 set<BusStation> *handle_file_stream_bus_stations(ifstream &i_file)
 {
@@ -14,7 +14,7 @@ set<BusStation> *handle_file_stream_bus_stations(ifstream &i_file)
             // cout << "Bus Stations op. ends at " << line << endl;
             break;
         }
-        temp = StringsOperations::split(StringsOperations::ltrim(line));
+        temp = StringOps::split(StringOps::ltrim(line));
 
         bus_stations->insert(BusStation(temp[0], isDepot_handler(temp[1])));
     }

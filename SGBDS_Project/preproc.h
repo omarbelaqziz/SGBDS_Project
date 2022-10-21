@@ -10,7 +10,7 @@
 
 #include "BusStation.h"
 #include "BusTrip.h"
-#include "StringsOperations.h"
+#include "StringOps.h"
 #include "BusStationsHandler.h"
 #include "BusTripsHandler.h"
 #include "BusInterTripsHandler.h"
