@@ -24,15 +24,6 @@
     <ClCompile Include="BusTrip.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BusLine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InterTrip.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StringsOperations.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="BusStationsHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -45,21 +36,21 @@
     <ClCompile Include="Itiniraires.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BusInterTripsHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphNotLinesGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BusStation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BusTrip.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BusLine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="InterTrip.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StringsOperations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BusStationsHandler.h">
@@ -72,6 +63,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Itiniraires.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BusInterTripsHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TargetInterTrip.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphNotLinesGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="preproc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

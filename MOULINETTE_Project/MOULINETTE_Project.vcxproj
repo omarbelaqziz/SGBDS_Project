@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{6165d74a-1dff-494e-9443-a2db4a7c5818}</ProjectGuid>
-    <RootNamespace>SGBDSProject</RootNamespace>
+    <ProjectGuid>{d44631c9-03e2-4b81-834a-84a21bce087d}</ProjectGuid>
+    <RootNamespace>MOULINETTEProject</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -88,7 +88,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\OMAR\source\repos\SGBDS_Project\StringOperations;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,34 +139,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BusStation.cpp" />
-    <ClCompile Include="BusInterTripsHandler.cpp" />
-    <ClCompile Include="BusTrip.cpp" />
-    <ClCompile Include="Itiniraires.cpp" />
-    <ClCompile Include="SGBDS_Project.cpp" />
-    <ClCompile Include="BusStationsHandler.cpp" />
-    <ClCompile Include="BusTripsHandler.cpp" />
-    <ClCompile Include="StatisticsCalculator.cpp" />
-    <ClCompile Include="GraphGenerator.cpp" />
-    <ClCompile Include="GraphNotLinesGenerator.cpp" />
+    <ClInclude Include="testkh.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BusStation.h" />
-    <ClInclude Include="BusInterTripsHandler.h" />
-    <ClInclude Include="BusTrip.h" />
-    <ClInclude Include="Itiniraires.h" />
-    <ClInclude Include="BusStationsHandler.h" />
-    <ClInclude Include="BusTripsHandler.h" />
-    <ClInclude Include="TargetInterTrip.h" />
-    <ClInclude Include="StatisticsCalculator.h" />
-    <ClInclude Include="GraphGenerator.h" />
-    <ClInclude Include="GraphNotLinesGenerator.h" />
-    <ClInclude Include="preproc.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\StringOperations\StringOperations.vcxproj">
-      <Project>{faa14cbd-ea10-4661-adfb-9c022c1215af}</Project>
-    </ProjectReference>
+    <ClCompile Include="testkh.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,6 +1,7 @@
-#include "StringsOperations.h"
+#include "pch.h"
+#include "StringOps.h"
 
-string StringsOperations::rtrim(const string &str)
+string StringOps::rtrim(const string& str)
 {
     string s(str);
 
@@ -10,7 +11,7 @@ string StringsOperations::rtrim(const string &str)
 
     return s;
 }
-string StringsOperations::ltrim(const string &str)
+string StringOps::ltrim(const string& str)
 {
     string s(str);
 
@@ -20,7 +21,7 @@ string StringsOperations::ltrim(const string &str)
 
     return s;
 }
-string StringsOperations::removeLastChar(const string& str)
+string StringOps::removeLastChar(const string& str)
 {
     string s(str);
     if (!s.empty()) {
@@ -29,7 +30,7 @@ string StringsOperations::removeLastChar(const string& str)
     return s;
 }
 
-vector<string> StringsOperations::split(const string &str)
+vector<string> StringOps::split(const string& str)
 {
 
     vector<string> tokens;
@@ -49,6 +50,6 @@ vector<string> StringsOperations::split(const string &str)
 
     return tokens;
 }
-bool StringsOperations::stringToBool(string const& str) {
+bool StringOps::stringToBool(string const& str) {
     return str != "0";
 }

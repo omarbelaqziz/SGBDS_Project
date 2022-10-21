@@ -1,5 +1,5 @@
 #include "BusTripsHandler.h"
-#include "StringsOperations.h"
+#include "StringOps.h"
 #include <iterator>
 
 void handle_file_stream_bus_trips(unordered_map<string, multiset<BusTrip> *> &tripsMap, ifstream &i_file, set<BusStation> *busStationsSet)
@@ -13,7 +13,7 @@ void handle_file_stream_bus_trips(unordered_map<string, multiset<BusTrip> *> &tr
         {
             break;
         }
-        rawData = StringsOperations::split(StringsOperations::removeLastChar(StringsOperations::ltrim(StringsOperations::rtrim(line))));
+        rawData = StringOps::split(StringOps::removeLastChar(StringOps::ltrim(StringOps::rtrim(line))));
         BusTrip busTrip;
         buildBusTrip(busTrip, rawData, *busStationsSet);
         multiset<BusTrip> *BSTrips;
