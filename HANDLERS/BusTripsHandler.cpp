@@ -1,5 +1,4 @@
 #include "BusTripsHandler.h"
-#include "StringOps.h"
 #include <iterator>
 
 void handle_file_stream_bus_trips(unordered_map<string, multiset<BusTrip> *> &tripsMap, ifstream &i_file, set<BusStation> *busStationsSet)
@@ -86,4 +85,17 @@ BusStation *findBusStationById(const set<BusStation *> &busStationsSet, string b
             return bs;
     }
     return nullptr;
+}
+
+void detach_lines(multiset<BusTrip> &resultTrips, TRIPS_MAP linesTrips)
+{
+    TRIPS_MAP ::iterator it1;
+    for (it1 = linesTrips.begin(); it1 != linesTrips.end(); ++it1)
+    {
+        multiset<BusTrip>::iterator temp_it;
+        for (temp_it = (*it1).second->begin(); temp_it != (*it1).second->end(); ++temp_it)
+        {
+            resultTrips.insert((*temp_it));
+        }
+    }
 }

@@ -372,6 +372,7 @@ include
 CMakeLists.txt
 ll
 /SGBDS_Project/ll
+/SGBDS_Project/StringOps.h
 
 #data folder
 data

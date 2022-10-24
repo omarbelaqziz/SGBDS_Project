@@ -1,5 +1,6 @@
 #pragma once 
-#include "preproc.h"
+
+#include "../SGBDS_Project/preproc.h"
 
 void graph_generator(
     INTER_TRIPS stationsTargets,

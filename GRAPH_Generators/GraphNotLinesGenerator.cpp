@@ -1,5 +1,4 @@
 #include "GraphNotLinesGenerator.h"
-#include "BusStationsHandler.h"
 #include <list>
 
 typedef struct
@@ -15,18 +14,7 @@ typedef struct
     double cout_total_depot;
 } DepotStats;
 
-void detach_lines(multiset<BusTrip> &resultTrips, TRIPS_MAP linesTrips)
-{
-    TRIPS_MAP ::iterator it1;
-    for (it1 = linesTrips.begin(); it1 != linesTrips.end(); ++it1)
-    {
-        multiset<BusTrip>::iterator temp_it;
-        for (temp_it = (*it1).second->begin(); temp_it != (*it1).second->end(); ++temp_it)
-        {
-            resultTrips.insert((*temp_it));
-        }
-    }
-}
+
 
 void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &output_file, set<BusStation> *busStations, INTER_TRIPS stationsTargets)
 {

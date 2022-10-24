@@ -1,15 +1,9 @@
-#include "preproc.h"
-#include "GraphGenerator.h"
-#include "GraphNotLinesGenerator.h"
+
+#include "../SGBDS_Project/preproc.h"
+#include "../GRAPH_Generators/GraphGenerator.h"
+#include "../GRAPH_Generators/GraphNotLinesGenerator.h"
 
 using namespace std;
-
-BusStation createBusStationFromLine(string line)
-{
-    string fineLine(StringOps::removeLastChar(StringOps::ltrim(StringOps::rtrim(line))));
-    vector<string> strings = StringOps::split(fineLine);
-    return BusStation(strings[0], StringOps::stringToBool(strings[1]));
-}
 
 int main()
 {
