@@ -554,43 +554,62 @@ void stats_calculator(
     set<BusStation>* busStations,
     multiset<BusTrip> trips ) 
 {
+    // total stats of depot params
+    int totalWaitDuration = 0;
+    int totalHlpDuration = 0;
+    int totalHlpNumber = 0;
+    int totalTripsDuration = 0;
+    int totalCost = 0;
+    int totalCoveredTrips = 0;
 
+    // iterate over all clusters
     for (int i = 0; i < clusters.size(); i++)
     {
-        int cost = 0;
+        cout << "start cluster " << i + 1 << endl;
+        // stats params
         int waitDuration = 0;
         int hlpDuration = 0;
+        int hlpNumber = 0;
         int tripsDuration = 0;
+        int coveredTripsInCluster = 0;
 
-
+        // load depot ID
         string depotId = findDepotId(busStations);
+
         BusTrip firstTrip, lastTrip;
 
+        // add duration between depot and first station 
         bool foundFirst = findTripById(firstTrip, clusters[i][0], trips);
         if (!foundFirst) {
-            cout << "didnt found trip " << clusters[i][j - 1] << endl;
+            cout << "didnt found trip " << clusters[i][0] << endl;
+            exit(-1);
         }
+        hlpDuration  += TargetInterTrip::findDurationByTargetId(firstTrip.busStationDep->getId(), stationsTargets[depotId]);
 
 
-        hlpDuration  = TargetInterTrip::findDurationByTargetId(clusters[i][0], stationsTargets[depotId]);
-
+        // iterate over the cluster 
         for (int j = 0; j < clusters[i].size(); j++)
         {
+            // case of wait in station 
             if (clusters[i][j] == "WS") {
                 BusTrip startTrip, nextTrip;
                 bool foundStart = findTripById(startTrip, clusters[i][j - 1], trips);
                 bool foundNext = findTripById(nextTrip, clusters[i][j + 1], trips);
                 if (!foundStart) {
                     cout << "didnt found trip " << clusters[i][j - 1] << endl;
+                    exit(-1);
                 }
                 else if (!foundNext) {
                     cout << "didnt found trip " << clusters[i][j + 1] << endl;
+                    exit(-1);
                 }
                 else
                 {
                     waitDuration += (difftime(nextTrip.dateDep, startTrip.dateDep) / 60);
                 }
             }
+
+            // case of HLP
             else if (clusters[i][j] == "HLP")
             {
                 BusTrip startTrip, nextTrip;
@@ -598,12 +617,15 @@ void stats_calculator(
                 bool foundNext = findTripById(nextTrip, clusters[i][j + 1], trips);
                 if (!foundStart) {
                     cout << "didnt found trip " << clusters[i][j - 1] << endl;
+                    exit(-1);
                 }
                 else if (!foundNext) {
                     cout << "didnt found trip " << clusters[i][j + 1] << endl;
+                    exit(-1);
                 }
                 else
                 {
+                    hlpNumber++;
                     int temp_duration = TargetInterTrip::findDurationByTargetId(nextTrip.getBusStationDep()->getId(), stationsTargets.at(startTrip.getBusStationArr()->getId()));
                     if (temp_duration == -1) {
                         cout << "error retrieving intertrip duratuion from : " << startTrip.getBusStationArr()->getId() << " to " << nextTrip.getBusStationDep()->getId() << endl;
@@ -615,16 +637,99 @@ void stats_calculator(
                     } 
                 }
             }
+            // case of a trip
             else {
                 if (j == clusters[i].size() - 1) {
-                    hlpDuration += TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[clusters[i][j]]);
+                    BusTrip busTrip;
+                    bool foundTrip = findTripById(busTrip, clusters[i][j], trips);
+                    if (!foundTrip) {
+                        cout << "didnt found trip " << clusters[i][j] << endl;
+                        exit(-1);
+                    }
+                    hlpDuration += TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[busTrip.busStationArr->getId()]);
                 }
                 BusTrip busTrip;
                 bool foundTrip = findTripById(busTrip, clusters[i][j], trips);
+                if (!foundTrip) {
+                    cout << "didnt found trip " << clusters[i][j] << endl;
+                    exit(-1);
+                }
+                coveredTripsInCluster++;
                 tripsDuration += (difftime(busTrip.dateDep, busTrip.dateDep) / 60);
             }
         }
 
+        // load statistics into clusters stats: 
+        vector<double> singleClusterStats;
 
+        // add duration to total params
+        totalHlpDuration += hlpDuration;
+        totalWaitDuration += waitDuration;
+        totalTripsDuration += tripsDuration;
+
+        // index 0 : total duaration of cluster = trips duration + wait duration + hlp duration
+        double totalClusterDuration = (double)tripsDuration + (double)waitDuration + (double)hlpDuration;
+        singleClusterStats.push_back(totalClusterDuration);
+
+        // index 1 : total cost of cluster = (wait duration * c_a) + (hlp duration * c_v)
+        int costCluster = (waitDuration * c_a) + (hlpDuration * c_v);
+        singleClusterStats.push_back(costCluster);
+        totalCost += costCluster;
+
+        // index 2 :  number of HLPs in cluster
+        singleClusterStats.push_back(hlpNumber);
+        totalHlpNumber += hlpNumber;
+
+        // index 3 : hlp duration 
+        singleClusterStats.push_back(hlpDuration);
+
+        // index 4 : hlp pourcentage = hlp duration / total duration 
+        singleClusterStats.push_back(hlpDuration / totalClusterDuration);
+
+        // index 5 : wait duration
+        singleClusterStats.push_back(waitDuration);
+
+        // index 6 : wait pourcentage
+        singleClusterStats.push_back(waitDuration / totalClusterDuration);
+
+        // index 7 : number of covered trips
+        singleClusterStats.push_back(coveredTripsInCluster);
+        totalCoveredTrips += coveredTripsInCluster;
+
+        // add the vector to clustersStats
+        clustersStats.push_back(singleClusterStats);
+    }
+    // add global depot stats 
+    // ! same indexes as previous and index 8 is the number of clusters
+    double totalDepotDuration = (double)totalHlpNumber + (double)totalWaitDuration + (double)totalTripsDuration;
+    depotStats.push_back(totalDepotDuration);
+    depotStats.push_back(totalCost);
+    depotStats.push_back(totalHlpNumber);
+    depotStats.push_back(totalHlpDuration);
+    depotStats.push_back(totalHlpDuration / totalDepotDuration); // hlp pourcentage
+    depotStats.push_back(totalWaitDuration);
+    depotStats.push_back(totalWaitDuration / totalDepotDuration); // wait pourcentage
+    depotStats.push_back(totalCoveredTrips);
+    depotStats.push_back(clusters.size());
+}
+
+
+void writeStatsIntoScreen(
+    const vector<vector<double>>& clustersStats,
+    const vector<double>& depotStats
+)
+{
+    cout << "| Cluster | Duration | Cluster's Cost | Number of HLPs | HLP Duration | HLP pourcentage | Wait Duration | Wait Pourcentage | Number of trips |" << endl;
+    for (int i = 0; i < clustersStats.size(); i++)
+    {
+        cout << "|" << setw(9) << i;
+        cout << "|" << setw(10) << clustersStats[i][0];
+        cout << "|" << setw(16) << clustersStats[i][1];
+        cout << "|" << setw(16) << clustersStats[i][2];
+        cout << "|" << setw(14) << clustersStats[i][3];
+        cout << "|" << setw(17) << clustersStats[i][4];
+        cout << "|" << setw(15) << clustersStats[i][5];
+        cout << "|" << setw(18) << clustersStats[i][6];
+        cout << "|" << setw(17) << clustersStats[i][7] << "|" << endl;
     }
 }

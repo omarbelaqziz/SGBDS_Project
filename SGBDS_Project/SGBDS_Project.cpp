@@ -98,18 +98,31 @@ int main()
             detach_lines(busTripsPopulation, tripsStations); 
 
             cout << "showing results of the new population" << endl; 
-            int sum_trips = 0; 
-            for(auto v: busTripsPopulation)
-            {
-                sum_trips++; 
+            //int sum_trips = 0; 
+            //for(auto v: busTripsPopulation)
+            //{
+               // sum_trips++; 
                 // v.showBusTrip();
                 // cout << endl; 
-            }
-            cout << "tripsTotal: " << sum_trips << endl; 
-            heuristic_graph_builder(busTripsPopulation, dataOutFile, busStations, interTrips);
+            //}
+            //cout << "tripsTotal: " << sum_trips << endl; 
+            //heuristic_graph_builder(busTripsPopulation, dataOutFile, busStations, interTrips);
             vector<vector<string>> allClusters = clusters_generator_fromTripsSet(interTrips, busStations, busTripsPopulation, 1);
             cout << "+++++++++++++++ SIZE " << allClusters.size() << "_______________________________" << endl;
             write_cluster_to_file(dataOutFileOc, allClusters);
+            vector<vector<double>> clustersStats;
+            vector<double> depotStats;
+            stats_calculator(
+                clustersStats,
+                depotStats,
+                allClusters,
+                interTrips,
+                busStations,
+                busTripsPopulation);
+            writeStatsIntoScreen(
+                clustersStats,
+                depotStats
+            );
         }
         else if (!dataFile.is_open())
         {
