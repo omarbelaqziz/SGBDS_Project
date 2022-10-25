@@ -4,13 +4,6 @@
 
 using namespace std;
 
-BusStation createBusStationFromLine(string line)
-{
-    string fineLine(StringOps::removeLastChar(StringOps::ltrim(StringOps::rtrim(line))));
-    vector<string> strings = StringOps::split(fineLine);
-    return BusStation(strings[0], StringOps::stringToBool(strings[1]));
-}
-
 int main()
 {
     std::clock_t c_start = std::clock();
@@ -34,6 +27,16 @@ int main()
         "../output/out59.txt",
         "../output/out60.txt"};
 
+    char output_files_onlycluster[][22] = {
+        "../output/out50oc.txt",
+        "../output/out54oc.txt",
+        "../output/out55oc.txt",
+        "../output/out56oc.txt",
+        "../output/out57oc.txt",
+        "../output/out58oc.txt",
+        "../output/out59oc.txt",
+        "../output/out60oc.txt"};
+
     int data_set_index = 0;
 
     for (auto FILEE : filenames)
@@ -41,6 +44,7 @@ int main()
         data_set_index++;
         string filename = FILEE;
         string outfile = output_files[data_set_index - 1];
+        string outfileOc = output_files_onlycluster[data_set_index - 1];
 
         std::cout << "Handling data set N#: " << data_set_index << " / "
                   << "8" << endl;
@@ -52,10 +56,12 @@ int main()
 
         ifstream dataFile;
         ofstream dataOutFile;
+        ofstream dataOutFileOc;
         dataOutFile.open(outfile);
+        dataOutFileOc.open(outfileOc);
         dataFile.open(filename, ios::in);
 
-        if (dataFile.is_open() && dataOutFile.is_open())
+        if (dataFile.is_open() && dataOutFile.is_open() && dataOutFileOc.is_open())
         {
             string line;
             int lineNumber = 0;
@@ -100,11 +106,18 @@ int main()
                 // cout << endl; 
             }
             cout << "tripsTotal: " << sum_trips << endl; 
-            heuristic_graph_builder(busTripsPopulation, dataOutFile, busStations, interTrips); 
+            heuristic_graph_builder(busTripsPopulation, dataOutFile, busStations, interTrips);
+            vector<vector<string>*> allClusters = clusters_generator_fromTripsSet(interTrips, busStations, busTripsPopulation, 1);
+            cout << "+++++++++++++++ SIZE " << allClusters.size() << "_______________________________" << endl;
+            write_cluster_to_file(dataOutFileOc, allClusters);
         }
         else if (!dataFile.is_open())
         {
             std::cout << "cannot open " << filename << endl;
+        }
+        else if (!dataOutFileOc.is_open())
+        {
+            std::cout << "cannot open " << outfileOc << endl;
         }
         else
         {

@@ -149,7 +149,7 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
                     if ((*ptr2).first.busStationDep == (*ptr1).first.busStationArr)
                     {
                         if (0 <= difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 &&
-                            difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 <= 45)
+                            difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 <= MIN_WAIT)
                         {
                             output_file << (*ptr1).first.tripId << "--> waitInStation(" << difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 << ") --->";
                             number_trips++;
@@ -162,7 +162,7 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
                             ptr2++;
                         }
                         // new cluster
-                        else if (difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 > 45)
+                        else if (difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 > MIN_WAIT)
                         {
                             int duree = TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[(*ptr1).first.busStationArr->getId()]);
                             if (duree == -1)
@@ -222,7 +222,7 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
 
                             if (attente > 0)
                             {
-                                if (attente > 45)
+                                if (attente > MIN_WAIT)
                                 {
                                     // added by omar <=>
                                     // we need to add trip duration even if he had to go to depot
