@@ -434,7 +434,7 @@ vector<vector<string>*> clusters_generator_fromTripsSet(
                                 difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 <= MIN_WAIT)
                             {
                                 cluster->push_back((*ptr1).first.tripId);
-                                (mode == 0) ? cluster->push_back("ws(" + to_string((int)difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60) + ")") : cluster->push_back("ws");
+                                (mode == 0) ? cluster->push_back("WS(" + to_string((int)difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60) + ")") : cluster->push_back("WS");
                                 (*ptr1).second = true;
                                 res++;
                                 ptr1 = ptr2;
@@ -512,7 +512,7 @@ vector<vector<string>*> clusters_generator_fromTripsSet(
                                     else
                                     {
                                         cluster->push_back((*ptr1).first.tripId);
-                                        (mode == 0) ? cluster->push_back("hlp(" + to_string(duree) + "," + to_string(attente) + ")") : cluster->push_back("hlp");
+                                        (mode == 0) ? cluster->push_back("HLP(" + to_string(duree) + "," + to_string(attente) + ")") : cluster->push_back("HLP");
                                         (*ptr1).second = true;
                                         res++;
                                         ptr1 = ptr2;
@@ -535,7 +535,7 @@ vector<vector<string>*> clusters_generator_fromTripsSet(
 void write_cluster_to_file(ofstream& output_file, vector<vector<string>*> allClusters) {
     for (int i = 0; i < allClusters.size(); i++)
     {
-        output_file << "cluster" << i << ": ";
+        output_file << "cluster " << i << ": ";
         for (int j = 0; j < allClusters[i]->size(); j++)
         {
             output_file << (*allClusters[i])[j] << " ";
