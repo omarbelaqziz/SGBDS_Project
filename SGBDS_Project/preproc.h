@@ -28,8 +28,8 @@ typedef vector<pair<BusTrip, bool>> TEMP_TYPE;
 
 
 
-#define c_a 0.4
-#define c_v 0.6
+#define c_a 0.2
+#define c_v 0.4
 
 #define MIN_WAIT 45
 using namespace std; 

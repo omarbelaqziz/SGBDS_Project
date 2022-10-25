@@ -87,3 +87,14 @@ BusStation *findBusStationById(const set<BusStation *> &busStationsSet, string b
     }
     return nullptr;
 }
+
+bool findTripById(BusTrip& bt, string tripId, multiset<BusTrip> busTrips)
+{
+    for (auto t : busTrips) {
+        if (t.getTripId() == tripId) {
+            bt = t;
+            return true;
+        }
+    }
+    return false;
+}
