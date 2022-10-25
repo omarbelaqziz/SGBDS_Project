@@ -719,7 +719,9 @@ void writeStatsIntoScreen(
     const vector<double>& depotStats
 )
 {
+    cout << "+---------+----------+----------------+----------------+--------------+-----------------+---------------+------------------+-----------------+" << endl;
     cout << "| Cluster | Duration | Cluster's Cost | Number of HLPs | HLP Duration | HLP pourcentage | Wait Duration | Wait Pourcentage | Number of trips |" << endl;
+    cout << "+---------+----------+----------------+----------------+--------------+-----------------+---------------+------------------+-----------------+" << endl;
     for (int i = 0; i < clustersStats.size(); i++)
     {
         cout << "|" << setw(9) << i;
@@ -732,4 +734,21 @@ void writeStatsIntoScreen(
         cout << "|" << setw(18) << clustersStats[i][6];
         cout << "|" << setw(17) << clustersStats[i][7] << "|" << endl;
     }
+    cout << "+---------+----------+----------------+----------------+--------------+-----------------+---------------+------------------+-----------------+" << endl;
+    cout << endl;
+
+    cout << "DEPOT STATS : " << endl;
+    cout << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
+    cout << "| Total Duration | Depot's Cost | Number of HLPs | HLP Duration | HLP pourcentage | Wait Duration | Wait Pourcentage | Number of trips | Number of Clusters |" << endl;
+    cout << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
+    cout << "|" << setw(16) << depotStats[0];
+    cout << "|" << setw(14) << depotStats[1];
+    cout << "|" << setw(16) << depotStats[2];
+    cout << "|" << setw(14) << depotStats[3];
+    cout << "|" << setw(17) << depotStats[4];
+    cout << "|" << setw(15) << depotStats[5];
+    cout << "|" << setw(18) << depotStats[6];
+    cout << "|" << setw(17) << depotStats[7];
+    cout << "|" << setw(20) << depotStats[8] << "|" << endl;
+    cout << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
 }
