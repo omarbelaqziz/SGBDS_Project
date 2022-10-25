@@ -535,7 +535,7 @@ vector<vector<string>*> clusters_generator_fromTripsSet(
 void write_cluster_to_file(ofstream& output_file, vector<vector<string>*> allClusters) {
     for (int i = 0; i < allClusters.size(); i++)
     {
-        output_file << "cluster " << i << ": ";
+        output_file << "cluster " << i << " : ";
         for (int j = 0; j < allClusters[i]->size(); j++)
         {
             output_file << (*allClusters[i])[j] << " ";
