@@ -39,6 +39,10 @@ public:
     bool operator==(const BusTrip *bus) const;
     bool operator==(const BusTrip &bus) const;
     void showBusTrip() const;
+
+    int getTripDuration() {
+        return difftime(this->getDateArr(), this->getDateDep())/60; 
+    }
     const BusStation *getBusStationDep() const
     {
         return this->busStationDep;

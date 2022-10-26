@@ -16,3 +16,4 @@ void buildBusTrip(BusTrip& busTrip, vector<string> rawData, set<BusStation>& bus
 static time_t dateTimeStringToTimeObject(string date, string time);
 BusStation* findBusStationById(const set<BusStation*>& busStationsSet, string busStationId);
 void detach_lines(multiset<BusTrip> &resultTrips, TRIPS_MAP linesTrips);
+bool findTripById(BusTrip& bt, string tripId, multiset<BusTrip> busTrips);

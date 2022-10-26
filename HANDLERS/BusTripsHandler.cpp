@@ -99,3 +99,14 @@ void detach_lines(multiset<BusTrip> &resultTrips, TRIPS_MAP linesTrips)
         }
     }
 }
+
+bool findTripById(BusTrip& bt, string tripId, multiset<BusTrip> busTrips)
+{
+    for (auto t : busTrips) {
+        if (t.getTripId() == tripId) {
+            bt = t;
+            return true;
+        }
+    }
+    return false;
+}
