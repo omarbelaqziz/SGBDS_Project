@@ -605,7 +605,7 @@ void stats_calculator(
                 }
                 else
                 {
-                    waitDuration += (difftime(nextTrip.dateDep, startTrip.dateDep) / 60);
+                    waitDuration += (difftime(nextTrip.dateDep, startTrip.dateArr) / 60);
                 }
             }
 
@@ -633,7 +633,7 @@ void stats_calculator(
                     }
                     else {
                         hlpDuration += temp_duration;
-                        waitDuration += (difftime(nextTrip.dateDep, startTrip.dateDep) / 60) - temp_duration;
+                        waitDuration += (difftime(nextTrip.dateDep, startTrip.dateArr) / 60) - temp_duration;
                     } 
                 }
             }
@@ -655,7 +655,7 @@ void stats_calculator(
                     exit(-1);
                 }
                 coveredTripsInCluster++;
-                tripsDuration += (difftime(busTrip.dateDep, busTrip.dateDep) / 60);
+                tripsDuration += (difftime(busTrip.dateArr, busTrip.dateDep) / 60);
             }
         }
 
