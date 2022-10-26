@@ -38,7 +38,7 @@ public:
     // Business Traitement
     void constructTripsPopulation();
     void showBusTripsPopulation(); 
-    void rulesVerfication(const vector<vector<string>>& clusters) const; 
+    void rulesVerfication(const vector<vector<string>>& clusters, vector<vector<string>> & output_data) const; 
     const bool findInterTripByTripId(BusTrip& temp, string tripId) const; 
     bool static verifyTwoTrips(string T_1, string T_2); 
 };

@@ -1,6 +1,7 @@
 #include <iostream>
 #include "LexicalAnalyser.h"
 #include "LogicalAnalyser.h"
+#include "StatisticsAnalyser.h"
 
 /**
  * Ex:
@@ -17,27 +18,31 @@
  */
 
 #define PATTERN "cluster [0-9][0-9]* : (T_[0-9][0-9]*( HLP | WS ))*T_[0-9][0-9]* ;"
-#define SOL_FILENAME "../output/out50.txt"
+#define SOL_FILENAME "../output/out60oc.txt"
 
-#define DATA_FILE "../data/test50.txt"
+#define DATA_FILE "../data/test60.txt"
 #define PARAM_FILE "../config/param.in"
-
-
 
 int main(int argc, char const *argv[])
 {
 
     // lexical analysis
-    vector<vector<string>> clusters ;
+    vector<vector<string>> clusters;
     LexicalAnalyser *lexicalAnalyser = LexicalAnalyser::getInstance(SOL_FILENAME, PATTERN);
     lexicalAnalyser->fileMatchLexicalReqs(clusters);
 
+    vector<vector<string>> output_data;
+    // logical analysis
+    LogicalAnalyser *logicalAnalyser = LogicalAnalyser::getInstance(PARAM_FILE, SOL_FILENAME, DATA_FILE);
+    // logicalAnalyser->showBusTripsPopulation();
 
-    // logical analysis 
-    LogicalAnalyser *logicalAnalyser = LogicalAnalyser::getInstance(PARAM_FILE, SOL_FILENAME, DATA_FILE); 
-    // logicalAnalyser->showBusTripsPopulation(); 
+    logicalAnalyser->rulesVerfication(clusters, output_data);
 
-    logicalAnalyser->rulesVerfication(clusters); 
+    string stats_out = "../output/stats.txt"; 
+    StatisticsAnalyser *statisticsAnalyser = new StatisticsAnalyser(output_data, stats_out); 
+    statisticsAnalyser->handleDepot(); 
+
+    // calcule du cout total
 
     return 0;
 }

@@ -95,7 +95,7 @@ bool LogicalAnalyser::verifyTwoTrips(string T_1, string T_2)
     //
 }
 
-void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters) const
+void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters, vector<vector<string>> &output_data) const
 {
     // Trips Number
     int TRIPS_COUNT = this->tripsPopulation.size();
@@ -103,20 +103,40 @@ void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters) c
     // trip existance
     map<string, int> existance;
 
-    //
-
-    // clusters iterator
-    vector<vector<string>>::iterator c_it;
+    // the matrix that will contains all data related to the depot
+    /**
+     * @brief
+     *  15 0 | 0 0 24 | 12 | 0 0 43 | 14 8 | 0 0 54 | 13 | 0 0 12 | 19 8 | 0 0 11 | 12 0 |
+     *  ...
+     */
+    // output_data
 
     // data iterator
     vector<string>::iterator d_it;
     int cluster_count = 0;
     for (auto cluster : clusters)
     {
+        vector<string> cluster_data;
         cluster_count++;
 
         BusTrip startTrip;
         bool found = this->findInterTripByTripId(startTrip, cluster[0]);
+
+        // search the inter trip between Depot --> startTrip.stDep
+        string depotId = findDepotId(this->busStations);
+        int depot_duration = TargetInterTrip::findDurationByTargetId(startTrip.getBusStationDep()->getId(), this->interTrips.at(depotId));
+        if (depot_duration != -1)
+        {
+            cluster_data.push_back(to_string(depot_duration) + " 0");
+            // add the first trip just after the depot
+            cluster_data.push_back("0 0 " + to_string(startTrip.getTripDuration()));
+        }
+        else
+        {
+            cerr << "No inter trip between " << depotId << " -> " << startTrip.getBusStationDep()->getId() << endl;
+            exit(-2);
+        }
+
         if (found)
         {
             BusTrip currentTrip;
@@ -141,30 +161,32 @@ void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters) c
                     bool found2 = this->findInterTripByTripId(currentTrip, (*d_it));
                     if (found2)
                     {
+                        cluster_data.push_back("0 0 " + to_string(currentTrip.getTripDuration()));
                         // traitement starts
                         if (startTrip < currentTrip) // are successor
                         {
                             // the two trips have the same Arrival and Departure station
                             if (startTrip.getBusStationArr()->getId() == currentTrip.getBusStationDep()->getId())
                             {
-                                double diff_time = difftime(currentTrip.getDateDep(), startTrip.getDateArr()) / 60;
+                                int diff_time = difftime(currentTrip.getDateDep(), startTrip.getDateArr()) / 60;
                                 // SI ON PEUT TOLERER ATTENTE = 0 DANS UNE STATION
-                                if (0 <= diff_time && diff_time < 45) // the successor could be the next
+                                if (0 <= diff_time && diff_time <= MIN_WAIT) // the successor could be the next
                                 {
-
-                                    
-
                                     {
                                         if (between != "WS") // between needs to be WS
                                         {
                                             // NOT OK
                                             cerr << "The state between " << startTrip.getTripId() << " and " << currentTrip.getTripId() << " needs to be WS instead of " << between << endl;
                                         }
+                                        else
+                                        {
+                                            cluster_data.push_back(to_string(diff_time));
+                                        }
                                     }
                                 }
-                                else if (diff_time >= 45)
+                                else if (diff_time > MIN_WAIT)
                                 {
-                                    cerr << "Trips " << startTrip.getTripId() << " and " << currentTrip.getTripId() << " couldn't be linked -> because difftime passes the 45 min " << endl;
+                                    cerr << "Trips " << startTrip.getTripId() << " and " << currentTrip.getTripId() << " couldn't be linked -> because difftime passes the MIN_WAIT min " << endl;
                                 }
                                 else
                                 {
@@ -181,12 +203,16 @@ void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters) c
 
                                     int attente_hlp = (difftime(currentTrip.getDateDep(), startTrip.getDateArr()) / 60.0) - temp_dur;
 
-                                    if (0 <= attente_hlp && attente_hlp < 45)
+                                    if (0 <= attente_hlp && attente_hlp <= MIN_WAIT)
                                     {
                                         // verifier si HLP
                                         if (between != "HLP")
                                         {
                                             cerr << "The state between " << startTrip.getTripId() << " and " << currentTrip.getTripId() << " needs to be HLP instead of " << between << endl;
+                                        }
+                                        else
+                                        {
+                                            cluster_data.push_back(to_string(temp_dur) + " " + to_string(attente_hlp));
                                         }
                                     }
                                     else if (attente_hlp < 0)
@@ -198,7 +224,7 @@ void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters) c
                                     else
                                     {
                                         cout << "dep: " << currentTrip.getDateDep() << " ARR: " << startTrip.getDateArr() << " - " << temp_dur << " att: " << attente_hlp << endl;
-                                        cerr << "L'attente dans la station d'arrivee est > a 45 " << startTrip.getTripId() << " and " << currentTrip.getTripId() << " Le vehicule doit se deplacer vers le depot " << endl;
+                                        cerr << "L'attente dans la station d'arrivee est > a MIN_WAIT " << startTrip.getTripId() << " and " << currentTrip.getTripId() << " Le vehicule doit se deplacer vers le depot " << endl;
                                     }
                                 }
                                 else
@@ -221,6 +247,18 @@ void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters) c
                     startTrip = currentTrip;
                 }
             }
+            depot_duration = TargetInterTrip::findDurationByTargetId(depotId, this->interTrips.at(currentTrip.getBusStationArr()->getId()));
+            if (depot_duration != -1)
+            {
+                cluster_data.push_back(to_string(depot_duration) + " 0");
+            }
+            else
+            {
+                cerr << "No inter trip between " << currentTrip.getBusStationArr()->getId() << " -> " << depotId << endl;
+                exit(-2);
+            }
+
+            output_data.push_back(cluster_data);
         }
         else
         {
