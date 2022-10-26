@@ -161,7 +161,7 @@ void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters, v
                     bool found2 = this->findInterTripByTripId(currentTrip, (*d_it));
                     if (found2)
                     {
-                        cluster_data.push_back("0 0 " + to_string(currentTrip.getTripDuration()));
+                        cluster_data.push_back(to_string(currentTrip.getTripDuration()) + " 0 0");
                         // traitement starts
                         if (startTrip < currentTrip) // are successor
                         {

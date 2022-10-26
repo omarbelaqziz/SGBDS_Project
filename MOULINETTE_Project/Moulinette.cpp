@@ -42,6 +42,8 @@ int main(int argc, char const *argv[])
     StatisticsAnalyser *statisticsAnalyser = new StatisticsAnalyser(output_data, stats_out); 
     statisticsAnalyser->handleDepot(); 
 
+    
+
     // calcule du cout total
 
     return 0;
