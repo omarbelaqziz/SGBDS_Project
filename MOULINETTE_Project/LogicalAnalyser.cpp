@@ -106,7 +106,7 @@ void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters, v
     // the matrix that will contains all data related to the depot
     /**
      * @brief
-     *  15 0 | 0 0 24 | 12 | 0 0 43 | 14 8 | 0 0 54 | 13 | 0 0 12 | 19 8 | 0 0 11 | 12 0 |
+     *  15 0 | 24 0 0 | 12 | 43 0 0 | 14 8 | 54 0 0 | 13 | 12 0 0 | 19 8 | 11 0 0 | 12 0 |
      *  ...
      */
     // output_data
@@ -119,6 +119,8 @@ void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters, v
         vector<string> cluster_data;
         cluster_count++;
 
+        bool OneTrip = true;
+
         BusTrip startTrip;
         bool found = this->findInterTripByTripId(startTrip, cluster[0]);
 
@@ -129,7 +131,7 @@ void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters, v
         {
             cluster_data.push_back(to_string(depot_duration) + " 0");
             // add the first trip just after the depot
-            cluster_data.push_back("0 0 " + to_string(startTrip.getTripDuration()));
+            cluster_data.push_back(to_string(startTrip.getTripDuration()) + " 0 0");
         }
         else
         {
@@ -147,6 +149,7 @@ void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters, v
             // the value could have two different states ; Trip || (HLP or WS)
             for (; d_it != cluster.end(); ++d_it)
             {
+                OneTrip = false;
                 if ((*d_it) == "HLP")
                 {
                     between = "HLP";
@@ -161,7 +164,7 @@ void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters, v
                     bool found2 = this->findInterTripByTripId(currentTrip, (*d_it));
                     if (found2)
                     {
-                        cluster_data.push_back(to_string(currentTrip.getTripDuration()) + " 0 0");
+
                         // traitement starts
                         if (startTrip < currentTrip) // are successor
                         {
@@ -181,6 +184,7 @@ void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters, v
                                         else
                                         {
                                             cluster_data.push_back(to_string(diff_time));
+                                            cluster_data.push_back(to_string(currentTrip.getTripDuration()) + " 0 0");
                                         }
                                     }
                                 }
@@ -213,17 +217,16 @@ void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters, v
                                         else
                                         {
                                             cluster_data.push_back(to_string(temp_dur) + " " + to_string(attente_hlp));
+                                            cluster_data.push_back(to_string(currentTrip.getTripDuration()) + " 0 0");
                                         }
                                     }
                                     else if (attente_hlp < 0)
                                     {
-                                        cout << "dep: " << currentTrip.getDateDep() << " ARR: " << startTrip.getDateArr() << " - " << temp_dur << " att: " << attente_hlp << endl;
 
                                         cerr << "Le bus ne peut pas achever le Trip " << startTrip.getTripId() << " => " << currentTrip.getTripId() << " au temps " << endl;
                                     }
                                     else
                                     {
-                                        cout << "dep: " << currentTrip.getDateDep() << " ARR: " << startTrip.getDateArr() << " - " << temp_dur << " att: " << attente_hlp << endl;
                                         cerr << "L'attente dans la station d'arrivee est > a MIN_WAIT " << startTrip.getTripId() << " and " << currentTrip.getTripId() << " Le vehicule doit se deplacer vers le depot " << endl;
                                     }
                                 }
@@ -247,7 +250,12 @@ void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters, v
                     startTrip = currentTrip;
                 }
             }
-            depot_duration = TargetInterTrip::findDurationByTargetId(depotId, this->interTrips.at(currentTrip.getBusStationArr()->getId()));
+
+            if (OneTrip)
+                depot_duration = TargetInterTrip::findDurationByTargetId(depotId, this->interTrips.at(startTrip.getBusStationArr()->getId()));
+            else
+                depot_duration = TargetInterTrip::findDurationByTargetId(depotId, this->interTrips.at(currentTrip.getBusStationArr()->getId()));
+            
             if (depot_duration != -1)
             {
                 cluster_data.push_back(to_string(depot_duration) + " 0");

@@ -565,7 +565,7 @@ void stats_calculator(
     // iterate over all clusters
     for (int i = 0; i < clusters.size(); i++)
     {
-        cout << "start cluster " << i + 1 << endl;
+        // cout << "start cluster " << i + 1 << endl;
         // stats params
         int waitDuration = 0;
         int hlpDuration = 0;

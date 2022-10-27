@@ -42,6 +42,14 @@ int main(int argc, char const *argv[])
     StatisticsAnalyser *statisticsAnalyser = new StatisticsAnalyser(output_data, stats_out); 
     statisticsAnalyser->handleDepot(); 
 
+    // for(auto cluster : output_data)
+    // {
+    //     for(auto str: cluster)
+    //     {
+    //         cout << str << " | "; 
+    //     }
+    //     cout << endl;
+    // }
     
 
     // calcule du cout total
