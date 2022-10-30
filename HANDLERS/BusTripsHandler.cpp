@@ -109,4 +109,8 @@ bool findTripById(BusTrip& bt, string tripId, multiset<BusTrip> busTrips)
         }
     }
     return false;
+<<<<<<< HEAD:HANDLERS/BusTripsHandler.cpp
 }
+=======
+}
+>>>>>>> c3bfb5ac69622dc03b977feba2a7528cdfaf1d54:SGBDS_Project/BusTripsHandler.cpp
