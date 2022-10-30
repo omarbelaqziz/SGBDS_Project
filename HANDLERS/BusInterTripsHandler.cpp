@@ -1,6 +1,4 @@
 #include "BusInterTripsHandler.h"
-#include "StringOps.h"
-#include "TargetInterTrip.h"
 
 using namespace std;
 

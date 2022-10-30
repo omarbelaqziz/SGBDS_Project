@@ -20,6 +20,7 @@ BusTrip::BusTrip(
     this->dateDep = dateDepart;
 }
 
+
 bool BusTrip::operator<(const BusTrip &trip) const
 {
     return difftime(trip.dateDep, this->dateDep) > 0;

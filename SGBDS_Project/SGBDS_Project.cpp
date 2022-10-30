@@ -1,6 +1,7 @@
+
 #include "preproc.h"
-#include "GraphGenerator.h"
-#include "GraphNotLinesGenerator.h"
+#include "../GRAPH_Generators/GraphGenerator.h"
+#include "../GRAPH_Generators/GraphNotLinesGenerator.h"
 
 using namespace std;
 
@@ -92,7 +93,6 @@ int main()
 
             /* showAllStatistics(tripsStations, dataOutFile);
             graph_generator(interTrips, busStations, tripsStations, dataOutFile);
-
             delete busStations; */ 
             multiset<BusTrip> busTripsPopulation; 
             detach_lines(busTripsPopulation, tripsStations); 

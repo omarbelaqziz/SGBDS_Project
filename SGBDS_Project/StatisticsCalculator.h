@@ -2,7 +2,8 @@
 #include <unordered_map>
 #include <set>
 #include <string>
-#include "BusTrip.h"
+
+#include "../SGBDS_Project/preproc.h"
 
 using namespace std;
 struct LineTrips {
