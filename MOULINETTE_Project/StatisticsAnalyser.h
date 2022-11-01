@@ -163,8 +163,8 @@ public:
     }
 
     //
-    int coutTotalCalculator()
+    float coutTotalCalculator(int size_clusters)
     {
-        return this->coutTotal;
+        return this->coutTotal + (1000.0 * size_clusters*1.0);
     }
 };

@@ -18,9 +18,9 @@
  */
 
 #define PATTERN "cluster [0-9][0-9]* : (T_[0-9][0-9]*( HLP | WS ))*T_[0-9][0-9]* ;"
-#define SOL_FILENAME "../output/out60oc.txt"
+#define SOL_FILENAME "../output/out50oc.txt"
 
-#define DATA_FILE "../data/test60.txt"
+#define DATA_FILE "../data/test50.txt"
 #define PARAM_FILE "../config/param.in"
 
 int main(int argc, char const *argv[])
@@ -40,7 +40,8 @@ int main(int argc, char const *argv[])
 
     string stats_out = "../output/stats.txt"; 
     StatisticsAnalyser *statisticsAnalyser = new StatisticsAnalyser(output_data, stats_out); 
-    statisticsAnalyser->handleDepot(); 
+    statisticsAnalyser->handleDepot();
+    cout << statisticsAnalyser->coutTotalCalculator(clusters.size()) << endl;  
 
     // for(auto cluster : output_data)
     // {
