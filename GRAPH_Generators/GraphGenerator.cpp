@@ -371,6 +371,14 @@ vector<vector<string>> clusters_generator_fromTripsSet(
 
         ptr1 = temp;
 
+        if(res == 0) {
+            for (int i = 0; i < trips.size()/2; i++)
+            {
+                ptr1++;
+            }
+            
+        }
+
         while ((*ptr1).second != false)
             ptr1++;
 
