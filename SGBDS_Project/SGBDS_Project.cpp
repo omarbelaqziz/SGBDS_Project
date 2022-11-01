@@ -53,7 +53,6 @@ int main()
 
         INTER_TRIPS interTrips;
         TRIPS_MAP tripsStations;
-        
 
         ifstream dataFile;
         ofstream dataOutFile;
@@ -93,20 +92,20 @@ int main()
 
             /* showAllStatistics(tripsStations, dataOutFile);
             graph_generator(interTrips, busStations, tripsStations, dataOutFile);
-            delete busStations; */ 
-            multiset<BusTrip> busTripsPopulation; 
-            detach_lines(busTripsPopulation, tripsStations); 
+            delete busStations; */
+            multiset<BusTrip> busTripsPopulation;
+            detach_lines(busTripsPopulation, tripsStations);
 
-            cout << "showing results of the new population" << endl; 
-            //int sum_trips = 0; 
-            //for(auto v: busTripsPopulation)
+            cout << "showing results of the new population" << endl;
+            // int sum_trips = 0;
+            // for(auto v: busTripsPopulation)
             //{
-               // sum_trips++; 
-                // v.showBusTrip();
-                // cout << endl; 
+            //  sum_trips++;
+            //  v.showBusTrip();
+            //  cout << endl;
             //}
-            //cout << "tripsTotal: " << sum_trips << endl; 
-            //heuristic_graph_builder(busTripsPopulation, dataOutFile, busStations, interTrips);
+            // cout << "tripsTotal: " << sum_trips << endl;
+            // heuristic_graph_builder(busTripsPopulation, dataOutFile, busStations, interTrips);
             vector<vector<string>> allClusters = clusters_generator_fromTripsSet(interTrips, busStations, busTripsPopulation, 1);
             cout << "+++++++++++++++ SIZE " << allClusters.size() << "_______________________________" << endl;
             write_cluster_to_file(dataOutFileOc, allClusters);
@@ -121,8 +120,7 @@ int main()
                 busTripsPopulation);
             writeStatsIntoScreen(
                 clustersStats,
-                depotStats
-            );
+                depotStats);
         }
         else if (!dataFile.is_open())
         {
