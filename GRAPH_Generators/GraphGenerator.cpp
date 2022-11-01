@@ -327,13 +327,19 @@ vector<vector<string>> clusters_generator_fromTripsSet(
 
     // handle each Line
     string depotId = findDepotId(busStations);
+    //set<BusStation>::iterator itr;
+    // for (itr = busStations->begin();
+    //      itr != busStations->end(); itr++)
+    // {
+    //         cout << itr->getId() << " " << itr->getIsDepot() << endl;
+    // }
+    // cout << "size : " << busStations->size() << endl;
     if (depotId == "")
     {
         cout << "no depot found in data" << endl;
         exit(-1);
     }
     // show the Depot
-
     int res = 0;
     bool isTreated;
 
@@ -346,6 +352,7 @@ vector<vector<string>> clusters_generator_fromTripsSet(
 
     multiset<BusTrip>::iterator temp_it;
 
+    
     int u = 0;
     for (temp_it = trips.begin(); temp_it != trips.end(); ++temp_it)
     {
