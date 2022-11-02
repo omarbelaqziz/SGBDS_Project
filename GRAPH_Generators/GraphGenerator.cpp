@@ -373,14 +373,6 @@ vector<vector<string>> clusters_generator_fromTripsSet(
 
         ptr1 = temp;
 
-        // if(res == 0) {
-        //     for (int i = 0; i < trips.size()/2; i++)
-        //     {
-        //         ptr1++;
-        //     }
-            
-        // }
-
         while ((*ptr1).second != false)
             ptr1++;
 
@@ -690,7 +682,7 @@ void stats_calculator(
     // ! same indexes as previous and index 8 is the number of clusters
     double totalDepotDuration = (double)totalHlpNumber + (double)totalWaitDuration + (double)totalTripsDuration;
     depotStats.push_back(totalDepotDuration);
-    depotStats.push_back((float)totalCost + (clusters.size() * 1000));
+    depotStats.push_back((double)totalCost + (clusters.size() * FIX_COST));
     depotStats.push_back(totalHlpNumber);
     depotStats.push_back(totalHlpDuration);
     depotStats.push_back(totalHlpDuration / totalDepotDuration); // hlp pourcentage
