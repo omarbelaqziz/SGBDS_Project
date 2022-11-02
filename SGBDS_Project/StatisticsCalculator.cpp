@@ -43,7 +43,7 @@ void showDurations(unordered_map<string, multiset<BusTrip>*> map, ofstream& outp
 		multiset<BusTrip> ::iterator it; 
 		for (it = p.second->begin(); it != p.second->end(); ++it)
 		{
-			int duree = difftime((*it).dateArr, (*it).dateDep) / 60;
+			int duree = difftime((*it).getDateArr(), (*it).getDateDep()) / 60;
 			somme += duree;
 			if (btMin == nullptr || duree < dureeMin) {
 				dureeMin = duree;
