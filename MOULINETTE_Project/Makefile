@@ -15,7 +15,5 @@ PREFIX_PATH = ../../SGBDS_Project
 
 INCLUDES_OFF = $(PREFIX_PATH)/BUSINESS_ENTITIES/*.cpp $(PREFIX_PATH)/HANDLERS/*.cpp $(PREFIX_PATH)/SGBDS_Project/*.cpp $(PREFIX_PATH)/GRAPH_Generators/*.cpp 
 
-
 livrable1: livrable1
-	$(CCC) -c -g ./SGBDS_Project.cpp $(INCLUDES_OFF) -o livrable1
-
+	$(CCC) -g $(INCLUDES_OFF) ./SGBDS_Project.cpp -o livrable1
