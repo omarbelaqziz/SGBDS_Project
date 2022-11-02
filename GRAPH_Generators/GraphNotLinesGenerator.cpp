@@ -78,20 +78,20 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
 
         // add from depot duration
 
-        duree_total += TargetInterTrip::findDurationByTargetId((*ptr1).first.busStationDep->getId(), stationsTargets[depotId]);
+        duree_total += TargetInterTrip::findDurationByTargetId((*ptr1).first.getBusStationDep()->getId(), stationsTargets[depotId]);
         if (duree_total == -1)
         {
-            cout << "duration between depot and " << (*ptr1).first.busStationDep->getId() << " not found" << endl;
+            cout << "duration between depot and " << (*ptr1).first.getBusStationDep()->getId() << " not found" << endl;
             exit(-1);
         }
         cout_total += duree_total * c_v;
 
         if (ptr1 == (temp + population_size - 1))
         {
-            int duree = TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[(*ptr1).first.busStationArr->getId()]);
+            int duree = TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[(*ptr1).first.getBusStationArr()->getId()]);
             if (duree == -1)
             {
-                cout << "duration between " << (*ptr1).first.busStationArr->getId() << " and depot not found" << endl;
+                cout << "duration between " << (*ptr1).first.getBusStationArr()->getId() << " and depot not found" << endl;
                 exit(-1);
             }
             duree_total += duree;
@@ -99,10 +99,10 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
             (*ptr1).second = true;
             res++;
             depot_stats.somme_covered_voyages++;
-            output_file << (*ptr1).first.tripId << "--> Depot" << endl;
+            output_file << (*ptr1).first.getTripId() << "--> Depot" << endl;
             number_trips++;
             isTreated = true;
-            duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60);
+            duree_total += (difftime((*ptr1).first.getDateArr(), (*ptr1).first.getDateDep()) / 60);
         }
         else
         {
@@ -116,56 +116,56 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
                 }
                 if (ptr2 == (temp + population_size - 1))
                 {
-                    int duree = TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[(*ptr1).first.busStationArr->getId()]);
+                    int duree = TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[(*ptr1).first.getBusStationArr()->getId()]);
                     if (duree == -1)
                     {
-                        cout << "duration between " << (*ptr1).first.busStationArr->getId() << " and depot not found" << endl;
+                        cout << "duration between " << (*ptr1).first.getBusStationArr()->getId() << " and depot not found" << endl;
                         exit(-1);
                     }
                     duree_total += duree;
                     cout_total += duree * c_v;
                     (*ptr1).second = true;
                     res++;
-                    output_file << (*ptr1).first.tripId << "--> Depot" << endl;
+                    output_file << (*ptr1).first.getTripId() << "--> Depot" << endl;
                     number_trips++;
                     isTreated = true;
                     depot_stats.somme_covered_voyages++;
-                    duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60);
+                    duree_total += (difftime((*ptr1).first.getDateArr(), (*ptr1).first.getDateDep()) / 60);
                 }
                 else
                 {
-                    if ((*ptr2).first.busStationDep == (*ptr1).first.busStationArr)
+                    if ((*ptr2).first.getBusStationDep() == (*ptr1).first.getBusStationArr())
                     {
-                        if (0 <= difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 &&
-                            difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 <= MIN_WAIT)
+                        if (0 <= difftime((*ptr2).first.getDateDep(), (*ptr1).first.getDateArr()) / 60 &&
+                            difftime((*ptr2).first.getDateDep(), (*ptr1).first.getDateArr()) / 60 <= MIN_WAIT)
                         {
-                            output_file << (*ptr1).first.tripId << "--> waitInStation(" << difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 << ") --->";
+                            output_file << (*ptr1).first.getTripId() << "--> waitInStation(" << difftime((*ptr2).first.getDateDep(), (*ptr1).first.getDateArr()) / 60 << ") --->";
                             number_trips++;
                             (*ptr1).second = true;
                             res++;
                             depot_stats.somme_covered_voyages++;
-                            duree_attente += difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60;
-                            duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60 + difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60);
+                            duree_attente += difftime((*ptr2).first.getDateDep(), (*ptr1).first.getDateArr()) / 60;
+                            duree_total += (difftime((*ptr1).first.getDateArr(), (*ptr1).first.getDateDep()) / 60 + difftime((*ptr2).first.getDateDep(), (*ptr1).first.getDateArr()) / 60);
                             ptr1 = ptr2;
                             ptr2++;
                         }
                         // new cluster
-                        else if (difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 > MIN_WAIT)
+                        else if (difftime((*ptr2).first.getDateDep(), (*ptr1).first.getDateArr()) / 60 > MIN_WAIT)
                         {
-                            int duree = TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[(*ptr1).first.busStationArr->getId()]);
+                            int duree = TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[(*ptr1).first.getBusStationArr()->getId()]);
                             if (duree == -1)
                             {
-                                cout << "duration between " << (*ptr1).first.busStationArr->getId() << " and depot not found" << endl;
+                                cout << "duration between " << (*ptr1).first.getBusStationArr()->getId() << " and depot not found" << endl;
                                 exit(-1);
                             }
                             duree_total += duree;
                             cout_total += duree * c_v;
-                            output_file << (*ptr1).first.tripId << " ---> Depot" << endl;
+                            output_file << (*ptr1).first.getTripId() << " ---> Depot" << endl;
                             number_trips++;
                             (*ptr1).second = true;
                             // added by omar <=>
                             // we need to add trip duration even if he had to go to depot
-                            duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60);
+                            duree_total += (difftime((*ptr1).first.getDateArr(), (*ptr1).first.getDateDep()) / 60);
                             // <=>
                             res++;
                             isTreated = true;
@@ -178,7 +178,7 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
                     }
                     else
                     {
-                        auto PTRR = (*ptr2).first.busStationDep;
+                        auto PTRR = (*ptr2).first.getBusStationDep();
 
                         if (PTRR == NULL)
                         {
@@ -188,17 +188,17 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
                         }
                         else
                         {
-                            int duree = TargetInterTrip::findDurationByTargetId((*ptr2).first.busStationDep->getId(), stationsTargets[(*ptr1).first.busStationArr->getId()]);
+                            int duree = TargetInterTrip::findDurationByTargetId((*ptr2).first.getBusStationDep()->getId(), stationsTargets[(*ptr1).first.getBusStationArr()->getId()]);
 
                             if (duree == -1)
                             {
 
                                 // SEARCH IN THE NEGATIVE WAY
-                                int temp_duree = TargetInterTrip::findDurationByTargetId((*ptr1).first.busStationArr->getId(), stationsTargets[(*ptr2).first.busStationDep->getId()]);
+                                int temp_duree = TargetInterTrip::findDurationByTargetId((*ptr1).first.getBusStationArr()->getId(), stationsTargets[(*ptr2).first.getBusStationDep()->getId()]);
                                 if (temp_duree == -1)
                                 {
                                     cout << endl
-                                         << "---> There is no InterTrip between " << (*ptr1).first.busStationArr->id << " -> " << (*ptr2).first.busStationDep->getId() << " <-- " << endl;
+                                         << "---> There is no InterTrip between " << (*ptr1).first.getBusStationArr()->getId() << " -> " << (*ptr2).first.getBusStationDep()->getId() << " <-- " << endl;
                                     exit(-1);
                                 }
                                 else
@@ -206,17 +206,14 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
                                     duree = temp_duree;
                                 }
                             }
-                            int attente = (difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60) - duree;
+                            int attente = (difftime((*ptr2).first.getDateDep(), (*ptr1).first.getDateArr()) / 60) - duree;
 
                             if (attente > 0)
                             {
                                 if (attente > MIN_WAIT)
                                 {
-                                    // added by omar <=>
-                                    // we need to add trip duration even if he had to go to depot
-                                    duree_total += (difftime((*ptr1).first.dateArr, (*ptr1).first.dateDep) / 60);
-                                    // <=>
-                                    output_file << (*ptr1).first.tripId << " --> Depot" << endl;
+                                    duree_total += (difftime((*ptr1).first.getDateArr(), (*ptr1).first.getDateDep()) / 60);
+                                    output_file << (*ptr1).first.getTripId() << " --> Depot" << endl;
                                     number_trips++;
                                     (*ptr1).second = true;
                                     res++;
@@ -229,7 +226,7 @@ void heuristic_graph_builder(multiset<BusTrip> busTripsPopulation, ofstream &out
                                     duree_hlp += duree;
                                     duree_total += attente + duree;
                                     hlp_number++;
-                                    output_file << (*ptr1).first.tripId << " -- HLP --> "
+                                    output_file << (*ptr1).first.getTripId() << " -- HLP --> "
                                                 << " waitInStation (" << attente << ")"
                                                 << " -->";
                                     number_trips++;

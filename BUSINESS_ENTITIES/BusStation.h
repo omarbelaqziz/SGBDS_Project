@@ -6,7 +6,7 @@ using namespace std;
 
 class BusStation
 {
-public:
+private:
     string id;
     bool isDepot;
 

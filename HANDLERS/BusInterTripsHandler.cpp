@@ -37,7 +37,7 @@ void handle_file_stream_inter_trips(map<string, set<TargetInterTrip> *> &inter_t
         TargetInterTrip targetInterTrip(&(*arrivalBusStation), interTripId, duration); 
         
 
-        if (inter_trips.count((*depBusStation).id) > 0)
+        if (inter_trips.count((*depBusStation).getId()) > 0)
         {
             
             DepTargets = inter_trips[(*depBusStation).getId()];

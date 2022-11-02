@@ -49,13 +49,13 @@ void buildBusTrip(BusTrip &busTrip, vector<string> rawData, set<BusStation> &bus
     }
     if (depBusStation != busStationsSet.end() && arrivalBusStation != busStationsSet.end())
     {
-        busTrip.tripId = rawData[1],
-        busTrip.busStationDep = &(*depBusStation),
-        busTrip.busStationArr = &(*arrivalBusStation),
-        busTrip.strDDarr = rawData[7]; 
-        busTrip.strDDep = rawData[4]; 
-        busTrip.dateDep = depTime,
-        busTrip.dateArr = arrivalTime;
+        busTrip.setTripId(rawData[1]),
+        busTrip.setBusStationDep(&(*depBusStation)),
+        busTrip.setBusStationArr(&(*arrivalBusStation)),
+        busTrip.setStrDDarr(rawData[7]); 
+        busTrip.setStrDDep(rawData[4]); 
+        busTrip.setDateDep(depTime),
+        busTrip.setDateArr(arrivalTime);
     }
 
     else

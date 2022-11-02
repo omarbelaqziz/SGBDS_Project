@@ -11,7 +11,7 @@ using namespace std;
 
 class BusTrip
 {
-public:
+private:
     string tripId;
     const BusStation *busStationDep;
     const BusStation *busStationArr;
@@ -64,4 +64,38 @@ public:
     {
         return this->tripId;
     }
+// setters
+
+    void setBusStationDep(const BusStation* statDep)
+    {
+        this->busStationDep = statDep;
+    }
+
+    void setBusStationArr(const BusStation* statArr)
+    {
+        this->busStationArr = statArr;
+    }
+    
+    void setDateDep(time_t dateDep) 
+    {
+        this->dateDep = dateDep;
+    }
+    void setDateArr(time_t dateArr)
+    {
+        this->dateArr = dateArr;
+    }
+    void setTripId(string tripId)
+    {
+        this->tripId = tripId;
+    }
+
+    void setStrDDep(string strDDep)
+    {
+        this->strDDep = strDDep;
+    }
+    void setStrDDarr(string strDDarr)
+    {
+        this->strDDarr = strDDarr;
+    }
+    
 };

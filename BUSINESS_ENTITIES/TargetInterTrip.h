@@ -7,13 +7,13 @@ using namespace std;
 class TargetInterTrip
 {
 
-public:
+private:
     const BusStation *target;
     string interTripId;
     int duree;
 
-public:
 
+public:
     TargetInterTrip(){
 
     }
@@ -61,5 +61,14 @@ public:
     bool operator<(const TargetInterTrip *tip) const
     {
         return *(this->target) < *(tip->target);
+    }
+    string getInterTripId(){
+        return this->interTripId;
+    }
+    int getDuree(){
+        return this->duree;
+    }
+    const BusStation * getTarget() const{
+        return this->target;
     }
 };
