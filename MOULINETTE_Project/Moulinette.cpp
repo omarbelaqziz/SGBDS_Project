@@ -75,20 +75,19 @@ int main(int argc, char const *argv[])
         "../output/Hiba/Depot59.txt",
         "../output/Hiba/Depot60.txt"};
 
-    for (int i = 0; i < 8; i++)
-    {
+
         // lexical analysis
         vector<vector<string>> clusters;
-        LexicalAnalyser *lexicalAnalyser = LexicalAnalyser::getInstance(output_files_onlycluster[i], PATTERN);
+        LexicalAnalyser *lexicalAnalyser = LexicalAnalyser::getInstance(output_files_onlycluster[0], PATTERN);
         lexicalAnalyser->fileMatchLexicalReqs(clusters);
 
         vector<vector<string>> output_data;
         // logical analysis
-        LogicalAnalyser *logicalAnalyser = LogicalAnalyser::getInstance(PARAM_FILE, output_files_onlycluster[i], filenames[i]);
+        LogicalAnalyser *logicalAnalyser = LogicalAnalyser::getInstance(PARAM_FILE, output_files_onlycluster[0], filenames[0]);
         
         logicalAnalyser->rulesVerfication(clusters, output_data);
 
-        StatisticsAnalyser *statisticsAnalyser = new StatisticsAnalyser(output_data, statsout[i]); 
+        StatisticsAnalyser *statisticsAnalyser = new StatisticsAnalyser(output_data, statsout[0]); 
         statisticsAnalyser->handleDepot(); 
 
 
@@ -104,6 +103,5 @@ int main(int argc, char const *argv[])
 
         statisticsAnalyser = nullptr;
 
-    }
     return 0;
 }

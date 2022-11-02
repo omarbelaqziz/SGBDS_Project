@@ -4,6 +4,7 @@
 #include <set>
 #include <iomanip>
 
+
 struct StatsItineraire
 {
     int duree_total;
@@ -347,6 +348,7 @@ vector<vector<string>> clusters_generator_fromTripsSet(
     pair<BusTrip, bool> *temp;
     pair<BusTrip, bool> *ptr1;
     pair<BusTrip, bool> *ptr2;
+    pair<BusTrip, bool> *ptr3;
 
     temp = new pair<BusTrip, bool>[trips.size()];
 
@@ -371,13 +373,13 @@ vector<vector<string>> clusters_generator_fromTripsSet(
 
         ptr1 = temp;
 
-        if(res == 0) {
-            for (int i = 0; i < trips.size()/2; i++)
-            {
-                ptr1++;
-            }
+        // if(res == 0) {
+        //     for (int i = 0; i < trips.size()/2; i++)
+        //     {
+        //         ptr1++;
+        //     }
             
-        }
+        // }
 
         while ((*ptr1).second != false)
             ptr1++;
@@ -392,7 +394,7 @@ vector<vector<string>> clusters_generator_fromTripsSet(
         }
         else
         {
-            if (mode == 0)
+             if (mode == 0)
                 cluster.push_back("Depot(" + to_string(duree_depot_fs) + ")");
         }
 
@@ -417,7 +419,6 @@ vector<vector<string>> clusters_generator_fromTripsSet(
             ptr2 = ptr1;
             while (!isTreated)
             {
-
                 while ((*ptr2).second && ptr2 != (temp + trips.size() - 1))
                 {
                     ptr2++;
@@ -433,6 +434,14 @@ vector<vector<string>> clusters_generator_fromTripsSet(
                     (*ptr1).second = true;
                     res++;
                     cluster.push_back((*ptr1).first.tripId);
+                    float cost;
+                    string type;
+                    if(twoTripsCost(cost,stationsTargets,busStations,(*ptr1).first,(*ptr2).first,type)){
+                        (*ptr2).second = true;
+                        res++;
+                        cluster.push_back(type);
+                        cluster.push_back((*ptr2).first.tripId);
+                    }
                     if (mode == 0)
                         cluster.push_back("Depot(" + to_string(duree) + ")");
                     allClusters.push_back(cluster);
@@ -440,112 +449,64 @@ vector<vector<string>> clusters_generator_fromTripsSet(
                 }
                 else
                 {
-                    if ((*ptr2).first.busStationDep == (*ptr1).first.busStationArr)
-                    {
-                        if (0 <= difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 &&
-                            difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 <= MIN_WAIT)
+                    float cost,secondcost;
+                    string type,secondtype;
+                    if(twoTripsCost(cost,stationsTargets,busStations,(*ptr1).first,(*ptr2).first,type)){
+                        ptr3 = ptr2;
+                        while ((*ptr3).second && ptr3 != (temp + trips.size() - 1))
                         {
-                            cluster.push_back((*ptr1).first.tripId);
-                            (mode == 0) ? cluster.push_back("WS(" + to_string((int)difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60) + ")") : cluster.push_back("WS");
-                            (*ptr1).second = true;
-                            res++;
-                            ptr1 = ptr2;
-                            ptr2++;
-                        }
-                        // new cluster
-                        else if (difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60 > MIN_WAIT)
-                        {
-                            int duree = TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[(*ptr1).first.busStationArr->getId()]);
-                            if (duree == -1)
-                            {
-                                cout << "duration between " << (*ptr1).first.busStationArr->getId() << " and depot not found" << endl;
-                                exit(-1);
+                            if(twoTripsCost(secondcost,stationsTargets,busStations,(*ptr1).first,(*ptr3).first,secondtype)){
+                                if(secondcost < cost){
+                                    cost = secondcost;
+                                    ptr2 = ptr3;
+                                    type = secondtype;
+                                }
                             }
-                            //***************
-                            cluster.push_back((*ptr1).first.tripId);
-                            if (mode == 0)
-                                cluster.push_back("Depot(" + to_string(duree) + ")");
-                            allClusters.push_back(cluster);
-                            (*ptr1).second = true;
-                            res++;
-                            isTreated = true;
                         }
-                        else
-                        {
-                            ptr2++;
-                        }
+                        (*ptr1).second = true;
+                        res++;
+                        cluster.push_back((*ptr1).first.tripId);
+                        cluster.push_back(type);
+                        ptr1 = ptr2;
+                        ptr2++;
                     }
-                    else
-                    {
-                        auto PTRR = (*ptr2).first.busStationDep;
-
-                        if (PTRR == NULL)
-                        {
-                            cout << endl
-                                 << "---> There is no no data for ptr2 :: " << endl;
-                            exit(-1);
-                        }
-                        else
-                        {
-                            int duree = TargetInterTrip::findDurationByTargetId((*ptr2).first.busStationDep->getId(), stationsTargets[(*ptr1).first.busStationArr->getId()]);
-
-                            if (duree == -1)
-                            {
-
-                                // SEARCH IN THE NEGATIVE WAY
-                                int temp_duree = TargetInterTrip::findDurationByTargetId((*ptr1).first.busStationArr->getId(), stationsTargets[(*ptr2).first.busStationDep->getId()]);
-                                if (temp_duree == -1)
-                                {
-                                    cout << endl
-                                         << "---> There is no InterTrip between " << (*ptr1).first.busStationArr->id << " -> " << (*ptr2).first.busStationDep->getId() << " <-- " << endl;
-                                    exit(-1);
-                                }
-                                else
-                                {
-                                    duree = temp_duree;
-                                }
-                            }
-                            int attente = (difftime((*ptr2).first.dateDep, (*ptr1).first.dateArr) / 60) - duree;
-
-                            if (attente > 0)
-                            {
-                                if (attente > MIN_WAIT)
-                                {
-                                    cluster.push_back((*ptr1).first.tripId);
-                                    int duree = TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[(*ptr1).first.busStationArr->getId()]);
-                                    if (duree == -1)
-                                    {
-                                        cout << "duration between " << (*ptr1).first.busStationArr->getId() << " and depot not found" << endl;
-                                        exit(-1);
-                                    }
-                                    if (mode == 0)
-                                        cluster.push_back("Depot(" + to_string(duree) + ")");
-                                    allClusters.push_back(cluster);
-                                    (*ptr1).second = true;
-                                    res++;
-                                    isTreated = true;
-                                }
-                                else
-                                {
-                                    cluster.push_back((*ptr1).first.tripId);
-                                    (mode == 0) ? cluster.push_back("HLP(" + to_string(duree) + "," + to_string(attente) + ")") : cluster.push_back("HLP");
-                                    (*ptr1).second = true;
-                                    res++;
-                                    ptr1 = ptr2;
-                                    ptr2++;
-                                }
-                            }
-                            else
-                            {
-                                ptr2++;
-                            }
-                        }
+                    else{
+                        ptr2++;
                     }
                 }
             }
         }
     }
     return allClusters;
+}
+
+vector<vector<string>> optimize_generated_solution(
+    INTER_TRIPS stationsTargets,
+    set<BusStation> *busStations,
+    multiset<BusTrip> trips,
+    vector<vector<string>> solution) {
+    for (int i = 0; i < solution.size(); i++)
+    {
+        // cout << "enter i " << i << endl;
+        int size = solution.at(i).size();
+        float cost;
+        for (int j = i + 1; j < solution.size(); j++)
+        {
+            // cout << "enter j" << j << endl;
+            BusTrip depart, arrivee;
+            if(findTripById(depart,solution.at(i).at(size - 1),trips) 
+            &&
+            findTripById(arrivee,solution.at(i).at(0),trips)){
+                string type;
+                if(twoTripsCost(cost,stationsTargets,busStations,depart,arrivee,type)){
+                    solution.at(i).insert(solution.at(i).end(),solution.at(j).begin(),solution.at(j).end());
+                    solution.erase(solution.begin()+j);
+                    break;
+                }
+            }
+        }
+    }
+    return solution;
 }
 
 void write_cluster_to_file(ofstream &output_file, vector<vector<string>> allClusters)
@@ -729,7 +690,7 @@ void stats_calculator(
     // ! same indexes as previous and index 8 is the number of clusters
     double totalDepotDuration = (double)totalHlpNumber + (double)totalWaitDuration + (double)totalTripsDuration;
     depotStats.push_back(totalDepotDuration);
-    depotStats.push_back(totalCost);
+    depotStats.push_back((float)totalCost + (clusters.size() * 1000));
     depotStats.push_back(totalHlpNumber);
     depotStats.push_back(totalHlpDuration);
     depotStats.push_back(totalHlpDuration / totalDepotDuration); // hlp pourcentage
@@ -775,4 +736,60 @@ void writeStatsIntoScreen(
     cout << "|" << setw(17) << depotStats[7];
     cout << "|" << setw(20) << depotStats[8] << "|" << endl;
     cout << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
+}
+
+bool twoTripsCost(float& cost, 
+    INTER_TRIPS stationsTargets,
+    set<BusStation> *busStations,
+    BusTrip firstTrip,
+    BusTrip secondTrip,
+    string& type){
+        if (secondTrip.busStationDep == firstTrip.busStationArr)
+        {
+            if (0 <= difftime(secondTrip.dateDep, firstTrip.dateArr) / 60 &&
+                difftime(secondTrip.dateDep, firstTrip.dateArr) / 60 <= MIN_WAIT)
+            {
+                cost = (difftime(secondTrip.dateDep, firstTrip.dateArr) / 60) * c_a;
+                type = "WS";
+                return true;
+            }
+            else {
+                cost = -1.0;
+                return false;
+            }
+            
+        }
+        else {
+            int duree = TargetInterTrip::findDurationByTargetId(secondTrip.busStationDep->getId(), stationsTargets[firstTrip.busStationArr->getId()]);
+
+            if (duree == -1)
+            {
+                // SEARCH IN THE NEGATIVE WAY
+                int temp_duree = TargetInterTrip::findDurationByTargetId(firstTrip.busStationArr->getId(), stationsTargets[secondTrip.busStationDep->getId()]);
+                if (temp_duree == -1)
+                {
+                    cout << endl
+                            << "---> There is no InterTrip between " << firstTrip.busStationArr->id << " -> " << secondTrip.busStationDep->getId() << " <-- " << endl;
+                    exit(-1);
+                }
+                else
+                {
+                    duree = temp_duree;
+                }
+            }
+            int attente = (difftime(secondTrip.dateDep, firstTrip.dateArr) / 60) - duree;
+
+            if (attente > 0 && attente <= MIN_WAIT)
+            {
+                cost = (attente * c_a) + (duree * c_v); 
+                type = "HLP";
+                return true;
+            }
+            else
+            {
+                cost = -1.0;
+                return false;
+            }
+        }
+
 }
