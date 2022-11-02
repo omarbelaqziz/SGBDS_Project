@@ -90,11 +90,6 @@ void LogicalAnalyser::showBusTripsPopulation()
     }
 }
 
-bool LogicalAnalyser::verifyTwoTrips(string T_1, string T_2)
-{
-    //
-}
-
 void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters, vector<vector<string>> &output_data) const
 {
     // Trips Number

@@ -65,43 +65,42 @@ int main(int argc, char const *argv[])
         "../output/out59oc.txt",
         "../output/out60oc.txt"};
 
-    char output_files_onlycluster_Hiba[][27] = {
-        "../output/Hiba/Depot50.txt",
-        "../output/Hiba/Depot54.txt",
-        "../output/Hiba/Depot55.txt",
-        "../output/Hiba/Depot56.txt",
-        "../output/Hiba/Depot57.txt",
-        "../output/Hiba/Depot58.txt",
-        "../output/Hiba/Depot59.txt",
-        "../output/Hiba/Depot60.txt"};
 
-
+// cmd form ./ll test50.txt out50oc.txt
+    if (argc == 3)
+    {
         // lexical analysis
-        vector<vector<string>> clusters;
-        LexicalAnalyser *lexicalAnalyser = LexicalAnalyser::getInstance(output_files_onlycluster[0], PATTERN);
-        lexicalAnalyser->fileMatchLexicalReqs(clusters);
+            vector<vector<string>> clusters;
+            LexicalAnalyser *lexicalAnalyser = LexicalAnalyser::getInstance(argv[2], PATTERN);
+            lexicalAnalyser->fileMatchLexicalReqs(clusters);
 
-        vector<vector<string>> output_data;
-        // logical analysis
-        LogicalAnalyser *logicalAnalyser = LogicalAnalyser::getInstance(PARAM_FILE, output_files_onlycluster[0], filenames[0]);
+            vector<vector<string>> output_data;
+            // logical analysis
+            LogicalAnalyser *logicalAnalyser = LogicalAnalyser::getInstance(PARAM_FILE, argv[2], argv[1]);
+            
+            logicalAnalyser->rulesVerfication(clusters, output_data);
+
+            StatisticsAnalyser *statisticsAnalyser = new StatisticsAnalyser(output_data, statsout[0]); 
+            statisticsAnalyser->handleDepot(); 
+
+
+            //  free(lexicalAnalyser);
+            //  free(logicalAnalyser);
+            //delete statisticsAnalyser;
+
+            // lexicalAnalyser = nullptr;
+            // logicalAnalyser = nullptr;
+
+            // clusters.erase(clusters.begin(), clusters.end()); 
+            // output_data.erase(output_data.begin(), output_data.end()); 
+
+            // statisticsAnalyser = nullptr;
+    }
+    else {
+        cout << "please run the following form of the commande : ./moulinette DATA_FILE SOLUTION_FILE" << endl;
+        return -1;
+    }
         
-        logicalAnalyser->rulesVerfication(clusters, output_data);
-
-        StatisticsAnalyser *statisticsAnalyser = new StatisticsAnalyser(output_data, statsout[0]); 
-        statisticsAnalyser->handleDepot(); 
-
-
-        //  free(lexicalAnalyser);
-        //  free(logicalAnalyser);
-         delete statisticsAnalyser;
-
-        lexicalAnalyser = nullptr;
-        logicalAnalyser = nullptr;
-
-        clusters.erase(clusters.begin(), clusters.end()); 
-        output_data.erase(output_data.begin(), output_data.end()); 
-
-        statisticsAnalyser = nullptr;
 
     return 0;
 }

@@ -537,6 +537,7 @@ void stats_calculator(
         // stats params
         int waitDuration = 0;
         int hlpDuration = 0;
+        int fromAndToDepotDuration = 0;
         int hlpNumber = 0;
         int tripsDuration = 0;
         int coveredTripsInCluster = 0;
@@ -553,7 +554,7 @@ void stats_calculator(
             cout << "didnt found trip " << clusters[i][0] << endl;
             exit(-1);
         }
-        hlpDuration += TargetInterTrip::findDurationByTargetId(firstTrip.busStationDep->getId(), stationsTargets[depotId]);
+        fromAndToDepotDuration += TargetInterTrip::findDurationByTargetId(firstTrip.busStationDep->getId(), stationsTargets[depotId]);
 
         // iterate over the cluster
         for (int j = 0; j < clusters[i].size(); j++)
@@ -624,7 +625,7 @@ void stats_calculator(
                         cout << "didnt found trip " << clusters[i][j] << endl;
                         exit(-1);
                     }
-                    hlpDuration += TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[busTrip.busStationArr->getId()]);
+                    fromAndToDepotDuration += TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[busTrip.busStationArr->getId()]);
                 }
                 BusTrip busTrip;
                 bool foundTrip = findTripById(busTrip, clusters[i][j], trips);
@@ -644,14 +645,14 @@ void stats_calculator(
         // add duration to total params
         totalHlpDuration += hlpDuration;
         totalWaitDuration += waitDuration;
-        totalTripsDuration += tripsDuration;
+        totalTripsDuration += tripsDuration + fromAndToDepotDuration;
 
         // index 0 : total duaration of cluster = trips duration + wait duration + hlp duration
         double totalClusterDuration = (double)tripsDuration + (double)waitDuration + (double)hlpDuration;
         singleClusterStats.push_back(totalClusterDuration);
 
         // index 1 : total cost of cluster = (wait duration * c_a) + (hlp duration * c_v)
-        double costCluster = (waitDuration * c_a) + (hlpDuration * c_v);
+        double costCluster = (waitDuration * c_a) + (hlpDuration * c_v) + (fromAndToDepotDuration * c_v);
         singleClusterStats.push_back(costCluster);
         totalCost += costCluster;
 
@@ -682,7 +683,7 @@ void stats_calculator(
     // ! same indexes as previous and index 8 is the number of clusters
     double totalDepotDuration = (double)totalHlpNumber + (double)totalWaitDuration + (double)totalTripsDuration;
     depotStats.push_back(totalDepotDuration);
-    depotStats.push_back((double)totalCost + (clusters.size() * FIX_COST));
+    depotStats.push_back((double)(totalCost + (clusters.size() * FIX_COST)));
     depotStats.push_back(totalHlpNumber);
     depotStats.push_back(totalHlpDuration);
     depotStats.push_back(totalHlpDuration / totalDepotDuration); // hlp pourcentage

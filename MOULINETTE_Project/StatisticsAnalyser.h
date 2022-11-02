@@ -124,42 +124,42 @@ public:
     void handleDepot()
     {
         int i = 1;
-        stats_out << "+---------+----------+----------------+----------------+--------------+-----------------+---------------+------------------+-----------------+" << endl;
-        stats_out << "| Cluster | Duration | Cluster's Cost | Number of HLPs | HLP Duration | HLP pourcentage | Wait Duration | Wait Pourcentage | Number of trips |" << endl;
-        stats_out << "+---------+----------+----------------+----------------+--------------+-----------------+---------------+------------------+-----------------+" << endl;
+        cout << "+---------+----------+----------------+----------------+--------------+-----------------+---------------+------------------+-----------------+" << endl;
+        cout << "| Cluster | Duration | Cluster's Cost | Number of HLPs | HLP Duration | HLP pourcentage | Wait Duration | Wait Pourcentage | Number of trips |" << endl;
+        cout << "+---------+----------+----------------+----------------+--------------+-----------------+---------------+------------------+-----------------+" << endl;
 
         for (auto cluster : this->matrixData)
         {
             vector<float> data = this->calculateClusterData(i, cluster);
-            stats_out << "|" << setw(9) << i;
-            stats_out << "|" << setw(10) << data[1];
-            stats_out << "|" << setw(16) << data[2];
-            stats_out << "|" << setw(16) << data[3];
-            stats_out << "|" << setw(14) << data[4];
-            stats_out << "|" << setw(17) << data[5];
-            stats_out << "|" << setw(15) << data[6];
-            stats_out << "|" << setw(18) << data[7];
-            stats_out << "|" << setw(17) << data[8] << "|" << endl;
+            cout << "|" << setw(9) << i;
+            cout << "|" << setw(10) << data[1];
+            cout << "|" << setw(16) << data[2];
+            cout << "|" << setw(16) << data[3];
+            cout << "|" << setw(14) << data[4];
+            cout << "|" << setw(17) << data[5];
+            cout << "|" << setw(15) << data[6];
+            cout << "|" << setw(18) << data[7];
+            cout << "|" << setw(17) << data[8] << "|" << endl;
             i++;
         }
 
-        stats_out << "+---------+----------+----------------+----------------+--------------+-----------------+---------------+------------------+-----------------+" << endl;
-        stats_out << endl;
+        cout << "+---------+----------+----------------+----------------+--------------+-----------------+---------------+------------------+-----------------+" << endl;
+        cout << endl;
 
-        stats_out << "DEPOT STATS : " << endl;
-        stats_out << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
-        stats_out << "| Total Duration | Depot's Cost | Number of HLPs | HLP Duration | HLP pourcentage | Wait Duration | Wait Pourcentage | Number of trips | Number of Clusters |" << endl;
-        stats_out << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
-        stats_out << "|" << setw(16) << this->totalTripDuration;
-        stats_out << "|" << setw(14) << this->coutTotalCalculator();
-        stats_out << "|" << setw(16) << this->HLPCounter;
-        stats_out << "|" << setw(14) << this->HLPDuration;
-        stats_out << "|" << setw(17) << (this->HLPDuration * 1.0 / this->totalTripDuration * 1.0) * 100;
-        stats_out << "|" << setw(15) << this->attenteDuration;
-        stats_out << "|" << setw(18) << (this->attenteDuration * 1.0 / this->totalTripDuration * 1.0) * 100;
-        stats_out << "|" << setw(17) << this->totalTrips;
-        stats_out << "|" << setw(20) << this->clustersCount << "|" << endl;
-        stats_out << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
+        cout << "DEPOT STATS : " << endl;
+        cout << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
+        cout << "| Total Duration | Depot's Cost | Number of HLPs | HLP Duration | HLP pourcentage | Wait Duration | Wait Pourcentage | Number of trips | Number of Clusters |" << endl;
+        cout << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
+        cout << "|" << setw(16) << this->totalTripDuration;
+        cout << "|" << setw(14) << this->coutTotalCalculator();
+        cout << "|" << setw(16) << this->HLPCounter;
+        cout << "|" << setw(14) << this->HLPDuration;
+        cout << "|" << setw(17) << (this->HLPDuration * 1.0 / this->totalTripDuration * 1.0) * 100;
+        cout << "|" << setw(15) << this->attenteDuration;
+        cout << "|" << setw(18) << (this->attenteDuration * 1.0 / this->totalTripDuration * 1.0) * 100;
+        cout << "|" << setw(17) << this->totalTrips;
+        cout << "|" << setw(20) << this->clustersCount << "|" << endl;
+        cout << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
 
         stats_out.close();
     }
