@@ -139,10 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="testkh.h" />
+    <ClInclude Include="LexicalAnalyser.h" />
+    <ClInclude Include="LogicalAnalyser.h" />
+    <ClInclude Include="StatisticsAnalyser.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="testkh.cpp" />
+    <ClCompile Include="LexicalAnalyser.cpp" />
+    <ClCompile Include="LogicalAnalyser.cpp" />
+    <ClCompile Include="StatisticsAnalyser.cpp" />
+    <ClCompile Include="Moulinette.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
