@@ -25,35 +25,83 @@
 
 int main(int argc, char const *argv[])
 {
+    char filenames[][19] = {
+        "../data/test50.txt",
+        "../data/test54.txt",
+        "../data/test55.txt",
+        "../data/test56.txt",
+        "../data/test57.txt",
+        "../data/test58.txt",
+        "../data/test59.txt",
+        "../data/test60.txt"};
 
-    // lexical analysis
-    vector<vector<string>> clusters;
-    LexicalAnalyser *lexicalAnalyser = LexicalAnalyser::getInstance(SOL_FILENAME, PATTERN);
-    lexicalAnalyser->fileMatchLexicalReqs(clusters);
+    char statsout[][20] = {
+        "../data/stats50.txt",
+        "../data/stats54.txt",
+        "../data/stats55.txt",
+        "../data/stats56.txt",
+        "../data/stats57.txt",
+        "../data/stats58.txt",
+        "../data/stats59.txt",
+        "../data/stats60.txt"};
 
-    vector<vector<string>> output_data;
-    // logical analysis
-    LogicalAnalyser *logicalAnalyser = LogicalAnalyser::getInstance(PARAM_FILE, SOL_FILENAME, DATA_FILE);
-    // logicalAnalyser->showBusTripsPopulation();
+    char output_files[][20] = {
+        "../output/out50.txt",
+        "../output/out54.txt",
+        "../output/out55.txt",
+        "../output/out56.txt",
+        "../output/out57.txt",
+        "../output/out58.txt",
+        "../output/out59.txt",
+        "../output/out60.txt"};
 
-    logicalAnalyser->rulesVerfication(clusters, output_data);
+    char output_files_onlycluster[][22] = {
+        "../output/out50oc.txt",
+        "../output/out54oc.txt",
+        "../output/out55oc.txt",
+        "../output/out56oc.txt",
+        "../output/out57oc.txt",
+        "../output/out58oc.txt",
+        "../output/out59oc.txt",
+        "../output/out60oc.txt"};
 
-    string stats_out = "../output/stats.txt"; 
-    StatisticsAnalyser *statisticsAnalyser = new StatisticsAnalyser(output_data, stats_out); 
-    statisticsAnalyser->handleDepot();
-    cout << statisticsAnalyser->coutTotalCalculator(clusters.size()) << endl;  
+    char output_files_onlycluster_Hiba[][27] = {
+        "../output/Hiba/Depot50.txt",
+        "../output/Hiba/Depot54.txt",
+        "../output/Hiba/Depot55.txt",
+        "../output/Hiba/Depot56.txt",
+        "../output/Hiba/Depot57.txt",
+        "../output/Hiba/Depot58.txt",
+        "../output/Hiba/Depot59.txt",
+        "../output/Hiba/Depot60.txt"};
 
-    // for(auto cluster : output_data)
-    // {
-    //     for(auto str: cluster)
-    //     {
-    //         cout << str << " | "; 
-    //     }
-    //     cout << endl;
-    // }
-    
 
-    // calcule du cout total
+        // lexical analysis
+        vector<vector<string>> clusters;
+        LexicalAnalyser *lexicalAnalyser = LexicalAnalyser::getInstance(output_files_onlycluster[0], PATTERN);
+        lexicalAnalyser->fileMatchLexicalReqs(clusters);
+
+        vector<vector<string>> output_data;
+        // logical analysis
+        LogicalAnalyser *logicalAnalyser = LogicalAnalyser::getInstance(PARAM_FILE, output_files_onlycluster[0], filenames[0]);
+        
+        logicalAnalyser->rulesVerfication(clusters, output_data);
+
+        StatisticsAnalyser *statisticsAnalyser = new StatisticsAnalyser(output_data, statsout[0]); 
+        statisticsAnalyser->handleDepot(); 
+
+
+        //  free(lexicalAnalyser);
+        //  free(logicalAnalyser);
+         delete statisticsAnalyser;
+
+        lexicalAnalyser = nullptr;
+        logicalAnalyser = nullptr;
+
+        clusters.erase(clusters.begin(), clusters.end()); 
+        output_data.erase(output_data.begin(), output_data.end()); 
+
+        statisticsAnalyser = nullptr;
 
     return 0;
 }

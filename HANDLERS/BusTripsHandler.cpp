@@ -89,7 +89,7 @@ BusStation *findBusStationById(const set<BusStation *> &busStationsSet, string b
 
 void detach_lines(multiset<BusTrip> &resultTrips, TRIPS_MAP linesTrips)
 {
-    TRIPS_MAP ::iterator it1;
+    TRIPS_MAP::iterator it1;
     for (it1 = linesTrips.begin(); it1 != linesTrips.end(); ++it1)
     {
         multiset<BusTrip>::iterator temp_it;

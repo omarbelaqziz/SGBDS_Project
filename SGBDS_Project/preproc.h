@@ -34,3 +34,4 @@ typedef vector<pair<BusTrip, bool>> TEMP_TYPE;
 
 #define MIN_WAIT 45
 
+#define FIX_COST 1000.0

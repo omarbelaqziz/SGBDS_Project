@@ -382,3 +382,7 @@ examples
 res.txt
 
 output
+
+*.bat
+*.txt
+*.sh

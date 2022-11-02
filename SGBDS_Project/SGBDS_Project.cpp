@@ -107,6 +107,7 @@ int main()
             // cout << "tripsTotal: " << sum_trips << endl;
             // heuristic_graph_builder(busTripsPopulation, dataOutFile, busStations, interTrips);
             vector<vector<string>> allClusters = clusters_generator_fromTripsSet(interTrips, busStations, busTripsPopulation, 1);
+            //vector<vector<string>> allClusters= optimize_generated_solution(interTrips,busStations,busTripsPopulation,allClustersB); 
             cout << "+++++++++++++++ SIZE " << allClusters.size() << "_______________________________" << endl;
             write_cluster_to_file(dataOutFileOc, allClusters);
             vector<vector<double>> clustersStats;

@@ -25,3 +25,15 @@ void writeStatsIntoScreen(
     const vector<vector<double>>& clustersStats,
     const vector<double>& depotStats
 );
+bool twoTripsCost(float& cost, 
+    INTER_TRIPS stationsTargets,
+    set<BusStation> *busStations,
+    BusTrip firstTrip,
+    BusTrip secondTrip,
+    string& type);
+
+vector<vector<string>> optimize_generated_solution(
+    INTER_TRIPS stationsTargets,
+    set<BusStation> *busStations,
+    multiset<BusTrip> trips,
+    vector<vector<string>> solution);

@@ -24,11 +24,11 @@ set<BusStation> *handle_file_stream_bus_stations(ifstream &i_file)
 bool isDepot_handler(string isDepot_string)
 {
     bool result = false;
-    if (isDepot_string.size() == 2)
-    {
+    //if (isDepot_string.size() == 2)
+    //{
         char v = isDepot_string.at(0);
         (v == '0') ? result = false : result = true;
-    }
+    //}
     // handle the error
     return result;
 }
@@ -43,5 +43,5 @@ string findDepotId(set<BusStation> *busStations)
         if (itr->getIsDepot() == true)
             return itr->getId();
     }
-    return NULL; 
+    return depotId; 
 }
