@@ -385,3 +385,4 @@ output
 
 *.txt
 *.sh
+*.o

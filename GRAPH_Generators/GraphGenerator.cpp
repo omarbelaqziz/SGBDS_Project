@@ -695,40 +695,42 @@ void stats_calculator(
 
 void writeStatsIntoScreen(
     const vector<vector<double>> &clustersStats,
-    const vector<double> &depotStats)
+    const vector<double> &depotStats, 
+    ofstream &stats_out_stream)
 {
-    cout << "+---------+----------+----------------+----------------+--------------+-----------------+---------------+------------------+-----------------+" << endl;
-    cout << "| Cluster | Duration | Cluster's Cost | Number of HLPs | HLP Duration | HLP pourcentage | Wait Duration | Wait Pourcentage | Number of trips |" << endl;
-    cout << "+---------+----------+----------------+----------------+--------------+-----------------+---------------+------------------+-----------------+" << endl;
+    stats_out_stream << "Total cluster : " << clustersStats.size() << endl; 
+    stats_out_stream << "+---------+----------+----------------+----------------+--------------+-----------------+---------------+------------------+-----------------+" << endl;
+    stats_out_stream << "| Cluster | Duration | Cluster's Cost | Number of HLPs | HLP Duration | HLP pourcentage | Wait Duration | Wait Pourcentage | Number of trips |" << endl;
+    stats_out_stream << "+---------+----------+----------------+----------------+--------------+-----------------+---------------+------------------+-----------------+" << endl;
     for (int i = 0; i < clustersStats.size(); i++)
     {
-        cout << "|" << setw(9) << i;
-        cout << "|" << setw(10) << clustersStats[i][0];
-        cout << "|" << setw(16) << clustersStats[i][1];
-        cout << "|" << setw(16) << clustersStats[i][2];
-        cout << "|" << setw(14) << clustersStats[i][3];
-        cout << "|" << setw(17) << clustersStats[i][4];
-        cout << "|" << setw(15) << clustersStats[i][5];
-        cout << "|" << setw(18) << clustersStats[i][6];
-        cout << "|" << setw(17) << clustersStats[i][7] << "|" << endl;
+        stats_out_stream << "|" << setw(9) << i;
+        stats_out_stream << "|" << setw(10) << clustersStats[i][0];
+        stats_out_stream << "|" << setw(16) << clustersStats[i][1];
+        stats_out_stream << "|" << setw(16) << clustersStats[i][2];
+        stats_out_stream << "|" << setw(14) << clustersStats[i][3];
+        stats_out_stream << "|" << setw(17) << clustersStats[i][4];
+        stats_out_stream << "|" << setw(15) << clustersStats[i][5];
+        stats_out_stream << "|" << setw(18) << clustersStats[i][6];
+        stats_out_stream << "|" << setw(17) << clustersStats[i][7] << "|" << endl;
     }
-    cout << "+---------+----------+----------------+----------------+--------------+-----------------+---------------+------------------+-----------------+" << endl;
-    cout << endl;
+    stats_out_stream << "+---------+----------+----------------+----------------+--------------+-----------------+---------------+------------------+-----------------+" << endl;
+    stats_out_stream << endl;
 
-    cout << "DEPOT STATS : " << endl;
-    cout << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
-    cout << "| Total Duration | Depot's Cost | Number of HLPs | HLP Duration | HLP pourcentage | Wait Duration | Wait Pourcentage | Number of trips | Number of Clusters |" << endl;
-    cout << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
-    cout << "|" << setw(16) << depotStats[0];
-    cout << "|" << setw(14) << depotStats[1];
-    cout << "|" << setw(16) << depotStats[2];
-    cout << "|" << setw(14) << depotStats[3];
-    cout << "|" << setw(17) << depotStats[4];
-    cout << "|" << setw(15) << depotStats[5];
-    cout << "|" << setw(18) << depotStats[6];
-    cout << "|" << setw(17) << depotStats[7];
-    cout << "|" << setw(20) << depotStats[8] << "|" << endl;
-    cout << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
+    stats_out_stream << "DEPOT STATS : " << endl;
+    stats_out_stream << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
+    stats_out_stream << "| Total Duration | Depot's Cost | Number of HLPs | HLP Duration | HLP pourcentage | Wait Duration | Wait Pourcentage | Number of trips | Number of Clusters |" << endl;
+    stats_out_stream << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
+    stats_out_stream << "|" << setw(16) << depotStats[0];
+    stats_out_stream << "|" << setw(14) << depotStats[1];
+    stats_out_stream << "|" << setw(16) << depotStats[2];
+    stats_out_stream << "|" << setw(14) << depotStats[3];
+    stats_out_stream << "|" << setw(17) << depotStats[4];
+    stats_out_stream << "|" << setw(15) << depotStats[5];
+    stats_out_stream << "|" << setw(18) << depotStats[6];
+    stats_out_stream << "|" << setw(17) << depotStats[7];
+    stats_out_stream << "|" << setw(20) << depotStats[8] << "|" << endl;
+    stats_out_stream << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
 }
 
 bool twoTripsCost(float& cost, 

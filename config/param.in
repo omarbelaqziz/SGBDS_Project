@@ -1,0 +1,4 @@
+MIN_WAIT = 45
+C_A = 0.2
+C_V = 0.4
+FIX_COST = 1000.0

@@ -182,7 +182,7 @@ int main(int argc, char const *argv[])
         {
             exp2 += Y[i][k];
         }
-        Model.add(exp2 == IloTrue);
+        Model.add(exp2 == 1);
     }
 
     // 2.a

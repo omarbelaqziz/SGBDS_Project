@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 #include "LexicalAnalyser.h"
 #include "LogicalAnalyser.h"
 #include "StatisticsAnalyser.h"
@@ -17,90 +18,49 @@
  *  - if not HLP needs to be <= connection between tripF & tripS
  */
 
-#define PATTERN "cluster [0-9][0-9]* : (T_[0-9][0-9]*( HLP | WS ))*T_[0-9][0-9]* ;"
-#define SOL_FILENAME "../output/out50oc.txt"
-
-#define DATA_FILE "../data/test50.txt"
+// #define PATTERN "cluster [0-9][0-9]* : (T_[0-9][0-9]*( HLP | WS ))*T_[0-9][0-9]* ;"
 #define PARAM_FILE "../config/param.in"
 
 int main(int argc, char const *argv[])
 {
-    char filenames[][19] = {
-        "../data/test50.txt",
-        "../data/test54.txt",
-        "../data/test55.txt",
-        "../data/test56.txt",
-        "../data/test57.txt",
-        "../data/test58.txt",
-        "../data/test59.txt",
-        "../data/test60.txt"};
+    auto start = chrono::high_resolution_clock::now();
 
-    char statsout[][20] = {
-        "../data/stats50.txt",
-        "../data/stats54.txt",
-        "../data/stats55.txt",
-        "../data/stats56.txt",
-        "../data/stats57.txt",
-        "../data/stats58.txt",
-        "../data/stats59.txt",
-        "../data/stats60.txt"};
+    // cmd form ./moulinette dataFile.txt onlyCluster.txt stats_out.txt 
 
-    char output_files[][20] = {
-        "../output/out50.txt",
-        "../output/out54.txt",
-        "../output/out55.txt",
-        "../output/out56.txt",
-        "../output/out57.txt",
-        "../output/out58.txt",
-        "../output/out59.txt",
-        "../output/out60.txt"};
+    // lexical analysis
+    vector<vector<string>> clusters;
+    LexicalAnalyser *lexicalAnalyser = LexicalAnalyser::getInstance(argv[2], PATTERN);
+    lexicalAnalyser->fileMatchLexicalReqs(clusters);
 
-    char output_files_onlycluster[][22] = {
-        "../output/out50oc.txt",
-        "../output/out54oc.txt",
-        "../output/out55oc.txt",
-        "../output/out56oc.txt",
-        "../output/out57oc.txt",
-        "../output/out58oc.txt",
-        "../output/out59oc.txt",
-        "../output/out60oc.txt"};
+    cout << "Lexical analyser :" <<  GREEN << "DONE" << RESET << endl; 
+
+    vector<vector<string>> output_data;
+    // logical analysis
+    LogicalAnalyser *logicalAnalyser = LogicalAnalyser::getInstance(PARAM_FILE, argv[2], argv[1]);
+
+    logicalAnalyser->rulesVerfication(clusters, output_data);
+
+    cout << "Logical analyser :" <<  GREEN << "DONE" << RESET << endl << endl;
+
+    StatisticsAnalyser *statisticsAnalyser = new StatisticsAnalyser(output_data, argv[3]);
+    statisticsAnalyser->handleDepot();
+
+    cout << "Statistics analyser :" <<  GREEN << "DONE" << RESET << endl << endl;
+
+    statisticsAnalyser->showSubData(); 
 
 
-// cmd form ./ll test50.txt out50oc.txt
-    if (argc == 3)
-    {
-        // lexical analysis
-            vector<vector<string>> clusters;
-            LexicalAnalyser *lexicalAnalyser = LexicalAnalyser::getInstance(argv[2], PATTERN);
-            lexicalAnalyser->fileMatchLexicalReqs(clusters);
+    // free up the instances to de-allocate memory 
+    free(lexicalAnalyser);
+    free(logicalAnalyser);
+    delete statisticsAnalyser;
 
-            vector<vector<string>> output_data;
-            // logical analysis
-            LogicalAnalyser *logicalAnalyser = LogicalAnalyser::getInstance(PARAM_FILE, argv[2], argv[1]);
-            
-            logicalAnalyser->rulesVerfication(clusters, output_data);
+    lexicalAnalyser = nullptr;
+    logicalAnalyser = nullptr;
 
-            StatisticsAnalyser *statisticsAnalyser = new StatisticsAnalyser(output_data, statsout[0]); 
-            statisticsAnalyser->handleDepot(); 
-
-
-            //  free(lexicalAnalyser);
-            //  free(logicalAnalyser);
-            //delete statisticsAnalyser;
-
-            // lexicalAnalyser = nullptr;
-            // logicalAnalyser = nullptr;
-
-            // clusters.erase(clusters.begin(), clusters.end()); 
-            // output_data.erase(output_data.begin(), output_data.end()); 
-
-            // statisticsAnalyser = nullptr;
-    }
-    else {
-        cout << "please run the following form of the commande : ./moulinette DATA_FILE SOLUTION_FILE" << endl;
-        return -1;
-    }
-        
+    auto end = chrono::high_resolution_clock::now();
+	auto Elapsed = chrono::duration_cast<chrono::milliseconds>(end - start);
+	cout << endl << "Elapsed Time(s): " << Elapsed.count() / 1000.0 << endl;
 
     return 0;
 }

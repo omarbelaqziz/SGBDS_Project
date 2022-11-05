@@ -1,50 +1,58 @@
-# Bus Stations process optimization 
+# Bus Stations process optimization
 
-## Description 
-The following project is a solution to real bus network optimaztion 
+## Description
 
-## How to use the Repo 
-### for visual studio users 
-run
+The following project is a solution to real bus network optimaztion
+
+The project contains three main programs `Moulinette, Livrable1, Livrable2, Livrable3, Simplex Method`
+
+## How to use the Repo
+
+### for visual studio users
+
 ```
-git clon https://github.com/mo-hunter123/SGBDS-project
+git clone https://github.com/mo-hunter123/SGBDS-project
 # then just run the app
+```
+
+### for linux users
+
+## To use The graph generators project
+
+First Run
+``` 
+cd SGBDS_Project 
+```
+
+In the following directory exists two main files :
+- `./build.sh` : This file will let you build the solution depending on the desire livrable index 
+  - livrable1 : the greedy solution of reading data by bus lines 
+  - livrable2 : a more optimised solution of generating clusters data 
+  ```
+    # the ./build.sh follows the following pattern 
+    ./build.sh [livrableIndex]
+  ```
+- `./run.sh` : The following script will let you run the desired livrable by following this pattern 
+  ```
+  ./run.sh [livrableIndex] [path_to_datafile.txt] [path_to_output_statistics.txt] [path_to_clusters_generation_file.txt]
+  ```
+## To use the Moulinette project
+
+First Run
 
 ```
 
-### for linux users 
-you can configure a cmake file to run the app 
-
-but in my usecase I used a bash script as the following : 
-
-in the root directory run: 
-```
-touch build-proj.sh
-```
-then copy the script: 
-```
-#!/bin/bash 
-
-g++  \
-    ./SGBDS_Project/SGBDS_Project.cpp \
-    ./SGBDS_Project/StringsOperations.cpp \
-    ./SGBDS_Project/BusStation.cpp \
-    ./SGBDS_Project/BusStationsHandler.cpp \
-    ./SGBDS_Project/BusTripsHandler.cpp \
-    ./SGBDS_Project/BusTrip.cpp \
-    ./SGBDS_Project/BusInterTripsHandler.cpp \
-    ./SGBDS_Project/StatisticsCalculator.cpp \
-    ./SGBDS_Project/GraphGenerator.cpp \
-    -o out-exec
+cd MOULINETTE_Project
 
 ```
 
-then run 
-```
-chmod 755 build-proj.sh
-./build-proj.sh
-```
-then you can execute the out file ```./out-exec``` in that case 
+You will find in `./MOULINETTE_Project` two files :
 
-and that's it
+- `./build.sh` : this file will let you build the moulinette solution [no arguments needed]
+- `./run.sh` : this file will let you run the executable. The pattern to run the following is 
+  - ```./run.sh [path_to_data_file.txt] [path_to_cluster_data.txt] [path_to_statistics_destination.txt]```
+
+
+
+
 ### Happy hacking 

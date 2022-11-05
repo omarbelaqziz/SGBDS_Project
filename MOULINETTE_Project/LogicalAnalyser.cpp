@@ -53,7 +53,7 @@ void LogicalAnalyser::constructTripsPopulation()
             // CONSTRUCT INTER TRIPS
             else if (line.find("InterTrips") != string::npos)
             {
-                handle_file_stream_inter_trips(interTrips, this->datafile_in, busStations);
+                handle_file_stream_inter_trips(this->interTrips, this->datafile_in, busStations);
             }
         }
         else if (line.find("}") != string::npos)
@@ -126,6 +126,12 @@ void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters, v
         BusTrip startTrip;
         bool found = this->findInterTripByTripId(startTrip, cluster[0]);
 
+        if (!found)
+        {
+            cout << RED << "Sorry we can't find the trip " << cluster[0] << " on the cluster : " << cluster_count << RESET << endl;
+            exit(-1);
+        }
+
         // search the inter trip between Depot --> startTrip.stDep
         string depotId = findDepotId(this->busStations);
         int depot_duration = TargetInterTrip::findDurationByTargetId(startTrip.getBusStationDep()->getId(), this->interTrips.at(depotId));
@@ -138,145 +144,137 @@ void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters, v
         }
         else
         {
-            cerr << "No inter trip between " << depotId << " -> " << startTrip.getBusStationDep()->getId() << endl;
+            cerr << RED << "No inter trip between " << depotId << " -> " << startTrip.getBusStationDep()->getId() << RESET << endl;
             exit(-2);
         }
+        BusTrip currentTrip;
+        string between;
 
-        if (found)
+        d_it = cluster.begin();
+        ++d_it;
+        // the value could have two different states ; Trip || (HLP or WS)
+        for (; d_it != cluster.end(); ++d_it)
         {
-            BusTrip currentTrip;
-            string between;
-
-            d_it = cluster.begin();
-            ++d_it;
-            // the value could have two different states ; Trip || (HLP or WS)
-            for (; d_it != cluster.end(); ++d_it)
+            OneTrip = false;
+            if ((*d_it) == "HLP")
             {
-                OneTrip = false;
-                if ((*d_it) == "HLP")
+                between = "HLP";
+            }
+            else if ((*d_it) == "WS")
+            {
+                between = "WS";
+            }
+            // Trip handling
+            else
+            {
+                bool found2 = this->findInterTripByTripId(currentTrip, (*d_it));
+                if (found2)
                 {
-                    between = "HLP";
-                }
-                else if ((*d_it) == "WS")
-                {
-                    between = "WS";
-                }
-                // Trip handling
-                else
-                {
-                    bool found2 = this->findInterTripByTripId(currentTrip, (*d_it));
-                    if (found2)
+
+                    // traitement starts
+                    if (startTrip < currentTrip) // are successor
                     {
-
-                        // traitement starts
-                        if (startTrip < currentTrip) // are successor
+                        // the two trips have the same Arrival and Departure station
+                        if (startTrip.getBusStationArr()->getId() == currentTrip.getBusStationDep()->getId())
                         {
-                            // the two trips have the same Arrival and Departure station
-                            if (startTrip.getBusStationArr()->getId() == currentTrip.getBusStationDep()->getId())
+                            int diff_time = difftime(currentTrip.getDateDep(), startTrip.getDateArr()) / 60;
+                            // SI ON PEUT TOLERER ATTENTE = 0 DANS UNE STATION
+                            if (0 <= diff_time && diff_time <= MIN_WAIT) // the successor could be the next
                             {
-                                int diff_time = difftime(currentTrip.getDateDep(), startTrip.getDateArr()) / 60;
-                                // SI ON PEUT TOLERER ATTENTE = 0 DANS UNE STATION
-                                if (0 <= diff_time && diff_time <= MIN_WAIT) // the successor could be the next
                                 {
+                                    if (between != "WS") // between needs to be WS
                                     {
-                                        if (between != "WS") // between needs to be WS
-                                        {
-                                            // NOT OK
-                                            cerr << "The state between " << startTrip.getTripId() << " and " << currentTrip.getTripId() << " needs to be WS instead of " << between << endl;
-                                        }
-                                        else
-                                        {
-                                            cluster_data.push_back(to_string(diff_time));
-                                            cluster_data.push_back(to_string(currentTrip.getTripDuration()) + " 0 0");
-                                            visited_trips[currentTrip.getTripId()]++;
-                                        }
-                                    }
-                                }
-                                else if (diff_time > MIN_WAIT)
-                                {
-                                    cerr << "Trips " << startTrip.getTripId() << " and " << currentTrip.getTripId() << " couldn't be linked -> because difftime passes the MIN_WAIT min " << endl;
-                                }
-                                else
-                                {
-                                    cerr << "The difftime between " << startTrip.getTripId() << " and " << currentTrip.getTripId() << " is negative so trips can't be reached " << endl;
-                                }
-                            }
-                            else // when the stations are different
-                            {
-                                // search inter trip between stations
-                                int temp_dur = TargetInterTrip::findDurationByTargetId(currentTrip.getBusStationDep()->getId(), this->interTrips.at(startTrip.getBusStationArr()->getId()));
-
-                                if (temp_dur != -1) // inter trip exists
-                                {
-
-                                    int attente_hlp = (difftime(currentTrip.getDateDep(), startTrip.getDateArr()) / 60.0) - temp_dur;
-
-                                    if (0 <= attente_hlp && attente_hlp <= MIN_WAIT)
-                                    {
-                                        // verifier si HLP
-                                        if (between != "HLP")
-                                        {
-                                            cerr << "The state between " << startTrip.getTripId() << " and " << currentTrip.getTripId() << " needs to be HLP instead of " << between << endl;
-                                        }
-                                        else
-                                        {
-                                            cluster_data.push_back(to_string(temp_dur) + " " + to_string(attente_hlp));
-                                            cluster_data.push_back(to_string(currentTrip.getTripDuration()) + " 0 0");
-                                            visited_trips[currentTrip.getTripId()]++;
-                                        }
-                                    }
-                                    else if (attente_hlp < 0)
-                                    {
-
-                                        cerr << "Le bus ne peut pas achever le Trip " << startTrip.getTripId() << " => " << currentTrip.getTripId() << " au temps " << endl;
+                                        // NOT OK
+                                        cerr << RED << "The state between " << startTrip.getTripId() << " and " << currentTrip.getTripId() << " needs to be WS instead of " << between << RESET << endl;
                                     }
                                     else
                                     {
-                                        cerr << "L'attente dans la station d'arrivee est > a MIN_WAIT " << startTrip.getTripId() << " and " << currentTrip.getTripId() << " Le vehicule doit se deplacer vers le depot " << endl;
+                                        cluster_data.push_back(to_string(diff_time));
+                                        cluster_data.push_back(to_string(currentTrip.getTripDuration()) + " 0 0");
+                                        visited_trips[currentTrip.getTripId()]++;
                                     }
                                 }
-                                else
-                                    cerr << "il y a pas d'intertrip entre " << startTrip.getBusStationArr()->getId() << " and " << currentTrip.getBusStationDep()->getId() << " Trips: " << startTrip.getTripId() << " -> " << currentTrip.getTripId() << endl;
+                            }
+                            else if (diff_time > MIN_WAIT)
+                            {
+                                cerr << RED << "Trips " << startTrip.getTripId() << " and " << currentTrip.getTripId() << " couldn't be linked -> because difftime passes the MIN_WAIT min " << RESET << endl;
+                            }
+                            else
+                            {
+                                cerr << RED << "The difftime between " << startTrip.getTripId() << " and " << currentTrip.getTripId() << " is negative so trips can't be reached " << RESET << endl;
                             }
                         }
-                        else
+                        else // when the stations are different
                         {
-                            cerr << "The trips " << startTrip.getTripId() << " and " << currentTrip.getTripId() << " are not even succesors by start date " << endl;
+                            // search inter trip between stations
+                            int temp_dur = TargetInterTrip::findDurationByTargetId(currentTrip.getBusStationDep()->getId(), this->interTrips.at(startTrip.getBusStationArr()->getId()));
+
+                            if (temp_dur != -1) // inter trip exists
+                            {
+
+                                int attente_hlp = (difftime(currentTrip.getDateDep(), startTrip.getDateArr()) / 60.0) - temp_dur;
+
+                                if (0 <= attente_hlp && attente_hlp <= MIN_WAIT)
+                                {
+                                    // verifier si HLP
+                                    if (between != "HLP")
+                                    {
+                                        cerr << RED << "The state between " << startTrip.getTripId() << " and " << currentTrip.getTripId() << " needs to be HLP instead of " << between << RESET << endl;
+                                    }
+                                    else
+                                    {
+                                        cluster_data.push_back(to_string(temp_dur) + " " + to_string(attente_hlp));
+                                        cluster_data.push_back(to_string(currentTrip.getTripDuration()) + " 0 0");
+                                        visited_trips[currentTrip.getTripId()]++;
+                                    }
+                                }
+                                else if (attente_hlp < 0)
+                                {
+
+                                    cerr << RED << "Le bus ne peut pas achever le Trip " << startTrip.getTripId() << " => " << currentTrip.getTripId() << " au temps " << RESET << endl;
+                                }
+                                else
+                                {
+                                    cerr << RED << "L'attente dans la station d'arrivee est > a MIN_WAIT " << startTrip.getTripId() << " and " << currentTrip.getTripId() << " Le vehicule doit se deplacer vers le depot " << RESET << endl;
+                                }
+                            }
+                            else
+                                cerr << RED << "il y a pas d'intertrip entre " << startTrip.getBusStationArr()->getId() << " and " << currentTrip.getBusStationDep()->getId() << " Trips: " << startTrip.getTripId() << " -> " << currentTrip.getTripId() << RESET << endl;
                         }
                     }
-                    // the destination trip not found
                     else
                     {
-                        cerr << "The trip :  " << (*d_it) << " not even exist in data set " << endl;
-                        exit(-1);
+                        cerr << RED << "The trips " << startTrip.getTripId() << " and " << currentTrip.getTripId() << " are not even succesors by start date "<< RESET << endl;
                     }
-
-                    // next start will be the current
-                    startTrip = currentTrip;
                 }
-            }
+                // the destination trip not found
+                else
+                {
+                    cerr << RED << "The trip :  " << (*d_it) << " not even exist in data set " << RESET << endl;
+                    exit(-1);
+                }
 
-            if (OneTrip)
-                depot_duration = TargetInterTrip::findDurationByTargetId(depotId, this->interTrips.at(startTrip.getBusStationArr()->getId()));
-            else
-                depot_duration = TargetInterTrip::findDurationByTargetId(depotId, this->interTrips.at(currentTrip.getBusStationArr()->getId()));
-
-            if (depot_duration != -1)
-            {
-                cluster_data.push_back(to_string(depot_duration) + " 0");
+                // next start will be the current
+                startTrip = currentTrip;
             }
-            else
-            {
-                cerr << "No inter trip between " << currentTrip.getBusStationArr()->getId() << " -> " << depotId << endl;
-                exit(-2);
-            }
+        }
 
-            output_data.push_back(cluster_data);
+        if (OneTrip)
+            depot_duration = TargetInterTrip::findDurationByTargetId(depotId, this->interTrips.at(startTrip.getBusStationArr()->getId()));
+        else
+            depot_duration = TargetInterTrip::findDurationByTargetId(depotId, this->interTrips.at(currentTrip.getBusStationArr()->getId()));
+
+        if (depot_duration != -1)
+        {
+            cluster_data.push_back(to_string(depot_duration) + " 0");
         }
         else
         {
-            cerr << "Sorry we can't find the trip " << cluster[0] << " on the cluster : " << cluster_count << endl;
+            cerr << RED << "No inter trip between " << currentTrip.getBusStationArr()->getId() << " -> " << depotId << RESET << endl;
+            exit(-2);
         }
+
+        output_data.push_back(cluster_data);
     }
 
     // check if a trip not visited or a trip visited many times
@@ -284,11 +282,11 @@ void LogicalAnalyser::rulesVerfication(const vector<vector<string>> &clusters, v
     {
         if (pair.second == 0)
         {
-            cerr << "trip: " << pair.first << " not visited" << endl;
+            cerr << RED << "trip: " << pair.first << " not visited" << RESET << endl;
         }
         else if (pair.second > 1)
         {
-            cerr << "trip: " << pair.first << " visited many times " << endl;
+            cerr << RED << "trip: " << pair.first << " visited many times " << RESET << endl;
         }
     }
 }

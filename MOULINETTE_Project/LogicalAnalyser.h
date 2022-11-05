@@ -14,12 +14,10 @@ private:
     ifstream solution_in;
     ifstream datafile_in;
 
-
-    set<BusStation> *busStations; 
-    INTER_TRIPS interTrips; 
-    multiset<BusTrip> tripsPopulation; 
-    TRIPS_MAP tripsStations; 
-
+    set<BusStation> *busStations;
+    INTER_TRIPS interTrips;
+    multiset<BusTrip> tripsPopulation;
+    TRIPS_MAP tripsStations;
 
 protected:
     LogicalAnalyser(const string param_file,
@@ -37,8 +35,8 @@ public:
 
     // Business Traitement
     void constructTripsPopulation();
-    void showBusTripsPopulation(); 
-    void rulesVerfication(const vector<vector<string>>& clusters, vector<vector<string>> & output_data) const; 
-    const bool findInterTripByTripId(BusTrip& temp, string tripId) const; 
-    bool static verifyTwoTrips(string T_1, string T_2); 
+    void showBusTripsPopulation();
+    void rulesVerfication(const vector<vector<string>> &clusters, vector<vector<string>> &output_data) const;
+    const bool findInterTripByTripId(BusTrip &temp, string tripId) const;
+    bool static verifyTwoTrips(string T_1, string T_2);
 };
