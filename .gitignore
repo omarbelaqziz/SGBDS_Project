@@ -368,7 +368,6 @@ build
 include
 
 .vscode
-/SGBDS_Project/build-and-run.sh 
 CMakeLists.txt
 ll
 /SGBDS_Project/ll
@@ -384,4 +383,4 @@ res.txt
 output
 
 *.txt
-*.sh
+*.o

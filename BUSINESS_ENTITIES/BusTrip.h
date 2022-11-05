@@ -40,62 +40,20 @@ public:
     bool operator==(const BusTrip &bus) const;
     void showBusTrip() const;
 
-    int getTripDuration() {
-        return difftime(this->getDateArr(), this->getDateDep())/60; 
-    }
-    const BusStation *getBusStationDep() const
-    {
-        return this->busStationDep;
-    }
-    const BusStation *getBusStationArr() const
-    {
-        return this->busStationArr;
-    }
+    // getters
+    int getTripDuration() const;
+    const BusStation *getBusStationDep() const;
+    const BusStation *getBusStationArr() const;
+    time_t getDateDep() const;
+    time_t getDateArr() const;
+    string getTripId() const;
 
-    time_t getDateDep() const
-    {
-        return this->dateDep;
-    }
-    time_t getDateArr() const
-    {
-        return this->dateArr;
-    }
-    string getTripId() const
-    {
-        return this->tripId;
-    }
-// setters
-
-    void setBusStationDep(const BusStation* statDep)
-    {
-        this->busStationDep = statDep;
-    }
-
-    void setBusStationArr(const BusStation* statArr)
-    {
-        this->busStationArr = statArr;
-    }
-    
-    void setDateDep(time_t dateDep) 
-    {
-        this->dateDep = dateDep;
-    }
-    void setDateArr(time_t dateArr)
-    {
-        this->dateArr = dateArr;
-    }
-    void setTripId(string tripId)
-    {
-        this->tripId = tripId;
-    }
-
-    void setStrDDep(string strDDep)
-    {
-        this->strDDep = strDDep;
-    }
-    void setStrDDarr(string strDDarr)
-    {
-        this->strDDarr = strDDarr;
-    }
-    
+    // setters
+    void setBusStationDep(const BusStation* statDep);
+    void setBusStationArr(const BusStation* statArr);
+    void setDateDep(time_t dateDep);
+    void setDateArr(time_t dateArr);
+    void setTripId(string tripId);
+    void setStrDDep(string strDDep);
+    void setStrDDarr(string strDDarr);
 };

@@ -5,138 +5,115 @@
 
 using namespace std;
 
-int main()
+int main(int argc, char const *argv[])
 {
-    std::clock_t c_start = std::clock();
-    char filenames[][19] = {
-        "../data/test50.txt",
-        "../data/test54.txt",
-        "../data/test55.txt",
-        "../data/test56.txt",
-        "../data/test57.txt",
-        "../data/test58.txt",
-        "../data/test59.txt",
-        "../data/test60.txt"};
 
-    char output_files[][20] = {
-        "../output/out50.txt",
-        "../output/out54.txt",
-        "../output/out55.txt",
-        "../output/out56.txt",
-        "../output/out57.txt",
-        "../output/out58.txt",
-        "../output/out59.txt",
-        "../output/out60.txt"};
+    // here test if all the env variables are set
 
-    char output_files_onlycluster[][22] = {
-        "../output/out50oc.txt",
-        "../output/out54oc.txt",
-        "../output/out55oc.txt",
-        "../output/out56oc.txt",
-        "../output/out57oc.txt",
-        "../output/out58oc.txt",
-        "../output/out59oc.txt",
-        "../output/out60oc.txt"};
+    cout << "starting depot treatement with the folowing data : " << endl;
 
-    int data_set_index = 0;
-
-    for (auto FILEE : filenames)
+    try
     {
-        data_set_index++;
-        string filename = FILEE;
-        string outfile = output_files[data_set_index - 1];
-        string outfileOc = output_files_onlycluster[data_set_index - 1];
+        cout << "waiting constant (c_a) = " << c_a << endl; 
+        cout << "traveling constant (c_v) = " << c_v << endl; 
+        cout << "Maximal waiting duration (MIN_WAIT) = " << MIN_WAIT << endl; 
+        cout << "Fixed Cluster cost (FIX_COST) = " << FIX_COST << endl; 
 
-        std::cout << "Handling data set N#: " << data_set_index << " / "
-                  << "8" << endl;
-        set<BusStation> *busStations = nullptr;
+    }
+    catch(string message)
+    {
+        std::cerr << message << '\n';
+    }
+     
 
-        INTER_TRIPS interTrips;
-        TRIPS_MAP tripsStations;
+    std::clock_t c_start = std::clock();
+    string filename = argv[1];
+    string outfile = argv[2];
+    string outfileOc = argv[3];
 
-        ifstream dataFile;
-        ofstream dataOutFile;
-        ofstream dataOutFileOc;
-        dataOutFile.open(outfile);
-        dataOutFileOc.open(outfileOc);
-        dataFile.open(filename, ios::in);
+    std::cout << "Handling data set : " << filename 
+              << " / " << endl;
+    set<BusStation> *busStations = nullptr;
 
-        if (dataFile.is_open() && dataOutFile.is_open() && dataOutFileOc.is_open())
+    INTER_TRIPS interTrips;
+    TRIPS_MAP tripsStations;
+
+    ifstream dataFile;
+    ofstream dataOutFile;
+    ofstream dataOutFileOc;
+
+    dataOutFile.open(outfile);
+    dataOutFileOc.open(outfileOc);
+    dataFile.open(filename, ios::in);
+
+    if (dataFile.is_open() && dataOutFile.is_open() && dataOutFileOc.is_open())
+    {
+        string line;
+        int lineNumber = 0;
+        while (getline(dataFile, line))
         {
-            string line;
-            int lineNumber = 0;
-            while (getline(dataFile, line))
+            lineNumber++;
+            if (line.find("{") != string::npos)
             {
-                lineNumber++;
-                if (line.find("{") != string::npos)
+                if (line.find("BusStations") != string::npos)
                 {
-                    if (line.find("BusStations") != string::npos)
-                    {
-                        busStations = handle_file_stream_bus_stations(dataFile);
-                    }
-                    else if (line.find("BusTrip") != string::npos)
-                    {
-                        handle_file_stream_bus_trips(tripsStations, dataFile, busStations);
-                    }
-                    else if (line.find("InterTrips") != string::npos)
-                    {
-                        handle_file_stream_inter_trips(interTrips, dataFile, busStations);
-                    }
+                    busStations = handle_file_stream_bus_stations(dataFile);
                 }
-                else if (line.find("}") != string::npos)
+                else if (line.find("BusTrip") != string::npos)
                 {
-                    // std::cout << "Op. ends at " << line << endl;
+                    handle_file_stream_bus_trips(tripsStations, dataFile, busStations);
+                }
+                else if (line.find("InterTrips") != string::npos)
+                {
+                    handle_file_stream_inter_trips(interTrips, dataFile, busStations);
                 }
             }
-            // livrable I
+            else if (line.find("}") != string::npos)
+            {
+                // std::cout << "Op. ends at " << line << endl;
+            }
+        }
+        // livrable I
 
-            /* showAllStatistics(tripsStations, dataOutFile);
-            graph_generator(interTrips, busStations, tripsStations, dataOutFile);
-            delete busStations; */
-            multiset<BusTrip> busTripsPopulation;
-            detach_lines(busTripsPopulation, tripsStations);
+        /* showAllStatistics(tripsStations, dataOutFile);
+        graph_generator(interTrips, busStations, tripsStations, dataOutFile);
+        delete busStations; */
+        multiset<BusTrip> busTripsPopulation;
+        detach_lines(busTripsPopulation, tripsStations);
 
-            cout << "showing results of the new population" << endl;
-            // int sum_trips = 0;
-            // for(auto v: busTripsPopulation)
-            //{
-            //  sum_trips++;
-            //  v.showBusTrip();
-            //  cout << endl;
-            //}
-            // cout << "tripsTotal: " << sum_trips << endl;
-            // heuristic_graph_builder(busTripsPopulation, dataOutFile, busStations, interTrips);
-            vector<vector<string>> allClusters = clusters_generator_fromTripsSet(interTrips, busStations, busTripsPopulation, 1);
-            //vector<vector<string>> allClusters= optimize_generated_solution(interTrips,busStations,busTripsPopulation,allClustersB); 
-            cout << "+++++++++++++++ SIZE " << allClusters.size() << "_______________________________" << endl;
-            write_cluster_to_file(dataOutFileOc, allClusters);
-            vector<vector<double>> clustersStats;
-            vector<double> depotStats;
-            stats_calculator(
-                clustersStats,
-                depotStats,
-                allClusters,
-                interTrips,
-                busStations,
-                busTripsPopulation);
-            writeStatsIntoScreen(
-                clustersStats,
-                depotStats);
-        }
-        else if (!dataFile.is_open())
-        {
-            std::cout << "cannot open " << filename << endl;
-        }
-        else if (!dataOutFileOc.is_open())
-        {
-            std::cout << "cannot open " << outfileOc << endl;
-        }
-        else
-        {
-            std::cout << "cannot open " << outfile << endl;
-        }
-        dataFile.close();
+        cout << "Full statistics calculation will be hosted in the file : " << filename << endl; 
+        cout << "showing sub data : " << endl;
+        vector<vector<string>> allClusters = clusters_generator_fromTripsSet(interTrips, busStations, busTripsPopulation, 1);
+        
+        
+        write_cluster_to_file(dataOutFileOc, allClusters);
+        vector<vector<double>> clustersStats;
+        vector<double> depotStats;
+        stats_calculator(
+            clustersStats,
+            depotStats,
+            allClusters,
+            interTrips,
+            busStations,
+            busTripsPopulation);
+        writeStatsIntoScreen(
+            clustersStats,
+            depotStats, 
+            dataOutFile);
     }
+    else if (!dataFile.is_open())
+    {
+        std::cout << "cannot open " << filename << endl;
+    }
+    else if (!dataOutFileOc.is_open())
+    {
+        std::cout << "cannot open " << outfileOc << endl;
+    }
+    else
+    {
+        std::cout << "cannot open " << outfile << endl;
+    }
+    dataFile.close();
 
     std::clock_t c_end = std::clock();
     long double time_elapsed_ms = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
