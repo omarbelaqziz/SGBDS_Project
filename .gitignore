@@ -384,3 +384,5 @@ output
 
 *.txt
 *.o
+
+*build-and-run.*

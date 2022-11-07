@@ -19,7 +19,7 @@ LIVRABLE_INDEX=$1
 # Livrable 1
 if [[ "$1" == "livrable1" ]]; then 
     g++ -g\
-        ./SGBDS_Project.cpp \
+        ./main_livrableUn.cpp \
         $PREFIX_PATH_STR_OPS/*.cpp \
         $PREFIX_PATH_BUSINESS_ENTITIES/*.cpp \
         $PREFIX_PATH_HANDLERS/*.cpp \
@@ -28,7 +28,13 @@ if [[ "$1" == "livrable1" ]]; then
 
 # Livrable 2
 elif [[ "$1" == "livrable2" ]]; then 
-    echo "not cofigured yet"
+    g++ -g\
+        ./main_livrableDeux.cpp \
+        $PREFIX_PATH_STR_OPS/*.cpp \
+        $PREFIX_PATH_BUSINESS_ENTITIES/*.cpp \
+        $PREFIX_PATH_HANDLERS/*.cpp \
+        $PREFIX_PATH_GRAPH_GEN/*.cpp \
+        -o livrable2
 # Livrable 3
 elif [[ "$1" == "livrable3" ]]; then
     echo "not cofigured yet"

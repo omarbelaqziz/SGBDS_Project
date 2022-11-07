@@ -10,8 +10,7 @@ void graph_generator(
 vector<vector<string>> clusters_generator_fromTripsSet(
     INTER_TRIPS stationsTargets,
     set<BusStation>* busStations,
-    multiset<BusTrip> trips,
-    int mode);
+    multiset<BusTrip> trips);
 void write_cluster_to_file(ofstream& output_file, vector<vector<string>> allClusters);
 void stats_calculator(
     vector<vector<double>>& clustersStats,

@@ -56,7 +56,7 @@ void LexicalAnalyser::fileMatchLexicalReqs(vector<vector<string>> &clusters)
         }
         else
         {
-            cerr << "Line : " << LINES_NUMBER << " doesn't match the given pattern" << endl;
+            cerr << "Line : " << LINES_NUMBER << RED << " doesn't match the given pattern" << RESET << endl;
         }
     }
 }

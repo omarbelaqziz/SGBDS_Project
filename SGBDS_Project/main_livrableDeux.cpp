@@ -73,17 +73,14 @@ int main(int argc, char const *argv[])
                 // std::cout << "Op. ends at " << line << endl;
             }
         }
-        // livrable I
+        // livrable II
 
-        /* showAllStatistics(tripsStations, dataOutFile);
-        graph_generator(interTrips, busStations, tripsStations, dataOutFile);
-        delete busStations; */
         multiset<BusTrip> busTripsPopulation;
         detach_lines(busTripsPopulation, tripsStations);
 
         cout << "Full statistics calculation will be hosted in the file : " << filename << endl; 
         cout << "showing sub data : " << endl;
-        vector<vector<string>> allClusters = clusters_generator_fromTripsSet(interTrips, busStations, busTripsPopulation, 1);
+        vector<vector<string>> allClusters = clusters_generator_fromTripsSet(interTrips, busStations, busTripsPopulation);
         
         
         write_cluster_to_file(dataOutFileOc, allClusters);

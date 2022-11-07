@@ -25,7 +25,7 @@ int main(int argc, char const *argv[])
 {
     auto start = chrono::high_resolution_clock::now();
 
-    // cmd form ./moulinette dataFile.txt onlyCluster.txt stats_out.txt 
+    // cmd form to tun this program : ./moulinette dataFile.txt onlyCluster.txt stats_out.txt 
 
     // lexical analysis
     vector<vector<string>> clusters;
