@@ -7,7 +7,7 @@ g++ -g ^
     ^
     ..\..\SGBDS_Project\HANDLERS\BusStationsHandler.cpp ^
     ..\..\SGBDS_Project\HANDLERS\BusTripsHandler.cpp ^
-    ..\..\SGBDS_Project\HANDLERSB\usInterTripsHandler.cpp ^
+    ..\..\SGBDS_Project\HANDLERS\BusInterTripsHandler.cpp ^
     ^
     ..\..\SGBDS_Project\SGBDS_Project\StatisticsCalculator.cpp ^
     ^

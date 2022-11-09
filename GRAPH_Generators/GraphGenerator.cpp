@@ -801,6 +801,7 @@ void stats_calculator(
     int totalTripsDuration = 0;
     double totalCost = 0.0;
     int totalCoveredTrips = 0;
+    float solutionFat=0.0;
 
     // iterate over all clusters
     for (int i = 0; i < clusters.size(); i++)
@@ -954,6 +955,7 @@ void stats_calculator(
     // add global depot stats
     // ! same indexes as previous and index 8 is the number of clusters
     double totalDepotDuration = (double)totalHlpNumber + (double)totalWaitDuration + (double)totalTripsDuration;
+    double solutionfat = ((double)totalHlpNumber + (double)totalWaitDuration)/totalDepotDuration;
     depotStats.push_back(totalDepotDuration);
     depotStats.push_back((double)totalCost + (clusters.size() * FIX_COST));
     depotStats.push_back(totalHlpNumber);
@@ -963,6 +965,7 @@ void stats_calculator(
     depotStats.push_back(totalWaitDuration / totalDepotDuration); // wait pourcentage
     depotStats.push_back(totalCoveredTrips);
     depotStats.push_back(clusters.size());
+    depotStats.push_back(solutionfat);
 }
 
 void writeStatsIntoScreen(
@@ -990,9 +993,9 @@ void writeStatsIntoScreen(
     stats_out_stream << endl;
 
     stats_out_stream << "DEPOT STATS : " << endl;
-    stats_out_stream << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
-    stats_out_stream << "| Total Duration | Depot's Cost | Number of HLPs | HLP Duration | HLP pourcentage | Wait Duration | Wait Pourcentage | Number of trips | Number of Clusters |" << endl;
-    stats_out_stream << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
+    stats_out_stream << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+---------------+" << endl;
+    stats_out_stream << "| Total Duration | Depot's Cost | Number of HLPs | HLP Duration | HLP pourcentage | Wait Duration | Wait Pourcentage | Number of trips | Number of Clusters | Solution Fat  |"<< endl;
+    stats_out_stream << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+---------------+" << endl;
     stats_out_stream << "|" << setw(16) << depotStats[0];
     stats_out_stream << "|" << setw(14) << depotStats[1];
     stats_out_stream << "|" << setw(16) << depotStats[2];
@@ -1001,7 +1004,8 @@ void writeStatsIntoScreen(
     stats_out_stream << "|" << setw(15) << depotStats[5];
     stats_out_stream << "|" << setw(18) << depotStats[6];
     stats_out_stream << "|" << setw(17) << depotStats[7];
-    stats_out_stream << "|" << setw(20) << depotStats[8] << "|" << endl;
+    stats_out_stream << "|" << setw(20) << depotStats[8];
+    stats_out_stream << "|" << setw(15) << depotStats[9] << "|" << endl;
     stats_out_stream << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
 }
 
