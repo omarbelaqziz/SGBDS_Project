@@ -4,7 +4,7 @@
 #include <set>
 #include <iomanip>
 
-
+#define MAX_HLP 15
 struct StatsItineraire
 {
     int duree_total;
@@ -364,8 +364,6 @@ vector<vector<string>> clusters_generator_fromTripsSet(
         while ((*ptr1).second != false && ptr1 != (temp + trips.size() -1))
             ptr1++;
 
-        
-
         // add from duration from depot to first station
         int duree_depot_fs = TargetInterTrip::findDurationByTargetId((*ptr1).first.getBusStationDep()->getId(), stationsTargets[depotId]);
         if (duree_depot_fs == -1)
@@ -453,6 +451,298 @@ vector<vector<string>> clusters_generator_fromTripsSet(
     }
     return allClusters;
 }
+
+vector<vector<string>> clusters_generator_fromTripsSet_livrableDeux(
+    INTER_TRIPS stationsTargets,
+    set<BusStation> *busStations,
+    multiset<BusTrip> trips)
+{
+    vector<vector<string>> allClusters;
+
+    // handle each Line
+    string depotId = findDepotId(busStations);
+    if (depotId == "")
+    {
+        cout << "no depot found in data" << endl;
+        exit(-1);
+    }
+    // show the Depot
+    int res = 0;
+    bool isTreated;
+
+    // copy the data to a temp set of pair<BusTrip, isVisited>
+    pair<BusTrip, bool> *temp;
+    pair<BusTrip, bool> *ptr1;
+    pair<BusTrip, bool> *ptr2;
+    pair<BusTrip, bool> *ptr3;
+
+    temp = new pair<BusTrip, bool>[trips.size()];
+
+    
+    
+
+    // fill temp with data
+    multiset<BusTrip>::iterator temp_it;
+    int u = 0;
+    for (temp_it = trips.begin(); temp_it != trips.end(); ++temp_it)
+    {
+        if (u == trips.size())
+            break;
+        (temp + u)->first = (*temp_it);
+        (temp + u)->second = false;
+        u++;
+    }
+
+    // while we didnt cover all trips
+    while (res <= trips.size())
+    {
+        vector<string> cluster;
+        isTreated = false;
+        ptr1 = temp;
+
+        // find first not visited trip
+        while ((*ptr1).second != false && ptr1 != (temp + trips.size() -1))
+            ptr1++;
+
+        // add from duration from depot to first station
+        int duree_depot_fs = TargetInterTrip::findDurationByTargetId((*ptr1).first.getBusStationDep()->getId(), stationsTargets[depotId]);
+        if (duree_depot_fs == -1)
+        {
+            cout << "duration between depot and " << (*ptr1).first.getBusStationDep()->getId() << " not found" << endl;
+            exit(-1);
+        }
+
+        if (ptr1 == (temp + trips.size() - 1))
+        {
+            if(ptr1->second == false){
+                int duree = TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[(*ptr1).first.getBusStationArr()->getId()]);
+                if (duree == -1)
+                {
+                    cout << "duration between " << (*ptr1).first.getBusStationArr()->getId() << " and depot not found" << endl;
+                    exit(-1);
+                }
+                (*ptr1).second = true;
+                res++;
+                cluster.push_back((*ptr1).first.getTripId());
+                allClusters.push_back(cluster);
+                isTreated = true;
+            }
+            break;
+        }
+        else
+        {
+            ptr2 = ptr1;
+            while (!isTreated)
+            {
+                while ((*ptr2).second != false && ptr2 != (temp + trips.size() - 1))
+                    ptr2++;
+                
+                if (ptr2 == (temp + trips.size() - 1))
+                {
+                    int duree = TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[(*ptr1).first.getBusStationArr()->getId()]);
+                    if (duree == -1)
+                    {
+                        cout << "duration between " << (*ptr1).first.getBusStationArr()->getId() << " and depot not found" << endl;
+                        exit(-1);
+                    }
+                    (*ptr1).second = true;
+                    res++;
+                    cluster.push_back((*ptr1).first.getTripId());
+                    float cost;
+                    string type;
+                    if(ptr2->second == false && twoTripsCost(cost,stationsTargets,busStations,(*ptr1).first,(*ptr2).first,type)){
+                        (*ptr2).second = true;
+                        res++;
+                        cluster.push_back(type);
+                        cluster.push_back((*ptr2).first.getTripId());
+                    }
+                    allClusters.push_back(cluster);
+                    isTreated = true;
+                }
+                else
+                {
+                    float cost,secondcost;
+                    string type,secondtype;
+                    if(twoTripsCost(cost,stationsTargets,busStations,(*ptr1).first,(*ptr2).first,type)){
+                        // ptr3 = ptr2;
+                        // while ((*ptr3).second && ptr3 != (temp + trips.size() - 1))
+                        // {
+                        //     if(twoTripsCost(secondcost,stationsTargets,busStations,(*ptr1).first,(*ptr3).first,secondtype)){
+                        //         if(secondcost < cost){
+                        //             cost = secondcost;
+                        //             ptr2 = ptr3;
+                        //             type = secondtype;
+                        //         }
+                        //     }
+                        // }
+                        (*ptr1).second = true;
+                        res++;
+                        cluster.push_back((*ptr1).first.getTripId());
+                        cluster.push_back(type);
+                        ptr1 = ptr2;
+                        ptr2++;
+                    }
+                    else{
+                        ptr2++;
+                    }
+                }
+            }
+        }
+    }
+    return allClusters;
+}
+vector<vector<string>> clusters_generator_fromTripsSet_bis(
+    INTER_TRIPS stationsTargets,
+    set<BusStation> *busStations,
+    multiset<BusTrip> trips)
+{
+    vector<vector<string>> allClusters;
+
+    // handle each Line
+    string depotId = findDepotId(busStations);
+    if (depotId == "")
+    {
+        cout << "no depot found in data" << endl;
+        exit(-1);
+    }
+    // show the Depot
+    int res = 0;
+    bool isTreated;
+
+    // copy the data to a temp set of pair<BusTrip, isVisited>
+    pair<BusTrip, bool> *temp;
+    pair<BusTrip, bool> *ptr1;
+    pair<BusTrip, bool> *ptr2;
+    pair<BusTrip, bool> *ptr3;
+
+    temp = new pair<BusTrip, bool>[trips.size()];
+
+    
+    
+
+    // fill temp with data
+    multiset<BusTrip>::iterator temp_it;
+    int u = 0;
+    for (temp_it = trips.begin(); temp_it != trips.end(); ++temp_it)
+    {
+        if (u == trips.size())
+            break;
+        (temp + u)->first = (*temp_it);
+        (temp + u)->second = false;
+        u++;
+    }
+
+    // while we didnt cover all trips
+    while (res <= trips.size())
+    {
+        int nbrHlp = 0;
+        vector<string> cluster;
+        isTreated = false;
+        ptr1 = temp;
+
+        // find first not visited trip
+        while ((*ptr1).second != false && ptr1 != (temp + trips.size() -1))
+            ptr1++;
+
+        // add from duration from depot to first station
+        int duree_depot_fs = TargetInterTrip::findDurationByTargetId((*ptr1).first.getBusStationDep()->getId(), stationsTargets[depotId]);
+        if (duree_depot_fs == -1)
+        {
+            cout << "duration between depot and " << (*ptr1).first.getBusStationDep()->getId() << " not found" << endl;
+            exit(-1);
+        }
+
+        if (ptr1 == (temp + trips.size() - 1))
+        {
+            if(ptr1->second == false){
+                int duree = TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[(*ptr1).first.getBusStationArr()->getId()]);
+                if (duree == -1)
+                {
+                    cout << "duration between " << (*ptr1).first.getBusStationArr()->getId() << " and depot not found" << endl;
+                    exit(-1);
+                }
+                (*ptr1).second = true;
+                res++;
+                cluster.push_back((*ptr1).first.getTripId());
+                allClusters.push_back(cluster);
+                isTreated = true;
+            }
+            break;
+        }
+        else
+        {
+            ptr2 = ptr1;
+            while (!isTreated)
+            {
+                while ((*ptr2).second != false && ptr2 != (temp + trips.size() - 1))
+                    ptr2++;
+                
+                if (ptr2 == (temp + trips.size() - 1))
+                {
+                    int duree = TargetInterTrip::findDurationByTargetId(depotId, stationsTargets[(*ptr1).first.getBusStationArr()->getId()]);
+                    if (duree == -1)
+                    {
+                        cout << "duration between " << (*ptr1).first.getBusStationArr()->getId() << " and depot not found" << endl;
+                        exit(-1);
+                    }
+                    (*ptr1).second = true;
+                    res++;
+                    cluster.push_back((*ptr1).first.getTripId());
+                    float cost;
+                    string type;
+                    if(ptr2->second == false && twoTripsCost(cost,stationsTargets,busStations,(*ptr1).first,(*ptr2).first,type)){
+                        (*ptr2).second = true;
+                        res++;
+                        cluster.push_back(type);
+                        cluster.push_back((*ptr2).first.getTripId());
+                    }
+                    allClusters.push_back(cluster);
+                    isTreated = true;
+                }
+                else
+                {
+                    float cost,secondcost;
+                    string type,secondtype;
+                    if(twoTripsCost(cost,stationsTargets,busStations,(*ptr1).first,(*ptr2).first,type)){
+                        ptr3 = ptr2;
+                        while ((*ptr3).second && ptr3 != (temp + trips.size() - 1))
+                        {
+                            if(twoTripsCost(secondcost,stationsTargets,busStations,(*ptr1).first,(*ptr3).first,secondtype)){
+                                if(secondcost < cost){
+                                    cost = secondcost;
+                                    ptr2 = ptr3;
+                                    type = secondtype;
+                                }
+                            }
+                        }
+                        (*ptr1).second = true;
+                        res++;
+                        cluster.push_back((*ptr1).first.getTripId());
+                        if(type == "HLP"){
+                            nbrHlp++;
+                            if(nbrHlp >= MAX_HLP){
+                                allClusters.push_back(cluster);
+                                isTreated = true;
+                                break;
+                            }
+                        }
+                        cluster.push_back(type);
+                        ptr1 = ptr2;
+                        ptr2++;
+                        
+                    }
+                    else{
+                        ptr2++;
+                    }
+                }
+            }
+        }
+    }
+    return allClusters;
+}
+
+
+
 
 vector<vector<string>> optimize_generated_solution(
     INTER_TRIPS stationsTargets,

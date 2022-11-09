@@ -37,7 +37,13 @@ elif [[ "$1" == "livrable2" ]]; then
         -o livrable2
 # Livrable 3
 elif [[ "$1" == "livrable3" ]]; then
-    echo "not cofigured yet"
+    g++ -g\
+        ./main_livrableTrois.cpp \
+        $PREFIX_PATH_STR_OPS/*.cpp \
+        $PREFIX_PATH_BUSINESS_ENTITIES/*.cpp \
+        $PREFIX_PATH_HANDLERS/*.cpp \
+        $PREFIX_PATH_GRAPH_GEN/*.cpp \
+        -o livrable3
     
 else 
     echo "the name of variable needs to be livrable1 OR livrable2 OR livrable3"

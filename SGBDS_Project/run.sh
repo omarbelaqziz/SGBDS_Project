@@ -26,7 +26,7 @@ elif [[ "$1" == "livrable2" ]]; then
 
 # Livrable 3
 elif [[ "$1" == "livrable3" ]]; then
-    ./livrable3 $2 $3 $4 
+    gdb --args livrable3 $2 $3 $4 
 
 else 
     echo "the name of variable needs to be livrable1 OR livrable2 OR livrable3"

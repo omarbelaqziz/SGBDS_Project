@@ -386,3 +386,5 @@ output
 *.o
 
 *build-and-run.*
+
+SGBDS_Project/livrable*

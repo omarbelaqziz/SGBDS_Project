@@ -37,3 +37,11 @@ vector<vector<string>> optimize_generated_solution(
     set<BusStation> *busStations,
     multiset<BusTrip> trips,
     vector<vector<string>> solution);
+vector<vector<string>> clusters_generator_fromTripsSet_bis(
+    INTER_TRIPS stationsTargets,
+    set<BusStation> *busStations,
+    multiset<BusTrip> trips);
+vector<vector<string>> clusters_generator_fromTripsSet_livrableDeux(
+    INTER_TRIPS stationsTargets,
+    set<BusStation> *busStations,
+    multiset<BusTrip> trips);
