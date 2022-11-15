@@ -699,20 +699,20 @@ void writeStatsIntoScreen(
     stats_out_stream << "+---------+----------+----------------+----------------+--------------+-----------------+---------------+------------------+-----------------+" << endl;
     stats_out_stream << endl;
 
-    stats_out_stream << "DEPOT STATS : " << endl;
-    stats_out_stream << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
-    stats_out_stream << "| Total Duration | Depot's Cost | Number of HLPs | HLP Duration | HLP pourcentage | Wait Duration | Wait Pourcentage | Number of trips | Number of Clusters |" << endl;
-    stats_out_stream << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
-    stats_out_stream << "|" << setw(16) << depotStats[0];
-    stats_out_stream << "|" << setw(14) << depotStats[1];
-    stats_out_stream << "|" << setw(16) << depotStats[2];
-    stats_out_stream << "|" << setw(14) << depotStats[3];
-    stats_out_stream << "|" << setw(17) << depotStats[4];
-    stats_out_stream << "|" << setw(15) << depotStats[5];
-    stats_out_stream << "|" << setw(18) << depotStats[6];
-    stats_out_stream << "|" << setw(17) << depotStats[7];
-    stats_out_stream << "|" << setw(20) << depotStats[8] << "|" << endl;
-    stats_out_stream << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
+    cout << "DEPOT STATS : " << endl;
+    cout << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
+    cout << "| Total Duration | Depot's Cost | Number of HLPs | HLP Duration | HLP pourcentage | Wait Duration | Wait Pourcentage | Number of trips | Number of Clusters |" << endl;
+    cout << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
+    cout << "|" << setw(16) << depotStats[0];
+    cout << "|" << setw(14) << depotStats[1];
+    cout << "|" << setw(16) << depotStats[2];
+    cout << "|" << setw(14) << depotStats[3];
+    cout << "|" << setw(17) << depotStats[4];
+    cout << "|" << setw(15) << depotStats[5];
+    cout << "|" << setw(18) << depotStats[6];
+    cout << "|" << setw(17) << depotStats[7];
+    cout << "|" << setw(20) << depotStats[8] << "|" << endl;
+    cout << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+" << endl;
 }
 
 bool twoTripsCost(float& cost, 

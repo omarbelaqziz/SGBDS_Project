@@ -5,7 +5,7 @@ void handle_file_stream_bus_trips(unordered_map<string, multiset<BusTrip> *> &tr
 {
     string line;
     vector<string> rawData;
-
+    
     while (getline(i_file, line))
     {
         if (line.find("}") != string::npos)
@@ -38,14 +38,14 @@ void buildBusTrip(BusTrip &busTrip, vector<string> rawData, set<BusStation> &bus
     time_t depTime = dateTimeStringToTimeObject(rawData[3], rawData[4]);
     time_t arrivalTime = dateTimeStringToTimeObject(rawData[6], rawData[7]);
 
-    if(rawData.size() != 8)
+    if(rawData.size() != BUS_LINE_RAW_COUNT)
     {
-        cout << "--> this vector of trips have a syntaxique problem : " ;
+        cout << RED << "--> this vector of trips have a syntaxique problem : " << RESET ;
         for(auto v: rawData) {
             cout << v << ", ";
         } 
         cout << endl; 
-        exit(-1); 
+        exit(EXIT_FAILURE); 
     }
     if (depBusStation != busStationsSet.end() && arrivalBusStation != busStationsSet.end())
     {

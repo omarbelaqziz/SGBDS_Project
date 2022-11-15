@@ -386,3 +386,10 @@ output
 *.o
 
 *build-and-run.*
+
+moulinette
+livrable1
+livrable2
+VRPsimplex2
+VRPsimplex
+PartialSimplex

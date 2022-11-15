@@ -56,4 +56,6 @@ public:
     void setTripId(string tripId);
     void setStrDDep(string strDDep);
     void setStrDDarr(string strDDarr);
+
+    
 };

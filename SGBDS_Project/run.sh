@@ -16,13 +16,13 @@ fi
 
 # Livrable 1
 if [[ "$1" == "livrable1" ]]; then 
-    gdb --args livrable1 $2 $3 $4
-    # ./livrable1 $2 $3 $4
+    # gdb --args livrable1 $2 $3 $4
+    ./livrable1 $2 $3 $4
 
 # Livrable 2
 elif [[ "$1" == "livrable2" ]]; then 
-    gdb --args livrable2 $2 $3 $4
-    # ./livrable2 $2 $3 $4
+    # gdb --args livrable2 $2 $3 $4
+    ./livrable2 $2 $3 $4
 
 # Livrable 3
 elif [[ "$1" == "livrable3" ]]; then
