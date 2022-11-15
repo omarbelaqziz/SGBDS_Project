@@ -992,6 +992,7 @@ void writeStatsIntoScreen(
     stats_out_stream << "+---------+----------+----------------+----------------+--------------+-----------------+---------------+------------------+-----------------+" << endl;
     stats_out_stream << endl;
 
+
     stats_out_stream << "DEPOT STATS : " << endl;
     stats_out_stream << "+----------------+--------------+----------------+--------------+-----------------+---------------+------------------+-----------------+--------------------+---------------+" << endl;
     stats_out_stream << "| Total Duration | Depot's Cost | Number of HLPs | HLP Duration | HLP pourcentage | Wait Duration | Wait Pourcentage | Number of trips | Number of Clusters | Solution Fat  |"<< endl;

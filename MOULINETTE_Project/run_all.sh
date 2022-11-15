@@ -5,4 +5,7 @@ export C_V="0.4"
 export FIX_COST="1000.0"
 export MIN_WAIT="45"
 
-./run.sh 
+DEPOT_FILE=../data/test50.txt
+
+
+./run.sh $DEPOT_FILE ../output/clusters/asdfa.txt ../output/stats/stats.txt

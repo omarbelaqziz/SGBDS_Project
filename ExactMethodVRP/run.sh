@@ -1,5 +1,10 @@
 #!/bin/bash 
 
-g++ -O0 -c -m64 -O -fPIC -fno-strict-aliasing -fexceptions -DNDEBUG -DIL_STD -I/home/ahrrass/cplex/CPLEX_Studio128/cplex/include -I/home/ahrrass/cplex/CPLEX_Studio128/concert/include  cutstock.cpp -o cutstock.o 
+export C_A="0.2"
+export C_V="0.4"
+export FIX_COST="1000.0"
+export MIN_WAIT="45"
+export PATTERN_CLUSTERS="cluster [0-9][0-9]* : (T_[0-9][0-9]*( HLP | WS ))*T_[0-9][0-9]* ;"
 
-g++ -O0 -m64 -O -fPIC -fno-strict-aliasing -fexceptions -DNDEBUG -DIL_STD -I/home/ahrrass/cplex/CPLEX_Studio128/cplex/include -I/home/ahrrass/cplex/CPLEX_Studio128/concert/include  -L/home/ahrrass/cplex/CPLEX_Studio128/cplex/lib/x86-64_linux/static_pic -L/home/ahrrass/cplex/CPLEX_Studio128/concert/lib/x86-64_linux/static_pic -o cutstock cutstock.o -lconcert -lilocplex -lcplex -lm -lpthread -ldl
+# gdb --args VRPsimplex2 ../data/partialTest.txt ../output/clusters/exact_meth_out.txt
+./PartialSimplex ../data/test50.txt ../output/clusters/exact_meth_out.txt

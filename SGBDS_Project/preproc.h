@@ -47,6 +47,12 @@ typedef unordered_map<string, multiset<BusTrip> *> TRIPS_MAP;
 typedef map<string, set<TargetInterTrip> *> INTER_TRIPS;
 typedef vector<pair<BusTrip, bool>> TEMP_TYPE;
 
+#define BUS_LINE_RAW_COUNT 8
+#define INTER_TRIPS_RAW_COUNT 4
+#define BUS_STATIONS_RAW_COUNT 2
+
+#define PARTIAL_TRIPS 145 
+#define VEHICULE_POURCENTAGE 0.076
 
 #define c_a stof(getenv(string("C_A").c_str()) ? getenv(string("C_A").c_str()) : throw "the C_A env variables is unseted")
 #define c_v stof(getenv(string("C_V").c_str()) ? getenv(string("C_V").c_str()) : throw "the C_V env variables is unseted")

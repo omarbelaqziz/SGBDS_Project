@@ -20,13 +20,13 @@ int main(int argc, char const *argv[])
         cout << "Fixed Cluster cost (FIX_COST) = " << FIX_COST << endl; 
 
     }
-    catch(string message)
+    catch(const char* message)
     {
         std::cerr << message << '\n';
     }
      
 
-    std::clock_t c_start = std::clock();
+    auto c_start = chrono::high_resolution_clock::now();
     string filename = argv[1];
     string outfile = argv[2];
     string outfileOc = argv[3];
@@ -50,6 +50,7 @@ int main(int argc, char const *argv[])
     {
         string line;
         int lineNumber = 0;
+
         while (getline(dataFile, line))
         {
             lineNumber++;
@@ -73,13 +74,11 @@ int main(int argc, char const *argv[])
                 // std::cout << "Op. ends at " << line << endl;
             }
         }
+
+        cout << "Handling data set : " << GREEN << "DONE" << RESET << endl; 
+
         // livrable I
-        cout << "clusters begined " << endl;
         vector<vector<string>> allClusters;
-        if(busStations->size() > 1 && interTrips.size() > 1 && tripsStations.size() > 1)
-            cout << "everything ok " << endl;
-        //for (auto it = tripsStations.begin(); it != tripsStations.end(); ++it)
-        //for (auto it = tripsStations.begin(); it != tripsStations.end(); ++it)
         for (auto it : tripsStations)
         {
             if(it.second != nullptr && it.second->size() != 0){
@@ -95,11 +94,11 @@ int main(int argc, char const *argv[])
             }
             
         }
-        cout << "clusters finished " << endl;
+        cout << "Building Clusters : " << GREEN << "DONE" << RESET << endl;
         multiset<BusTrip> busTripsPopulation;
         detach_lines(busTripsPopulation, tripsStations);
 
-        cout << "Full statistics calculation will be hosted in the file : " << filename << endl; 
+        cout << "Full statistics calculation will be hosted in the file : " << outfile << endl; 
         cout << "showing sub data : " << endl;
         
         
@@ -132,8 +131,7 @@ int main(int argc, char const *argv[])
     }
     dataFile.close();
 
-    std::clock_t c_end = std::clock();
-    long double time_elapsed_ms = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
-
-    std::cout << "CPU time used: " << time_elapsed_ms / 1000.0 << " s" << endl;
+    auto end = chrono::high_resolution_clock::now();
+    auto Elapsed = chrono::duration_cast<chrono::milliseconds>(end - start);
+    cout << YELLOW << "CPU time used (s):  " << Elapsed.count() / 1000.0 << RESET << endl;
 }

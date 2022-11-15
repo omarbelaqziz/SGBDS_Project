@@ -27,7 +27,7 @@ int TargetInterTrip::findDurationByTargetId(string targetId, set<TargetInterTrip
     std::set<TargetInterTrip>::iterator it = targetsSet->find(TargetInterTrip(bs, "InterTripXX", 12));
     if (it == targetsSet->end())
         return -1;
-    return (*it).duree;
+    return (*it).getDuree();
 }
 
 bool TargetInterTrip::operator==(const TargetInterTrip &tip) const

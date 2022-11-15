@@ -387,4 +387,10 @@ output
 
 *build-and-run.*
 
-SGBDS_Project/livrable*
+moulinette
+livrable1
+livrable2
+VRPsimplex2
+VRPsimplex
+PartialSimplex
+

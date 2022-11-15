@@ -24,12 +24,20 @@ set<BusStation> *handle_file_stream_bus_stations(ifstream &i_file)
 bool isDepot_handler(string isDepot_string)
 {
     bool result = false;
-    //if (isDepot_string.size() == 2)
-    //{
-        char v = isDepot_string.at(0);
-        (v == '0') ? result = false : result = true;
-    //}
-    // handle the error
+    char v = isDepot_string.at(0);
+    switch (v)
+    {
+    case '0':
+        result = false;
+        break;
+
+    case '1':
+        result = true;
+        break;
+    default:
+        cerr << RED << "error wile reading the is Depot property --> we'll considere it false for the moment " << RESET << endl;
+        break;
+    }
     return result;
 }
 
@@ -43,5 +51,8 @@ string findDepotId(set<BusStation> *busStations)
         if (itr->getIsDepot() == true)
             return itr->getId();
     }
-    return depotId; 
+
+    cerr << RED << "No Depot found in the data set please add one " << RESET << endl; 
+    exit(EXIT_FAILURE); 
+    return depotId;
 }

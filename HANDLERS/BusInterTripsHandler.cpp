@@ -17,12 +17,21 @@ void handle_file_stream_inter_trips(map<string, set<TargetInterTrip> *> &inter_t
         }
         stringData = StringOps::split(StringOps::removeLastChar(StringOps::ltrim(StringOps::rtrim(line))));
         
+        if(stringData.size() != INTER_TRIPS_RAW_COUNT)
+        {
+            cerr << RED << "--> Error while reading the inter trip line : " << RESET << endl; 
+            for(auto v: stringData)
+            {
+                cout << v << " "; 
+            }
+            cout << endl; 
+
+            exit(EXIT_FAILURE); 
+        }
 
         auto depBusStation = busStationsSet->find(BusStation(stringData[1], false));
-
         auto arrivalBusStation = busStationsSet->find(BusStation(stringData[2], false));
 
-    
 
         int duration = stoi(stringData[3]);
         string interTripId = stringData[0];
