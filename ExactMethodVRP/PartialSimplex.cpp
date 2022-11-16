@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <stdio.h>
+#include "../GRAPH_Generators/GraphGenerator.h"
 #include "../SGBDS_Project/preproc.h"
 #include "ilcplex/ilocplex.h"
 #include <iterator>
@@ -21,7 +22,7 @@ float existCostFromDepotAndCalculate(string depotId, string target, INTER_TRIPS 
 float existCostFromTripToDepotAndCalculate(string source, string depotId, INTER_TRIPS interTrips);
 float existCostBetweenTwotTripsAndCalculate(BusTrip startTrip, BusTrip currentTrip, INTER_TRIPS interTrips);
 string get_state_between_two_trips(string trip1, string trip2, multiset<BusTrip> &tripsPopulation);
-void treatPartial(vector<vector<string>> &clusters, multiset<BusTrip> &busTripsPopulation, INTER_TRIPS &interTrips, string depotId, multiset<BusTrip>::iterator &it_begin, multiset<BusTrip>::iterator &it_end);
+void treatPartial(vector<vector<string>> &clusters, multiset<BusTrip> &busTripsPopulation, INTER_TRIPS &interTrips, string depotId, multiset<BusTrip>::iterator &it_begin, multiset<BusTrip>::iterator &it_end, int index_iteration);
 
 int main(int argc, char const *argv[])
 {
@@ -34,8 +35,11 @@ int main(int argc, char const *argv[])
     TRIPS_MAP tripsStations;
 
     ifstream dataFile;
+    ofstream dataOutFileOc;
+
     dataFile.open(data_file);
-    if (!dataFile.is_open())
+    dataOutFileOc.open(output_file);
+    if (!dataFile.is_open() || !dataOutFileOc.is_open())
     {
         cerr << "Couldn't move forward " << endl;
         exit(-1);
@@ -77,36 +81,50 @@ int main(int argc, char const *argv[])
     multiset<BusTrip>::iterator begin_ite = busTripsPopulation.begin();
     multiset<BusTrip>::iterator end_ite = busTripsPopulation.begin();
     int temp_count = 0;
-
+    int iteration_index = 0;
     while (total_trips_count != busTripsPopulation.size())
     {
+
         while (temp_count != PARTIAL_TRIPS && end_ite != busTripsPopulation.end())
         {
             ++end_ite;
             temp_count++;
         }
 
-        treatPartial(clusters, busTripsPopulation, interTrips, depotId, begin_ite, end_ite);
+        treatPartial(clusters, busTripsPopulation, interTrips, depotId, begin_ite, end_ite, iteration_index);
 
         if (end_ite == busTripsPopulation.end())
             break;
-        begin_ite = ++end_ite;
+        begin_ite = end_ite;
 
         total_trips_count += temp_count;
         temp_count = 0;
+
+        iteration_index++;
     }
+
+    cout << "FINISHING ALL THE DATA SET";
+    
+    vector<vector<string>> second_collection = optimize_generated_solution(interTrips, busStations, busTripsPopulation, clusters); 
+    // vector<vector<string>> third_collection = optimize_generated_solution(interTrips, busStations, busTripsPopulation, second_collection); 
+    // vector<vector<string>> fourth_collection = optimize_generated_solution(interTrips, busStations, busTripsPopulation, third_collection); 
+    // vector<vector<string>> fifth_collection = optimize_generated_solution(interTrips, busStations, busTripsPopulation, fourth_collection); 
+    
+    write_cluster_to_file(dataOutFileOc, second_collection);
+
 
     return 0;
 }
 
-void treatPartial(vector<vector<string>> &clusters, multiset<BusTrip> &busTripsPopulation, INTER_TRIPS &interTrips, string depotId, multiset<BusTrip>::iterator &it_begin, multiset<BusTrip>::iterator &it_end)
+void treatPartial(vector<vector<string>> &clusters, multiset<BusTrip> &busTripsPopulation, INTER_TRIPS &interTrips, string depotId, multiset<BusTrip>::iterator &it_begin, multiset<BusTrip>::iterator &it_end, int index_iteration)
 {
 
 #pragma region Problem Data
 
     float **C;
     int N = std::distance(it_begin, it_end);
-    int M = N * VEHICULE_POURCENTAGE;
+    // int M = N * VEHICULE_POURCENTAGE;
+    int M = 2;
 
     C = (float **)malloc(sizeof(float *) * (N + 2));
 
@@ -133,14 +151,11 @@ void treatPartial(vector<vector<string>> &clusters, multiset<BusTrip> &busTripsP
     {
 
         C[i][0] = existCostFromTripToDepotAndCalculate((*it_to_i_trip).getBusStationArr()->getId(), depotId, interTrips);
-        // C[i][0] = NOT_EXIST_VALUE; 
-        
         C[i][N + 1] = existCostFromTripToDepotAndCalculate((*it_to_i_trip).getBusStationArr()->getId(), depotId, interTrips);
         C[0][i] = existCostFromDepotAndCalculate(depotId, (*it_to_i_trip).getBusStationDep()->getId(), interTrips);
-        // C[N + 1][i] = existCostFromDepotAndCalculate(depotId, (*it_to_i_trip).getBusStationDep()->getId(), interTrips);
-        C[N + 1][i] = 0;
+        C[N + 1][i] = existCostFromDepotAndCalculate(depotId, (*it_to_i_trip).getBusStationDep()->getId(), interTrips);
 
-        C[i][i] = NOT_EXIST_VALUE; 
+        C[i][i] = NOT_EXIST_VALUE;
 
         for (j = 1, it_to_j_trip = it_begin; it_to_j_trip != it_end; ++it_to_j_trip, ++j)
         {
@@ -282,12 +297,82 @@ void treatPartial(vector<vector<string>> &clusters, multiset<BusTrip> &busTripsP
         throw(-1);
     }
 
+    vector<string> sub_cluster;
+
     double obj = cplex.getObjValue();
-    tot_clusters += M;
+    // tot_clusters += M;
     cost_tot += obj;
 
     cout << "cost: " << cost_tot << endl;
     cout << "Clusters Tot: " << tot_clusters << endl;
+
+    // trying to show clusters
+    for (k = 0; k < M; k++)
+    {
+        int next = 0;
+        stack<int> s;
+        int temp_clusters_count = 1;
+        for (i = 0; i < N + 2; i++)
+        {
+
+            int Xval = cplex.getValue(X[N + 1][i][k]);
+            if (Xval == 1)
+            {
+                temp_clusters_count++;
+                s.push(i);
+            }
+        }
+
+        int start = 0;
+        for (j = 0; j < N + 2; j++)
+        {
+            int tt = cplex.getValue(X[0][j][k]);
+            if (tt == 1)
+                start = j;
+        }
+        string startTripId = get_trip_id_from_trips_population((start - 1) + (index_iteration * PARTIAL_TRIPS), busTripsPopulation);
+
+        int treated_clusters = 0;
+        sub_cluster.push_back(startTripId);
+
+        while (treated_clusters < temp_clusters_count)
+        {
+            for (j = 0; j < N + 2; j++)
+            {
+                int tt = cplex.getValue(X[start][j][k]);
+                if (tt == 1)
+                    next = j;
+            }
+            if (next == 0 || next == N + 1)
+            {
+                // end cluster
+                clusters.push_back(sub_cluster);
+                sub_cluster.clear();
+                treated_clusters++;
+
+                if (!s.empty())
+                {
+                    start = s.top();
+                    s.pop();
+                }
+                else
+                    break;
+                startTripId = get_trip_id_from_trips_population(start - 1 + (index_iteration * PARTIAL_TRIPS), busTripsPopulation);
+                sub_cluster.push_back(startTripId);
+            }
+            else
+            {
+                string arrivalTripId = get_trip_id_from_trips_population(next - 1 + (index_iteration * PARTIAL_TRIPS), busTripsPopulation);
+                string betweenTripsState = get_state_between_two_trips(startTripId, arrivalTripId, busTripsPopulation);
+
+                sub_cluster.push_back(betweenTripsState);
+                sub_cluster.push_back(arrivalTripId);
+
+                start = next;
+                startTripId = arrivalTripId;
+            }
+        }
+    }
 
     // serching the first start
     /*
@@ -333,7 +418,7 @@ void treatPartial(vector<vector<string>> &clusters, multiset<BusTrip> &busTripsP
 
     cout << endl;*/
 
-    for (k = 0; k < M; k++)
+    /*for (k = 0; k < M; k++)
     {
         for (i = 0; i < N + 2; i++)
         {
@@ -350,7 +435,7 @@ void treatPartial(vector<vector<string>> &clusters, multiset<BusTrip> &busTripsP
         }
         cout << endl
              << "=----------------=" << endl;
-    }
+    }*/
 
     // delete cost matrix
     for (i = 0; i < N + 2; i++)

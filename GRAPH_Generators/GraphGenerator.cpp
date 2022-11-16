@@ -461,7 +461,7 @@ vector<vector<string>> optimize_generated_solution(
     vector<vector<string>> solution) {
     for (int i = 0; i < solution.size(); i++)
     {
-        // cout << "enter i " << i << endl;
+        cout << "enter i " << i << endl;
         int size = solution.at(i).size();
         float cost;
         for (int j = i + 1; j < solution.size(); j++)
@@ -470,9 +470,10 @@ vector<vector<string>> optimize_generated_solution(
             BusTrip depart, arrivee;
             if(findTripById(depart,solution.at(i).at(size - 1),trips) 
             &&
-            findTripById(arrivee,solution.at(i).at(0),trips)){
+            findTripById(arrivee,solution.at(j).at(0),trips)){
                 string type;
                 if(twoTripsCost(cost,stationsTargets,busStations,depart,arrivee,type)){
+                    solution.at(i).insert(solution.at(i).end(),type);
                     solution.at(i).insert(solution.at(i).end(),solution.at(j).begin(),solution.at(j).end());
                     solution.erase(solution.begin()+j);
                     break;
