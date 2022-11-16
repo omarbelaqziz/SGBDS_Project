@@ -52,7 +52,7 @@ typedef vector<pair<BusTrip, bool>> TEMP_TYPE;
 #define INTER_TRIPS_RAW_COUNT 4
 #define BUS_STATIONS_RAW_COUNT 2
 
-#define PARTIAL_TRIPS 200 
+#define PARTIAL_TRIPS stoi(getenv(string("PARTIAL_TRIPS").c_str()) ? getenv(string("PARTIAL_TRIPS").c_str()) : throw "The PARTIAL TRIPS var is not set") 
 #define VEHICULE_POURCENTAGE 0.07
 
 #define c_a stof(getenv(string("C_A").c_str()) ? getenv(string("C_A").c_str()) : throw "the C_A env variables is unseted")
