@@ -64,7 +64,7 @@ CPP_EX = blend cutstock VRPsimplex VRPsimplex2 PartialSimplex
 
 all_cpp: $(CPP_EX)
 
-INCLUDES_OFF = ../HANDLERS/*.cpp ../BUSINESS_ENTITIES/*.cpp ../StringOperations/*.cpp
+INCLUDES_OFF = ../HANDLERS/*.cpp ../BUSINESS_ENTITIES/*.cpp ../StringOperations/*.cpp ../GRAPH_Generators/*.cpp
 
 all_c: $(CX_EX)
 

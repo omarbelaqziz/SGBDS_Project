@@ -8,6 +8,7 @@
 #include <ctime>
 #include <memory>
 #include <algorithm>
+#include <stack>
 
 #include "../BUSINESS_ENTITIES/BusStation.h"
 #include "../BUSINESS_ENTITIES/BusTrip.h"
@@ -51,8 +52,8 @@ typedef vector<pair<BusTrip, bool>> TEMP_TYPE;
 #define INTER_TRIPS_RAW_COUNT 4
 #define BUS_STATIONS_RAW_COUNT 2
 
-#define PARTIAL_TRIPS 145 
-#define VEHICULE_POURCENTAGE 0.076
+#define PARTIAL_TRIPS 200 
+#define VEHICULE_POURCENTAGE 0.07
 
 #define c_a stof(getenv(string("C_A").c_str()) ? getenv(string("C_A").c_str()) : throw "the C_A env variables is unseted")
 #define c_v stof(getenv(string("C_V").c_str()) ? getenv(string("C_V").c_str()) : throw "the C_V env variables is unseted")
