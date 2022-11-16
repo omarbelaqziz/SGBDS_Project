@@ -5,6 +5,7 @@
 #include "../SGBDS_Project/preproc.h"
 #include "ilcplex/ilocplex.h"
 #include <iterator>
+#include <chrono>
 
 using namespace std;
 
@@ -26,6 +27,7 @@ void treatPartial(vector<vector<string>> &clusters, multiset<BusTrip> &busTripsP
 
 int main(int argc, char const *argv[])
 {
+    auto start = chrono::high_resolution_clock::now();
 
     string data_file = argv[1];
     string output_file = argv[2];
@@ -105,14 +107,16 @@ int main(int argc, char const *argv[])
 
     cout << "FINISHING ALL THE DATA SET";
     
-    vector<vector<string>> second_collection = optimize_generated_solution(interTrips, busStations, busTripsPopulation, clusters); 
+    // vector<vector<string>> second_collection = optimize_generated_solution(interTrips, busStations, busTripsPopulation, clusters); 
     // vector<vector<string>> third_collection = optimize_generated_solution(interTrips, busStations, busTripsPopulation, second_collection); 
     // vector<vector<string>> fourth_collection = optimize_generated_solution(interTrips, busStations, busTripsPopulation, third_collection); 
     // vector<vector<string>> fifth_collection = optimize_generated_solution(interTrips, busStations, busTripsPopulation, fourth_collection); 
     
-    write_cluster_to_file(dataOutFileOc, second_collection);
+    write_cluster_to_file(dataOutFileOc, clusters);
 
-
+    auto end = chrono::high_resolution_clock::now();
+    auto Elapsed = chrono::duration_cast<chrono::milliseconds>(end - start);
+    cout << "\t Elapsed Time(s): " << Elapsed.count() / 60 << endl;
     return 0;
 }
 
